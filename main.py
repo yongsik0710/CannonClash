@@ -6,5 +6,5 @@ def yongsik():
 def name():
     print("민서")
 
-def jam():
+def jaemin():
     print("재민")
