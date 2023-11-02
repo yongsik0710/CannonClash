@@ -5,3 +5,6 @@ def yongsik():
 
 def name():
     print("민서")
+
+def jam():
+    print("재민")
