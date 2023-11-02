@@ -1,6 +1,6 @@
 print("Hi!")
 print("Hello!")
-def test():
+def yongsik():
     print("용식")
 
 def name():
