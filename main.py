@@ -1,5 +1,6 @@
 print("Hi!")
 print("Hello!")
+
 def yongsik():
     print("용식")
 
