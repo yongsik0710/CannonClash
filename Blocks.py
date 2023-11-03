@@ -1,7 +1,44 @@
 class Block:
-    def __init__(self, hardness, texture):
-        self.hardness = hardness
-        self.texture = texture
+    health = 100
+    blastResistance = 0
+    texture = ""
+    layer = ""
 
-class Air(Block):
+    def refresh(self):
+        if 80 < self.health <= 100: self.layer = 0
+        elif 60 < self.health <= 80: self.layer = 1
+        elif 40 < self.health <= 60: self.layer = 2
+        elif 20 < self.health <= 40: self.layer = 3
+        elif 0 < self.health <= 20: self.layer = 4
+        else: pass
+
+    def hit(self, blastDamage):
+        self.health -= blastDamage * ((100 - self.blastResistance) / 100)
+
+
+class Fluid:
     pass
+
+
+class Air(Fluid):
+    pass
+
+
+class Grass(Block):
+    pass
+
+
+class Dirt(Block):
+    pass
+
+
+class Stone(Block):
+    blastResistance = 30
+
+
+class Concrete(Block):
+    blastResistance = 50
+
+
+class Iron(Block):
+    blastResistance = 80
