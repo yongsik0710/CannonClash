@@ -25,20 +25,16 @@ class Air(Fluid):
 
 
 class Grass(Block):
-    pass
+    blastResistance = 0
 
 
 class Dirt(Block):
-    pass
+    blastResistance = 0
 
 
 class Stone(Block):
     blastResistance = 30
 
 
-class Concrete(Block):
-    blastResistance = 50
-
-
 class Iron(Block):
-    blastResistance = 80
+    blastResistance = 70

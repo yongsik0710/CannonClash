@@ -1,5 +1,5 @@
-from Stage import *
-from Blocks import *
+from stage import *
+from blocks import *
 
 
 class Level1(Stage):
