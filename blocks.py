@@ -1,6 +1,7 @@
 class Block:
     health = 100
     blastResistance = 0
+    passable = False
     texture = ""
     layer = ""
 
@@ -16,12 +17,9 @@ class Block:
         self.health -= blastDamage * ((100 - self.blastResistance) / 100)
 
 
-class Fluid:
-    pass
-
-
-class Air(Fluid):
-    pass
+class Air(Block):
+    blastResistance = 0
+    passable = True
 
 
 class Grass(Block):
