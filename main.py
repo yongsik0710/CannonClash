@@ -13,10 +13,9 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("대포 게임")
 
 clock = pygame.time.Clock()
-FPS = 165
+FPS = 60
 
 a = Ball((45, 10))
-all_sprites = pygame.sprite.Group(a)
 
 
 running = True
@@ -39,8 +38,8 @@ while running:
                 screen.blit(Texture.dirt, [120 * j, 120 * i])
             else:
                 screen.blit(Texture.stone, [120 * j, 120 * i])
-    all_sprites.update()
-    all_sprites.draw(screen)
+    a.update()
+    screen.blit(a.image, a.rect)
     pygame.display.update()
     clock.tick(FPS)
 
