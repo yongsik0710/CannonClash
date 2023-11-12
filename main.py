@@ -1,6 +1,5 @@
 import pygame
 from stage import *
-from config import *
 from shell import *
 
 
@@ -15,7 +14,9 @@ pygame.display.set_caption("대포 게임")
 clock = pygame.time.Clock()
 FPS = 60
 
-a = Ball((45, 10))
+from levels import *
+stage_1 = Stage(Levels.level_1, 1, 0)
+a = Ball((45, 8))
 
 
 running = True
@@ -30,14 +31,8 @@ while running:
     screen.fill((100, 100, 100))
     for i in range(9):
         for j in range(16):
-            if i <= 5:
-                screen.blit(Texture.air, [120 * j, 120 * i])
-            elif i == 6:
-                screen.blit(Texture.grass, [120 * j, 120 * i])
-            elif i == 7:
-                screen.blit(Texture.dirt, [120 * j, 120 * i])
-            else:
-                screen.blit(Texture.stone, [120 * j, 120 * i])
+            stage_1.level[i][j].update(j * 120, i * 120)
+            screen.blit(stage_1.level[i][j].image, stage_1.level[i][j].rect)
     a.update()
     screen.blit(a.image, a.rect)
     pygame.display.update()

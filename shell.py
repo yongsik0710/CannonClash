@@ -26,7 +26,7 @@ class Ball(pygame.sprite.Sprite):
 
     def __init__(self, vector):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_png('iron.png')
+        self.image, self.rect = load_png('ball.png')
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.vector = vector

@@ -18,8 +18,8 @@ def load_png(name):
 
 
 class Texture:
-    air = pygame.image.load("images/air.png")
-    grass = pygame.image.load("images/grass.png")
-    dirt = pygame.image.load("images/dirt.png")
-    stone = pygame.image.load("images/stone.png")
-    iron = pygame.image.load("images/iron.png")
+    air = load_png("Air.png")
+    grass = load_png("grass.png")
+    dirt = load_png("dirt.png")
+    stone = load_png("stone.png")
+    iron = load_png("iron.png")
