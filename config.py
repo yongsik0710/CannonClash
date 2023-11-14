@@ -1,25 +1,19 @@
-import pygame
 import os
 
 
-def load_png(name):
-    """ Load image and return image object"""
-    fullname = os.path.join("images", name)
+def resource_path(relative_path):
     try:
-        image = pygame.image.load(fullname)
-        if image.get_alpha() is None:
-            image = image.convert()
-        else:
-            image = image.convert_alpha()
-    except FileNotFoundError:
-        print(f"Cannot load image: {fullname}")
-        raise SystemExit
-    return image, image.get_rect()
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 class Texture:
-    air = load_png("Air.png")
-    grass = load_png("grass.png")
-    dirt = load_png("dirt.png")
-    stone = load_png("stone.png")
-    iron = load_png("iron.png")
+    none = resource_path("images/none.png")
+    air = resource_path("images/air.png")
+    grass = resource_path("images/grass.png")
+    dirt = resource_path("images/dirt.png")
+    stone = resource_path("images/stone.png")
+    iron = resource_path("images/iron.png")

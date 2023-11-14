@@ -19,42 +19,49 @@ def load_png(name):
 
 
 class Block(pygame.sprite.Sprite):
-    texture = ""
+    id = 0
+    texture = Texture.none
     blastResistance = 0
     passable = False
 
-    def __init__(self):
-        self.health = 100
+    def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
+        self.health = 100
+        self.x = x
+        self.y = y
+        self.texture = load_png(self.texture)
         self.image, self.rect = self.texture
-        screen = pygame.display.get_surface()
-        self.area = screen.get_rect()
-
-    def update(self, x, y):
-        self.rect = (x, y)
+        self.rect = self.rect.move((120 * x, 120 * y))
+        # screen = pygame.display.get_surface()
+        # self.area = screen.get_rect()
 
 
 class Air(Block):
+    id = 1
     texture = Texture.air
     blastResistance = 0
     passable = True
 
 
 class Grass(Block):
+    id = 2
     texture = Texture.grass
     blastResistance = 10
 
 
 class Dirt(Block):
+    id = 3
     texture = Texture.dirt
     blastResistance = 0
 
 
 class Stone(Block):
+    id = 4
     texture = Texture.stone
     blastResistance = 30
 
 
 class Iron(Block):
+    id = 5
     texture = Texture.iron
     blastResistance = 70

@@ -1,6 +1,7 @@
 import pygame
-from stage import *
 from shell import *
+from levels import *
+from stage import *
 
 
 SCREEN_WIDTH = 1920
@@ -14,9 +15,10 @@ pygame.display.set_caption("대포 게임")
 clock = pygame.time.Clock()
 FPS = 60
 
-from levels import *
-stage_1 = Stage(Levels.level_1, 1, 0)
-a = Ball((45, 8))
+stage_1 = Stage(Levels.level_1, 1.0, 0)
+blocks = pygame.sprite.Group(stage_1.level)
+shell_1 = Shell(stage_1, (300, 500), [8, -12])
+projectiles = pygame.sprite.Group(shell_1)
 
 
 running = True
@@ -28,13 +30,11 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
-    screen.fill((100, 100, 100))
-    for i in range(9):
-        for j in range(16):
-            stage_1.level[i][j].update(j * 120, i * 120)
-            screen.blit(stage_1.level[i][j].image, stage_1.level[i][j].rect)
-    a.update()
-    screen.blit(a.image, a.rect)
+
+    blocks.draw(screen)
+    projectiles.update()
+    projectiles.draw(screen)
+
     pygame.display.update()
     clock.tick(FPS)
 

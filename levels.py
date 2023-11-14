@@ -1,14 +1,11 @@
-from blocks import *
-
-
 class Levels:
-    level_1 = [[Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air()],
-               [Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air()],
-               [Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air()],
-               [Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air()],
-               [Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air()],
-               [Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air(), Air()],
-               [Grass(), Grass(), Grass(), Grass(), Grass(), Grass(), Grass(), Grass(), Grass(), Grass(), Grass(), Grass(), Grass(), Grass(), Grass(), Grass()],
-               [Dirt(), Dirt(), Dirt(), Dirt(), Dirt(), Dirt(), Dirt(), Dirt(), Dirt(), Dirt(), Dirt(), Dirt(), Dirt(), Dirt(), Dirt(), Dirt()],
-               [Stone(), Stone(), Stone(), Stone(), Stone(), Stone(), Stone(), Stone(), Stone(), Stone(), Stone(), Stone(), Stone(), Stone(), Stone(), Stone()]]
+    level_1 = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+               [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+               [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+               [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+               [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+               [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+               [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+               [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+               [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]]
     level_2 = []
