@@ -12,6 +12,8 @@ pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("대포 게임")
 
+background = pygame.image.load("images/forest.png").convert()
+
 clock = pygame.time.Clock()
 FPS = 60
 
@@ -31,6 +33,7 @@ while running:
             if event.key == pygame.K_ESCAPE:
                 running = False
 
+    screen.blit(background, (0, 0))
     blocks.draw(screen)
     projectiles.update()
     projectiles.draw(screen)

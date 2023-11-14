@@ -12,6 +12,7 @@ def resource_path(relative_path):
 
 class Texture:
     none = resource_path("images/none.png")
+    air_transparent = resource_path("images/air_transparent.png")
     air = resource_path("images/air.png")
     grass = resource_path("images/grass.png")
     dirt = resource_path("images/dirt.png")
