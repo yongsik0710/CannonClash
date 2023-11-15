@@ -35,6 +35,12 @@ class Block(pygame.sprite.Sprite):
         # screen = pygame.display.get_surface()
         # self.area = screen.get_rect()
 
+    def damage(self, damage, level, group):
+        self.health -= damage
+        if self.health <= 0:
+            level[self.y][self.x] = Air(self.x, self.y)
+            group.add(level[self.y][self.x])
+
 
 class Air(Block):
     id = 1

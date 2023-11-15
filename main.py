@@ -19,6 +19,7 @@ FPS = 60
 
 stage_1 = Stage(Levels.level_1, 1.0, 0)
 blocks = pygame.sprite.Group(stage_1.level)
+non_passable_blocks = pygame.sprite.Group([stage_1.level[y][x] for y in range(9) for x in range(16) if not stage_1.level[y][x].passable])
 shell_1 = Shell(stage_1, (300, 500), [8, -12])
 projectiles = pygame.sprite.Group(shell_1)
 
@@ -37,6 +38,13 @@ while running:
     blocks.draw(screen)
     projectiles.update()
     projectiles.draw(screen)
+    if pygame.sprite.groupcollide(projectiles, non_passable_blocks, False, False):
+        test = []
+        for block in non_passable_blocks:
+            if pygame.sprite.collide_circle(shell_1, block):
+                test.append(block)
+        shell_1.explode(test, blocks)
+        print("충돌함!")
 
     pygame.display.update()
     clock.tick(FPS)

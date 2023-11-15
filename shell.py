@@ -1,5 +1,4 @@
 import pygame
-import math
 import os
 
 
@@ -26,6 +25,7 @@ class Shell(pygame.sprite.Sprite):
 
     def __init__(self, stage, pos, vector):
         pygame.sprite.Sprite.__init__(self)
+        self.radius = 50
         self.stage = stage
         self.vector = vector
         self.gravity = stage.gravity
@@ -41,3 +41,9 @@ class Shell(pygame.sprite.Sprite):
 
     def calcnewpos(self, rect, vector):
         return rect.move(vector)
+
+    def explode(self, blocks, group):
+        for block in blocks:
+            block.damage(120, self.stage.level, group)
+        print("펑!")
+        self.kill()
