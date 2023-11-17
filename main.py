@@ -19,7 +19,7 @@ FPS = 60
 
 stage_1 = Stage(Levels.level_1, 1.0, 0)
 blocks = pygame.sprite.Group(stage_1.level)
-non_passable_blocks = pygame.sprite.Group([stage_1.level[y][x] for y in range(18) for x in range(32) if not stage_1.level[y][x].passable])
+non_passable_blocks = pygame.sprite.Group([stage_1.level[y][x] for y in range(9) for x in range(16) if not stage_1.level[y][x].passable])
 shell_1 = Shell(stage_1, (300, 500), [8, -12])
 projectiles = pygame.sprite.Group(shell_1)
 

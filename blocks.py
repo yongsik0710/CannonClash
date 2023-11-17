@@ -8,7 +8,6 @@ def load_png(name):
     fullname = os.path.join("images", name)
     try:
         image = pygame.image.load(fullname)
-        image = pygame.transform.scale(image, (60, 60))
         if image.get_alpha() is None:
             image = image.convert()
         else:
@@ -32,7 +31,7 @@ class Block(pygame.sprite.Sprite):
         self.y = y
         self.texture = load_png(self.texture)
         self.image, self.rect = self.texture
-        self.rect = self.rect.move((60 * x, 60 * y))
+        self.rect = self.rect.move((120 * x, 120 * y))
         # screen = pygame.display.get_surface()
         # self.area = screen.get_rect()
 
