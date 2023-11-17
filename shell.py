@@ -25,7 +25,8 @@ class Shell(pygame.sprite.Sprite):
 
     def __init__(self, stage, pos, vector):
         pygame.sprite.Sprite.__init__(self)
-        self.radius = 50
+        self.damage = 80
+        self.radius = 60
         self.stage = stage
         self.vector = vector
         self.gravity = stage.gravity
@@ -45,5 +46,6 @@ class Shell(pygame.sprite.Sprite):
     def explode(self, blocks, group):
         for block in blocks:
             block.damage(120, self.stage.level, group)
+            print(pygame.math.Vector2(self.rect.center).distance_to(block.rect.center))
         print("펑!")
         self.kill()
