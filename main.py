@@ -3,7 +3,6 @@ from shell import *
 from levels import *
 from stage import *
 
-
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 
