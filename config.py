@@ -11,10 +11,17 @@ def resource_path(relative_path):
 
 
 class Texture:
-    none = resource_path("images/none.png")
-    air_transparent = resource_path("images/air_transparent.png")
-    air = resource_path("images/air.png")
-    grass = resource_path("images/grass.png")
-    dirt = resource_path("images/dirt.png")
-    stone = resource_path("images/stone.png")
-    iron = resource_path("images/iron.png")
+    class Blocks:
+        none = resource_path("Images/Blocks/none.png")
+        air_transparent = resource_path("Images/Blocks/air_transparent.png")
+        air = resource_path("Images/Blocks/air.png")
+        grass = resource_path("Images/Blocks/grass.png")
+        dirt = resource_path("Images/Blocks/dirt.png")
+        stone = resource_path("Images/Blocks/stone.png")
+        iron = resource_path("Images/Blocks/iron.png")
+
+    class Shells:
+        basic = resource_path("Images/Shells/ball.png")
+
+    class Buttons:
+        button = resource_path("Images/Buttons/button.png")

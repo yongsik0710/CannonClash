@@ -1,10 +1,11 @@
+from config import *
 import pygame
 import os
 
 
 def load_png(name):
     """ Load image and return image object"""
-    fullname = os.path.join("images", name)
+    fullname = os.path.join("Images", name)
     try:
         image = pygame.image.load(fullname)
         if image.get_alpha() is None:
@@ -18,20 +19,22 @@ def load_png(name):
 
 
 class Shell(pygame.sprite.Sprite):
-    """A ball that will move across the screen
-    Returns: ball object
-    Functions: update, calcnewpos
-    Attributes: area, vector"""
+    texture = Texture.Shells.basic
+    damage = 150
+    maxExplosionRadius = 120
 
     def __init__(self, stage, pos, vector):
         pygame.sprite.Sprite.__init__(self)
-        self.damage = 80
-        self.radius = 60
+        self.damage = self.damage
         self.stage = stage
         self.vector = vector
         self.gravity = stage.gravity
-        self.image, self.rect = load_png('ball.png')
+
+        self.texture = load_png(self.texture)
+        self.image, self.rect = self.texture
         self.rect = self.rect.move(pos)
+
+        self.radius = self.maxExplosionRadius - (self.rect.width * (2 ** (1 / 2)))
         # screen = pygame.display.get_surface()
         # self.area = screen.get_rect()
 
@@ -45,7 +48,9 @@ class Shell(pygame.sprite.Sprite):
 
     def explode(self, blocks, group):
         for block in blocks:
-            block.damage(120, self.stage.level, group)
-            print(pygame.math.Vector2(self.rect.center).distance_to(block.rect.center))
+            distance = pygame.math.Vector2(self.rect.center).distance_to(block.rect.center)
+            damage = self.damage * (((self.maxExplosionRadius - distance) / 100) ** 2)
+            print(distance, damage)
+            block.damage(damage, self.stage.level, group)
         print("펑!")
         self.kill()

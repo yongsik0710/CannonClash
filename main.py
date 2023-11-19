@@ -1,7 +1,9 @@
 import pygame
-from shell import *
 from levels import *
 from stage import *
+from missile_game import *
+from button import *
+
 
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
@@ -10,42 +12,76 @@ pygame.init()
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("대포 게임")
-
-background = pygame.image.load("images/forest.png").convert()
-
 clock = pygame.time.Clock()
 FPS = 60
 
-stage_1 = Stage(Levels.level_1, 1.0, 0)
-blocks = pygame.sprite.Group(stage_1.level)
-non_passable_blocks = pygame.sprite.Group([stage_1.level[y][x] for y in range(18) for x in range(32) if not stage_1.level[y][x].passable])
-shell_1 = Shell(stage_1, (300, 500), [8, -12])
-projectiles = pygame.sprite.Group(shell_1)
+Game = MissileGame(screen, Stage(Levels.level_1, 1.0, 0.0))
+
+button_image = pygame.image.load(Texture.Buttons.button).convert_alpha()
 
 
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+def test():
+    print("hi")
+    game()
 
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
+
+def main_menu():
+    click = False
+    font = pygame.font.SysFont('Arial', 40)
+    play_button = Button(500, 100, button_image, 1)
+
+    running = True
+    while running:
+        screen.fill((0, 0, 0))
+        if play_button.draw(screen) and click:
+            game()
+        click = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 running = False
 
-    screen.blit(background, (0, 0))
-    blocks.draw(screen)
-    projectiles.update()
-    projectiles.draw(screen)
-    if pygame.sprite.groupcollide(projectiles, non_passable_blocks, False, False):
-        test = []
-        for block in non_passable_blocks:
-            if pygame.sprite.collide_circle(shell_1, block):
-                test.append(block)
-        shell_1.explode(test, blocks)
-        print("충돌함!")
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
 
-    pygame.display.update()
-    clock.tick(FPS)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
 
-pygame.quit()
+        pygame.display.update()
+        clock.tick(FPS)
+
+
+def stage_select():
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+
+        pygame.display.update()
+        clock.tick(FPS)
+
+
+def game():
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+
+        Game.process()
+
+        pygame.display.update()
+        clock.tick(FPS)
+
+
+main_menu()

@@ -17,3 +17,6 @@ class Stage:
                 elif level[y][x] == Iron.id: level[y][x] = Iron(x, y)
                 else: level[y][x] = Block(x, y)
         return level
+
+    def update(self):
+        pass

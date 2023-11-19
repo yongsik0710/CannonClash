@@ -5,7 +5,7 @@ import os
 
 def load_png(name):
     """ Load image and return image object"""
-    fullname = os.path.join("images", name)
+    fullname = os.path.join("Images", name)
     try:
         image = pygame.image.load(fullname)
         image = pygame.transform.scale(image, (60, 60))
@@ -21,7 +21,7 @@ def load_png(name):
 
 class Block(pygame.sprite.Sprite):
     id = 0
-    texture = Texture.none
+    texture = Texture.Blocks.none
     blastResistance = 0
     passable = False
 
@@ -30,6 +30,7 @@ class Block(pygame.sprite.Sprite):
         self.health = 100
         self.x = x
         self.y = y
+
         self.texture = load_png(self.texture)
         self.image, self.rect = self.texture
         self.rect = self.rect.move((60 * x, 60 * y))
@@ -37,6 +38,7 @@ class Block(pygame.sprite.Sprite):
         # self.area = screen.get_rect()
 
     def damage(self, damage, level, group):
+        damage = int(damage * ((100 - self.blastResistance) / 100))
         self.health -= damage
         if self.health <= 0:
             level[self.y][self.x] = Air(self.x, self.y)
@@ -45,30 +47,30 @@ class Block(pygame.sprite.Sprite):
 
 class Air(Block):
     id = 1
-    texture = Texture.air
+    texture = Texture.Blocks.air
     blastResistance = 0
     passable = True
 
 
 class Grass(Block):
     id = 2
-    texture = Texture.grass
+    texture = Texture.Blocks.grass
     blastResistance = 10
 
 
 class Dirt(Block):
     id = 3
-    texture = Texture.dirt
+    texture = Texture.Blocks.dirt
     blastResistance = 0
 
 
 class Stone(Block):
     id = 4
-    texture = Texture.stone
+    texture = Texture.Blocks.stone
     blastResistance = 30
 
 
 class Iron(Block):
     id = 5
-    texture = Texture.iron
+    texture = Texture.Blocks.iron
     blastResistance = 70
