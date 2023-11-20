@@ -63,7 +63,8 @@ def game():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    game_menu()
+                    if not game_menu():
+                        running = False
 
         Game.process()
 
@@ -74,12 +75,15 @@ def game():
 def game_menu():
     font = pygame.font.Font(None, 60)
     resume_button = Button(screen, 790, 700, 400, 100, 5, font, "Resume")
+    back_to_main_menu = Button(screen, 790, 820, 400, 100, 5, font, "Back to Main Menu")
 
     running = True
     while running:
         screen.fill("#ffffff")
         if resume_button.draw():
             running = False
+        if back_to_main_menu.draw():
+            return False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
