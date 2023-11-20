@@ -21,7 +21,7 @@ def load_png(name):
 class Shell(pygame.sprite.Sprite):
     texture = Texture.Shells.basic
     damage = 150
-    maxExplosionRadius = 120
+    max_explosion_radius = 120
 
     def __init__(self, stage, pos, vector):
         pygame.sprite.Sprite.__init__(self)
@@ -34,7 +34,7 @@ class Shell(pygame.sprite.Sprite):
         self.image, self.rect = self.texture
         self.rect = self.rect.move(pos)
 
-        self.radius = self.maxExplosionRadius - (self.rect.width * (2 ** (1 / 2)))
+        self.radius = self.max_explosion_radius - (self.rect.width * (2 ** (1 / 2)))
         # screen = pygame.display.get_surface()
         # self.area = screen.get_rect()
 
@@ -49,7 +49,7 @@ class Shell(pygame.sprite.Sprite):
     def explode(self, blocks, group):
         for block in blocks:
             distance = pygame.math.Vector2(self.rect.center).distance_to(block.rect.center)
-            damage = self.damage * (((self.maxExplosionRadius - distance) / 100) ** 2)
+            damage = self.damage * (((self.max_explosion_radius - distance) / 100) ** 2)
             print(distance, damage)
             block.damage(damage, self.stage.level, group)
         print("펑!")

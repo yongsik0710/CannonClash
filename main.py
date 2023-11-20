@@ -17,25 +17,16 @@ FPS = 60
 
 Game = MissileGame(screen, Stage(Levels.level_1, 1.0, 0.0))
 
-button_image = pygame.image.load(Texture.Buttons.button).convert_alpha()
-
-
-def test():
-    print("hi")
-    game()
-
 
 def main_menu():
-    click = False
-    font = pygame.font.SysFont('Arial', 40)
-    play_button = Button(500, 100, button_image, 1)
+    font = pygame.font.Font(None, 60)
+    play_button = Button(screen, 790, 700, 400, 100, 5, font, "Play")
 
     running = True
     while running:
-        screen.fill((0, 0, 0))
-        if play_button.draw(screen) and click:
+        screen.fill("#f0f0f0")
+        if play_button.draw():
             game()
-        click = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -43,10 +34,6 @@ def main_menu():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
 
         pygame.display.update()
         clock.tick(FPS)
@@ -76,9 +63,30 @@ def game():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    running = False
+                    game_menu()
 
         Game.process()
+
+        pygame.display.update()
+        clock.tick(FPS)
+
+
+def game_menu():
+    font = pygame.font.Font(None, 60)
+    resume_button = Button(screen, 790, 700, 400, 100, 5, font, "Resume")
+
+    running = True
+    while running:
+        screen.fill("#ffffff")
+        if resume_button.draw():
+            running = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
 
         pygame.display.update()
         clock.tick(FPS)

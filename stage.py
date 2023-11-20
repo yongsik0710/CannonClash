@@ -2,12 +2,12 @@ from blocks import *
 
 
 class Stage:
-    def __init__(self, level, gravity, airResistance):
-        self.level = self.loadLevel(level)
+    def __init__(self, level, gravity, air_resistance):
+        self.level = self.load_level(level)
         self.gravity = gravity
-        self.airResistance = airResistance
+        self.air_resistance = air_resistance
 
-    def loadLevel(self, level):
+    def load_level(self, level):
         for y in range(18):
             for x in range(32):
                 if level[y][x] == Air.id: level[y][x] = Air(x, y)
