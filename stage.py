@@ -1,9 +1,10 @@
 from blocks import *
+import copy
 
 
 class Stage:
     def __init__(self, level, gravity, air_resistance):
-        self.level = self.load_level(level)
+        self.level = self.load_level(copy.deepcopy(level))  # deepcopy used
         self.gravity = gravity
         self.air_resistance = air_resistance
 

@@ -39,7 +39,9 @@ class Button:
         self.surface.blit(self.text_surf, self.text_rect)
         self.check_click()
 
-        return self.clicked
+        if self.clicked:
+            self.clicked = False
+            return True
 
     def check_click(self):
         mouse_pos = pygame.mouse.get_pos()

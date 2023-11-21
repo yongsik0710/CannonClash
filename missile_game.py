@@ -1,10 +1,12 @@
 import pygame
 from shell import *
+from menu import *
 
 
 class MissileGame:
-    def __init__(self, screen, stage):
-        self.screen = screen
+    def __init__(self, game, stage):
+        self.game = game
+        self.screen = game.screen
         self.stage = stage
 
         self.background = pygame.image.load("Images/Backgrounds/forest.png").convert()
@@ -19,23 +21,31 @@ class MissileGame:
                 if not block.passable: self.non_passable_blocks.add(block)
 
         self.projectiles = pygame.sprite.Group()
-        self.state = "play"
-        self.clicked = False
+        self.loop()
 
-    def process(self):
-        if pygame.mouse.get_pressed()[0] == 1 and not self.clicked:
-            self.clicked = True
-            self.projectiles.add(Shell(self.stage, pygame.mouse.get_pos(), [0, 0]))
-        elif pygame.mouse.get_pressed()[0] == 0:
-            self.clicked = False
+    def loop(self):
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        GameMenu(self.game)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.projectiles.add(Shell(self.stage, pygame.mouse.get_pos(), [0, 0]))
 
-        self.screen.blit(self.background, (0, 0))
-        self.blocks.draw(self.screen)
-        self.projectiles.update()
-        self.projectiles.draw(self.screen)
+            self.screen.blit(self.background, (0, 0))
+            self.blocks.draw(self.screen)
+            self.projectiles.update()
+            self.projectiles.draw(self.screen)
 
-        for projectile in self.projectiles:
-            if pygame.sprite.spritecollide(projectile, self.non_passable_blocks, False):
-                damagedBlocks = pygame.sprite.spritecollide(projectile, self.non_passable_blocks, False,
-                                                            pygame.sprite.collide_circle)
-                projectile.explode(damagedBlocks, self.blocks)
+            for projectile in self.projectiles:
+                if pygame.sprite.spritecollide(projectile, self.non_passable_blocks, False):
+                    damagedBlocks = pygame.sprite.spritecollide(projectile, self.non_passable_blocks, False,
+                                                                pygame.sprite.collide_circle)
+                    projectile.explode(damagedBlocks, self.blocks)
+
+            pygame.display.update()
+            self.game.clock.tick(self.game.FPS)
