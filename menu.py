@@ -29,7 +29,7 @@ class MainMenu(Menu):
                     if event.key == pygame.K_ESCAPE:
                         running = False
 
-            self.game.screen.fill((0, 0, 0))
+            self.game.screen.fill((200, 200, 200))
             if self.stage_select.draw():
                 StageSelect(self.game)
             if self.quit_button.draw():
@@ -57,10 +57,9 @@ class StageSelect(Menu):
                     if event.key == pygame.K_ESCAPE:
                         running = False
 
-            self.game.screen.fill((0, 0, 0))
+            self.game.screen.fill((200, 200, 200))
             if self.stage_1.draw():
                 running = False
-                print(Levels.level_1)
                 MissileGame(self.game, Stage(Levels.level_1, 1.0, 0.0))
 
             pygame.display.update()
