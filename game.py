@@ -10,6 +10,14 @@ class Game:
         pygame.display.set_caption("대포 게임")
         self.clock = pygame.time.Clock()
         self.FPS = 60
+        self.current_display = MainMenu(self)
 
     def start_game(self):
-        MainMenu(self)
+        self.main_loop()
+
+    def main_loop(self):
+        running = True
+        while running:
+            self.current_display.loop()
+            if self.current_display.stop:
+                running = False
