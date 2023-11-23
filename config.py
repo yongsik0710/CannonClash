@@ -23,5 +23,5 @@ class Texture:
     class Shells:
         basic = resource_path("Images/Shells/ball.png")
 
-    class Buttons:
-        button = resource_path("Images/Buttons/button.png")
+    class Cannon:
+        basic = resource_path("Images/Cannons/basic.png")

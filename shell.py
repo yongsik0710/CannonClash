@@ -8,6 +8,7 @@ def load_png(name):
     fullname = os.path.join("Images", name)
     try:
         image = pygame.image.load(fullname)
+        image = pygame.transform.scale(image, (20, 20))
         if image.get_alpha() is None:
             image = image.convert()
         else:
@@ -20,8 +21,8 @@ def load_png(name):
 
 class Shell(pygame.sprite.Sprite):
     texture = Texture.Shells.basic
-    damage = 150
-    max_explosion_radius = 120
+    damage = 120
+    max_explosion_radius = 100
 
     def __init__(self, stage, pos, vector):
         pygame.sprite.Sprite.__init__(self)
@@ -34,23 +35,27 @@ class Shell(pygame.sprite.Sprite):
         self.image, self.rect = self.texture
         self.rect = self.rect.move(pos)
 
+        self.add(self.stage.projectiles)
+
         self.radius = self.max_explosion_radius - (self.rect.width * (2 ** (1 / 2)))
         # screen = pygame.display.get_surface()
         # self.area = screen.get_rect()
 
     def update(self):
         self.vector[1] += self.gravity / 5
-        newpos = self.calcnewpos(self.rect, self.vector)
-        self.rect = newpos
+        self.collide_check()
+        self.rect = self.rect.move(self.vector)
 
-    def calcnewpos(self, rect, vector):
-        return rect.move(vector)
+    def collide_check(self):
+        if pygame.sprite.spritecollide(self, self.stage.non_passable_blocks, False):
+            damaged_blocks = pygame.sprite.spritecollide(self,
+                                                         self.stage.non_passable_blocks, False,
+                                                         pygame.sprite.collide_circle)
+            self.explode(damaged_blocks)
 
-    def explode(self, blocks, group):
+    def explode(self, blocks):
         for block in blocks:
             distance = pygame.math.Vector2(self.rect.center).distance_to(block.rect.center)
             damage = self.damage * (((self.max_explosion_radius - distance) / 100) ** 2)
-            print(distance, damage)
-            block.damage(damage, self.stage.level, group)
-        print("펑!")
+            block.damage(damage)
         self.kill()

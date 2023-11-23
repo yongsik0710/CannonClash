@@ -136,16 +136,6 @@ class MissileGame(Menu):
 
         self.background = pygame.image.load("Images/Backgrounds/forest.png").convert()
 
-        self.blocks = pygame.sprite.Group()
-        self.non_passable_blocks = pygame.sprite.Group()
-
-        for y in range(18):
-            for x in range(32):
-                block = self.stage.level[y][x]
-                self.blocks.add(block)
-                if not block.passable:
-                    self.non_passable_blocks.add(block)
-
         self.projectiles = pygame.sprite.Group()
 
     def loop(self):
@@ -153,11 +143,7 @@ class MissileGame(Menu):
         self.event_check()
         # 화면 그리기
         self.game.screen.blit(self.background, (0, 0))
-        self.blocks.draw(self.game.screen)
-        self.projectiles.update()
-        self.projectiles.draw(self.game.screen)
-        # 충돌 감지
-        self.collide_detect()
+        self.stage.draw(self.game.screen)
         # 화면 업데이트
         pygame.display.update()
         self.game.clock.tick(self.game.FPS)
@@ -173,12 +159,4 @@ class MissileGame(Menu):
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    self.projectiles.add(Shell(self.stage, pygame.mouse.get_pos(), [0, 0]))
-
-    def collide_detect(self):
-        for projectile in self.projectiles:
-            if pygame.sprite.spritecollide(projectile, self.non_passable_blocks, False):
-                damaged_blocks = pygame.sprite.spritecollide(projectile,
-                                                             self.non_passable_blocks, False,
-                                                             pygame.sprite.collide_circle)
-                projectile.explode(damaged_blocks, self.blocks)
+                    Shell(self.stage, pygame.mouse.get_pos(), [0, 0])
