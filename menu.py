@@ -1,8 +1,8 @@
 import pygame
 from button import *
-from levels import *
-from stage import *
 from shell import *
+from stage import *
+from levels import *
 
 
 class Menu:
@@ -13,15 +13,29 @@ class Menu:
     def loop(self):
         pass
 
+    def event_check(self):
+        pass
+
 
 class MainMenu(Menu):
     def __init__(self, game):
         super().__init__(game)
         font = pygame.font.Font(None, 50)
         self.stage_select = Button(game.screen, 790, 700, 400, 100, 5, font, "Stage Select")
-        self.quit_button = Button(game.screen, 790, 820, 400, 100, 5, font, "Quit")
+        self.quit = Button(game.screen, 790, 820, 400, 100, 5, font, "Quit")
 
     def loop(self):
+        # 이벤트 핸들러
+        self.event_check()
+        # 화면 그리기
+        self.game.screen.fill((200, 200, 200))
+        self.stage_select.draw()
+        self.quit.draw()
+        # 화면 업데이트
+        pygame.display.update()
+        self.game.clock.tick(self.game.FPS)
+
+    def event_check(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.stop = True
@@ -30,76 +44,89 @@ class MainMenu(Menu):
                 if event.key == pygame.K_ESCAPE:
                     self.stop = True
 
-        self.game.screen.fill((200, 200, 200))
-        if self.stage_select.draw():
-            self.game.current_display = StageSelect(self.game)
-        if self.quit_button.draw():
-            self.stop = True
+        if self.stage_select.is_clicked():  # 스테이지 선택
+            self.game.current_display = self.game.stage_select
 
-        pygame.display.update()
-        self.game.clock.tick(self.game.FPS)
+        if self.quit.is_clicked():  # 게임 종료
+            self.stop = True
 
 
 class StageSelect(Menu):
     def __init__(self, game):
         super().__init__(game)
         font = pygame.font.Font(None, 50)
-        self.stage_1 = Button(game.screen, 790, 700, 400, 100, 5, font, "Stage 1")
-        self.stage_2 = Button(game.screen, 790, 820, 400, 100, 5, font, "Stage 2")
+        self.stage_1 = Button(game.screen, 790, 580, 400, 100, 5, font, "Stage 1")
+        self.stage_2 = Button(game.screen, 790, 700, 400, 100, 5, font, "Stage 2")
+        self.back = Button(game.screen, 790, 820, 400, 100, 5, font, "Back")
 
     def loop(self):
+        # 이벤트 핸들러
+        self.event_check()
+        # 화면 그리기
+        self.game.screen.fill((200, 200, 200))
+        self.stage_1.draw()
+        self.stage_2.draw()
+        self.back.draw()
+        # 화면 업데이트
+        pygame.display.update()
+        self.game.clock.tick(self.game.FPS)
+
+    def event_check(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.stop = True
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self.game.current_display = MainMenu(self.game)
+                    self.game.current_display = self.game.main_menu
 
-        self.game.screen.fill((200, 200, 200))
-        if self.stage_1.draw():
-            self.game.current_display = MissileGame(self.game, Stage(Levels.level_1, 1.0, 0.0))
+        if self.stage_1.is_clicked():  # 스테이지 1
+            self.game.missile_game = MissileGame(self.game, Stage(Levels.level_1, 1.0, 0.0))
+            self.game.current_display = self.game.missile_game
 
-        if self.stage_2.draw():
-            self.game.current_display = MissileGame(self.game, Stage(Levels.level_2, 1.0, 0.0))
+        if self.stage_2.is_clicked():  # 스테이지 2
+            self.game.missile_game = MissileGame(self.game, Stage(Levels.level_2, 1.0, 0.0))
+            self.game.current_display = self.game.missile_game
 
-        pygame.display.update()
-        self.game.clock.tick(self.game.FPS)
+        if self.back.is_clicked():  # 메인 메뉴로 돌아가기
+            self.game.current_display = self.game.main_menu
 
 
 class GameMenu(Menu):
     def __init__(self, game):
         super().__init__(game)
         font = pygame.font.Font(None, 50)
-        self.resume_button = Button(game.screen, 790, 580, 400, 100, 5, font, "Resume")
-        self.back_to_main_menu_button = Button(game.screen, 790, 700, 400, 100, 5, font, "Back to Main Menu")
-        self.over = False
-        self.loop()
+        self.resume = Button(game.screen, 790, 580, 400, 100, 5, font, "Resume")
+        self.back_to_main_menu = Button(game.screen, 790, 700, 400, 100, 5, font, "Back to Main Menu")
+
+        # my_surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
+        # my_surface.fill((255, 255, 255, 100))
+        # self.game.screen.blit(my_surface, (0, 0))
 
     def loop(self):
-        my_surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
-        my_surface.fill((255, 255, 255, 100))
-        self.game.screen.blit(my_surface, (0, 0))
-        running = True
-        while running:
+        # 이벤트 핸들러
+        self.event_check()
+        # 화면 그리기
+        self.resume.draw()
+        self.back_to_main_menu.draw()
+        # 화면 업데이트
+        pygame.display.update()
+        self.game.clock.tick(self.game.FPS)
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
+    def event_check(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.stop = True
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.game.current_display = self.game.missile_game
 
-            if self.back_to_main_menu_button.draw():
-                running = False
-                self.over = True
+        if self.resume.is_clicked():  # 게임으로
+            self.game.current_display = self.game.missile_game
 
-            if self.resume_button.draw():
-                running = False
-
-            pygame.display.update()
-            self.game.clock.tick(self.game.FPS)
+        if self.back_to_main_menu.is_clicked():  # 메인 메뉴로 이동
+            self.game.current_display = self.game.main_menu
 
 
 class MissileGame(Menu):
@@ -116,34 +143,42 @@ class MissileGame(Menu):
             for x in range(32):
                 block = self.stage.level[y][x]
                 self.blocks.add(block)
-                if not block.passable: self.non_passable_blocks.add(block)
+                if not block.passable:
+                    self.non_passable_blocks.add(block)
 
         self.projectiles = pygame.sprite.Group()
 
     def loop(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.stop = True
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    g = GameMenu(self.game)
-                    if g.over:
-                        self.game.current_display = MainMenu(self.game)
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    self.projectiles.add(Shell(self.stage, pygame.mouse.get_pos(), [0, 0]))
-
+        # 이벤트 핸들러
+        self.event_check()
+        # 화면 그리기
         self.game.screen.blit(self.background, (0, 0))
         self.blocks.draw(self.game.screen)
         self.projectiles.update()
         self.projectiles.draw(self.game.screen)
-
-        for projectile in self.projectiles:
-            if pygame.sprite.spritecollide(projectile, self.non_passable_blocks, False):
-                damagedBlocks = pygame.sprite.spritecollide(projectile, self.non_passable_blocks, False,
-                                                            pygame.sprite.collide_circle)
-                projectile.explode(damagedBlocks, self.blocks)
-
+        # 충돌 감지
+        self.collide_detect()
+        # 화면 업데이트
         pygame.display.update()
         self.game.clock.tick(self.game.FPS)
 
+    def event_check(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.stop = True
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.game.current_display = self.game.game_menu
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    self.projectiles.add(Shell(self.stage, pygame.mouse.get_pos(), [0, 0]))
+
+    def collide_detect(self):
+        for projectile in self.projectiles:
+            if pygame.sprite.spritecollide(projectile, self.non_passable_blocks, False):
+                damaged_blocks = pygame.sprite.spritecollide(projectile,
+                                                             self.non_passable_blocks, False,
+                                                             pygame.sprite.collide_circle)
+                projectile.explode(damaged_blocks, self.blocks)

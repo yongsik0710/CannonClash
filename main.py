@@ -1,5 +1,5 @@
-import game
+from game import *
 
 
-g = game.Game()
-g.start_game()
+game = Game()
+game.start_game()

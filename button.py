@@ -39,10 +39,6 @@ class Button:
         self.surface.blit(self.text_surf, self.text_rect)
         self.check_click()
 
-        if self.clicked:
-            self.clicked = False
-            return True
-
     def check_click(self):
         mouse_pos = pygame.mouse.get_pos()
         if self.interact_rect.collidepoint(mouse_pos):
@@ -62,3 +58,9 @@ class Button:
             self.pressed = False
             self.dynamic_elecation = self.elevation
             self.top_color = '#475F77'
+
+    def is_clicked(self):
+        if self.clicked:
+            self.clicked = False
+            return True
+        return False
