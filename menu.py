@@ -134,7 +134,7 @@ class MissileGame(Menu):
         super().__init__(game)
         self.stage = stage
 
-        self.background = pygame.image.load("Images/Backgrounds/forest.png").convert()
+        self.background = pygame.image.load("Images/Backgrounds/sky.png").convert()
 
         self.projectiles = pygame.sprite.Group()
 

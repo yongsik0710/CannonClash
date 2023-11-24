@@ -44,12 +44,3 @@ class Cannon(pygame.sprite.Sprite):
     def collide_check(self):
         if pygame.sprite.spritecollide(self, self.stage.non_passable_blocks, False):
             self.vector = [0, 0]
-
-    def explode(self, blocks):
-        for block in blocks:
-            distance = pygame.math.Vector2(self.rect.center).distance_to(block.rect.center)
-            damage = self.damage * (((self.max_explosion_radius - distance) / 100) ** 2)
-            print(distance, damage)
-            block.damage(damage)
-        print("펑!")
-        self.kill()
