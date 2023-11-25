@@ -3,6 +3,7 @@ from button import *
 from shell import *
 from stage import *
 from levels import *
+from config import *
 
 
 class Menu:

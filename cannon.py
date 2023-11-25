@@ -8,7 +8,7 @@ def load_png(name):
     fullname = os.path.join("Images", name)
     try:
         image = pygame.image.load(fullname)
-        image = pygame.transform.scale(image, (100, 100))
+        image = pygame.transform.scale(image, (80, 80))
         if image.get_alpha() is None:
             image = image.convert()
         else:
@@ -31,6 +31,7 @@ class Cannon(pygame.sprite.Sprite):
         self.texture = load_png(self.texture)
         self.image, self.rect = self.texture
         self.rect = self.rect.move(pos)
+        self.mask = pygame.mask.from_surface(self.image)
 
         self.add(self.stage.cannons)
         # screen = pygame.display.get_surface()
@@ -42,5 +43,5 @@ class Cannon(pygame.sprite.Sprite):
         self.rect = self.rect.move(self.vector)
 
     def collide_check(self):
-        if pygame.sprite.spritecollide(self, self.stage.non_passable_blocks, False):
+        if pygame.sprite.spritecollide(self, self.stage.level_group, False, pygame.sprite.collide_mask):
             self.vector = [0, 0]

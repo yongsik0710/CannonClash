@@ -21,8 +21,8 @@ def load_png(name):
 
 class Shell(pygame.sprite.Sprite):
     texture = Texture.Shells.basic
-    damage = 120
-    max_explosion_radius = 100
+    damage = 100
+    explosion_radius = 50
 
     def __init__(self, stage, pos, vector):
         pygame.sprite.Sprite.__init__(self)
@@ -37,7 +37,11 @@ class Shell(pygame.sprite.Sprite):
 
         self.add(self.stage.projectiles)
 
-        self.radius = self.max_explosion_radius - (self.rect.width * (2 ** (1 / 2)))
+        self.surf = pygame.surface.Surface((self.explosion_radius * 2, self.explosion_radius * 2)).convert_alpha()
+        self.surf.fill((0, 0, 0, 0))
+        pygame.draw.circle(self.surf, "#000000", (self.explosion_radius, self.explosion_radius), self.explosion_radius)
+        self.explosion_mask = pygame.mask.from_surface(self.surf)
+        # self.radius = self.explosion_radius - (self.rect.width * (2 ** (1 / 2)))
         # screen = pygame.display.get_surface()
         # self.area = screen.get_rect()
 
@@ -47,15 +51,10 @@ class Shell(pygame.sprite.Sprite):
         self.rect = self.rect.move(self.vector)
 
     def collide_check(self):
-        if pygame.sprite.spritecollide(self, self.stage.non_passable_blocks, False):
-            damaged_blocks = pygame.sprite.spritecollide(self,
-                                                         self.stage.non_passable_blocks, False,
-                                                         pygame.sprite.collide_circle)
-            self.explode(damaged_blocks)
+        if pygame.sprite.spritecollide(self, self.stage.level_group, False, pygame.sprite.collide_mask):
+            self.explode()
 
-    def explode(self, blocks):
-        for block in blocks:
-            distance = pygame.math.Vector2(self.rect.center).distance_to(block.rect.center)
-            damage = self.damage * (((self.max_explosion_radius - distance) / 100) ** 2)
-            block.damage(damage)
+    def explode(self):
+        # damage = self.damage * (((self.max_explosion_radius - distance) / 100) ** 2)
+        pygame.mask.Mask.erase(self.stage.level.mask, self.explosion_mask, (self.rect.centerx - self.explosion_radius, self.rect.centery - self.explosion_radius))
         self.kill()
