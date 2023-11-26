@@ -1,28 +1,31 @@
 import pygame
-import copy
-from cannon import *
-from levels import *
+import os
 
 
-class Stage:
-    def __init__(self, level, gravity, air_resistance):
-        self.level_group = pygame.sprite.Group()
-        self.level = Level(self.level_group, level, (0, 0))
-        self.gravity = gravity
-        self.air_resistance = air_resistance
+def load_png(name):
+    """ Load image and return image object"""
+    fullname = os.path.join("Images", name)
+    try:
+        image = pygame.image.load(fullname)
+        if image.get_alpha() is None:
+            image = image.convert()
+        else:
+            image = image.convert_alpha()
+    except FileNotFoundError:
+        print(f"Cannot load image: {fullname}")
+        raise SystemExit
+    return image, image.get_rect()
 
-        self.projectiles = pygame.sprite.Group()
-        self.cannons = pygame.sprite.Group()
 
-        self.cannon = Cannon(self, (100, 300), [0, 0])
+class Stage(pygame.sprite.Sprite):
+    def __init__(self, group, level):
+        pygame.sprite.Sprite.__init__(self, group)
+        self.image, self.rect = load_png(level["level_image"])
+        self.mask = pygame.mask.from_surface(self.image)
 
-    def update(self):
-        pass
+        self.gravity = level["gravity"]
+        self.air_resistance = level["air_resistance"]
 
-    def draw(self, surface):
-        self.level_group.update()
-        self.level_group.draw(surface)
-        self.projectiles.draw(surface)
-        self.projectiles.update()
-        self.cannons.update()
-        self.cannons.draw(surface)
+    def custom_update(self):
+        self.image = self.mask.to_surface(setsurface=self.image, unsetcolor=(255, 0, 0, 0))
+        self.mask = pygame.mask.from_surface(self.image)

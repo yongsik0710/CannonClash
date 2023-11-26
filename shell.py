@@ -24,8 +24,8 @@ class Shell(pygame.sprite.Sprite):
     damage = 100
     explosion_radius = 50
 
-    def __init__(self, stage, pos, vector):
-        pygame.sprite.Sprite.__init__(self)
+    def __init__(self, group, stage, pos, vector):
+        pygame.sprite.Sprite.__init__(self, group)
         self.damage = self.damage
         self.stage = stage
         self.vector = vector
@@ -57,4 +57,5 @@ class Shell(pygame.sprite.Sprite):
     def explode(self):
         # damage = self.damage * (((self.max_explosion_radius - distance) / 100) ** 2)
         pygame.mask.Mask.erase(self.stage.level.mask, self.explosion_mask, (self.rect.centerx - self.explosion_radius, self.rect.centery - self.explosion_radius))
+        self.stage.level.custom_update()
         self.kill()

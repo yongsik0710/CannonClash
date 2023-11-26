@@ -13,6 +13,8 @@ class Game:
         self.missile_game = None
         self.game_menu = GameMenu(self)
         self.main_menu = MainMenu(self)
+        self.number_of_player_select = NumberOfPlayerSelect(self)
+        self.cannon_select = None
         self.stage_select = StageSelect(self)
         self.current_display = self.main_menu
 

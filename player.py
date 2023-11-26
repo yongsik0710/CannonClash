@@ -1,5 +1,7 @@
 class Player:
-    def __init__(self, cannon):
+    def __init__(self, name, cannon):
+        self.name = name
+        self.number = 0
         self.cannon = cannon
         self.turn = False
 
@@ -7,4 +9,4 @@ class Player:
         pass
 
     def next_turn(self):
-        self.turn = True
+        self.turn = False

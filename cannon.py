@@ -22,8 +22,8 @@ def load_png(name):
 class Cannon(pygame.sprite.Sprite):
     texture = Texture.Cannon.basic
 
-    def __init__(self, stage, pos, vector):
-        pygame.sprite.Sprite.__init__(self)
+    def __init__(self, group, stage, pos, vector):
+        pygame.sprite.Sprite.__init__(self, group)
         self.stage = stage
         self.vector = vector
         self.gravity = stage.gravity
@@ -45,3 +45,6 @@ class Cannon(pygame.sprite.Sprite):
     def collide_check(self):
         if pygame.sprite.spritecollide(self, self.stage.level_group, False, pygame.sprite.collide_mask):
             self.vector = [0, 0]
+
+    def shoot_shell(self):
+        pass
