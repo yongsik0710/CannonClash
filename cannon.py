@@ -20,7 +20,8 @@ def load_png(name):
 
 
 class Cannon(pygame.sprite.Sprite):
-    texture = Texture.Cannon.basic
+    barrel_texture = CANNONS[1]["barrel_texture"]
+    wheel_texture = CANNONS[1]["wheel_texture"]
 
     def __init__(self, group, stage, pos, vector):
         pygame.sprite.Sprite.__init__(self, group)

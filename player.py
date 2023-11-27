@@ -1,8 +1,9 @@
 class Player:
-    def __init__(self, name, cannon):
-        self.name = name
-        self.number = 0
-        self.cannon = cannon
+    def __init__(self, number):
+        self.number = number
+        self.name = "player name"
+        self.cannon_id = 0
+        self.cannon = None
         self.turn = False
 
     def shoot_shell(self, shell):

@@ -10,6 +10,8 @@ class MissileGame:
         self.stop = False
         self.camera_group = CameraGroup()
         self.players = players
+        # for player in players:
+        #     player.cannon = Cannon
         self.stage = Stage(self.camera_group, level)
 
         self.background = pygame.image.load(level["background_image"]).convert()

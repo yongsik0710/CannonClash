@@ -3,7 +3,8 @@ from button import *
 from textbox import *
 from config import *
 from missile_game import *
-from cannon_select_ui import *
+from cannon_selector import *
+from player import *
 
 
 class Menu:
@@ -110,8 +111,8 @@ class NumberOfPlayerSelect(Menu):
 class CannonSelect(Menu):
     def __init__(self, game, number_of_player):
         super().__init__(game)
-        self.players = [None for _ in range(number_of_player)]
-        self.ui = []
+        self.players = [Player(i + 1) for i in range(number_of_player)]
+        self.cannon_selector = []
 
         font = pygame.font.Font(None, 50)
         title_font = pygame.font.Font(None, 70)
@@ -120,8 +121,8 @@ class CannonSelect(Menu):
         self.back = Button(game.screen, 760, 920, 400, 100, 5, font, "Back")
 
         if number_of_player == 2:
-            self.ui.append(CannonSelectUI(self.game.screen, 420, 200, title_font, font, "Player 1"))
-            self.ui.append(CannonSelectUI(self.game.screen, 1120, 200, title_font, font, "Player 2"))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 420, 200, 1.0, self.players[0]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 1120, 200, 1.0, self.players[1]))
 
     def loop(self):
         # 이벤트 핸들러
@@ -130,8 +131,8 @@ class CannonSelect(Menu):
         self.game.screen.fill((200, 200, 200))
         self.next.draw()
         self.back.draw()
-        for object in self.ui:
-            object.draw()
+        for ui in self.cannon_selector:
+            ui.draw()
         # 화면 업데이트
         pygame.display.update()
         self.game.clock.tick(self.game.FPS)
@@ -144,6 +145,9 @@ class CannonSelect(Menu):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.game.current_display = self.game.number_of_player_select
+
+        for ui in self.cannon_selector:
+            ui.event_check()
 
         if self.next.is_clicked():  # 다음으로
             self.game.current_display = self.game.stage_select
@@ -182,11 +186,11 @@ class StageSelect(Menu):
                     self.game.current_display = self.game.number_of_player_select
 
         if self.stage_1.is_clicked():  # 스테이지 1
-            self.game.missile_game = MissileGame(self.game, [], Levels.test_level)
+            self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, LEVELS["test_level"])
             self.game.current_display = self.game.missile_game
 
         if self.stage_2.is_clicked():  # 스테이지 2
-            self.game.missile_game = MissileGame(self.game, [], Levels.level_2)
+            self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, LEVELS["level_2"])
             self.game.current_display = self.game.missile_game
 
         if self.back.is_clicked():  # 메인 메뉴로 돌아가기
@@ -197,8 +201,8 @@ class GameMenu(Menu):
     def __init__(self, game):
         super().__init__(game)
         font = pygame.font.Font(None, 50)
-        self.resume = Button(game.screen, 790, 580, 400, 100, 5, font, "Resume")
-        self.back_to_main_menu = Button(game.screen, 790, 700, 400, 100, 5, font, "Back to Main Menu")
+        self.resume = Button(game.screen, 760, 580, 400, 100, 5, font, "Resume")
+        self.back_to_main_menu = Button(game.screen, 760, 700, 400, 100, 5, font, "Back to Main Menu")
 
         # my_surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
         # my_surface.fill((255, 255, 255, 100))

@@ -20,7 +20,7 @@ def load_png(name):
 
 
 class Shell(pygame.sprite.Sprite):
-    texture = Texture.Shells.basic
+    texture = TexturePath.Shells.basic
     damage = 100
     explosion_radius = 50
 
