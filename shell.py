@@ -35,8 +35,6 @@ class Shell(pygame.sprite.Sprite):
         self.image, self.rect = self.texture
         self.rect = self.rect.move(pos)
 
-        self.add(self.stage.projectiles)
-
         self.surf = pygame.surface.Surface((self.explosion_radius * 2, self.explosion_radius * 2)).convert_alpha()
         self.surf.fill((0, 0, 0, 0))
         pygame.draw.circle(self.surf, "#000000", (self.explosion_radius, self.explosion_radius), self.explosion_radius)
@@ -46,7 +44,7 @@ class Shell(pygame.sprite.Sprite):
         # self.area = screen.get_rect()
 
     def update(self):
-        self.vector[1] += self.gravity / 5
+        self.vector.y += self.gravity / 2
         self.collide_check()
         self.rect = self.rect.move(self.vector)
 
@@ -56,7 +54,7 @@ class Shell(pygame.sprite.Sprite):
 
     def explode(self):
         # damage = self.damage * (((self.max_explosion_radius - distance) / 100) ** 2)
-        pygame.mask.Mask.erase(self.stage.level.mask, self.explosion_mask, (self.rect.centerx - self.explosion_radius, self.rect.centery - self.explosion_radius))
+        pygame.mask.Mask.erase(self.stage.mask, self.explosion_mask, (self.rect.centerx - self.explosion_radius, self.rect.centery - self.explosion_radius))
         self.stage.custom_update()
         self.kill()
 

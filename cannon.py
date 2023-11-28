@@ -27,8 +27,10 @@ class Cannon(pygame.sprite.Sprite):
 
     def __init__(self, group, stage, pos, vector):
         pygame.sprite.Sprite.__init__(self, group)
+        self.camera = group
+        self.health = 1000
         self.stage = stage
-        self.vector = vector
+        self.vector = pygame.math.Vector2(vector)
         self.gravity = stage.gravity
 
         surf = pygame.surface.Surface((100, 100)).convert_alpha()
@@ -37,21 +39,28 @@ class Cannon(pygame.sprite.Sprite):
         surf.blit(load_png(self.wheel_texture), (0, 0))
         self.image, self.rect = surf, surf.get_rect()
         self.rect = self.rect.move(pos)
-        self.mask = pygame.mask.from_surface(self.image)
+        self.mask = pygame.mask.from_surface(load_png(self.wheel_texture))
+
+        self.collide_pos = (0, 0)
         # screen = pygame.display.get_surface()
         # self.area = screen.get_rect()
 
     def update(self):
-        self.vector[1] += self.gravity / 5
+        self.vector.y += self.gravity / 10
         self.collide_check()
         self.rect = self.rect.move(self.vector)
 
     def collide_check(self):
         if pygame.sprite.collide_mask(self, self.stage):
-            self.vector = [0, 0]
+            self.collide_pos = self.mask.overlap(self.stage.mask, (-self.rect.x, -self.rect.y))
+            self.collide_pos = (self.collide_pos[0] + self.rect.x, self.collide_pos[1] + self.rect.y)
+            self.vector.y = -1
 
-    def shoot_shell(self):
-        pass
+    def shoot_shell(self, vector):
+        self.shell(self.camera, self.stage, (self.rect.centerx, self.rect.centery - 20), vector)
+
+    def move_right(self):
+        self.rect = self.rect.move(1, 0)
 
 
 class BasicCannon(Cannon):
