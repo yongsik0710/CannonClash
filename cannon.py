@@ -1,4 +1,4 @@
-from config import *
+from shell import *
 import pygame
 import os
 
@@ -8,7 +8,7 @@ def load_png(name):
     fullname = os.path.join("Images", name)
     try:
         image = pygame.image.load(fullname)
-        image = pygame.transform.scale(image, (80, 80))
+        image = pygame.transform.scale(image, (100, 100))
         if image.get_alpha() is None:
             image = image.convert()
         else:
@@ -16,12 +16,14 @@ def load_png(name):
     except FileNotFoundError:
         print(f"Cannot load image: {fullname}")
         raise SystemExit
-    return image, image.get_rect()
+    return image
 
 
 class Cannon(pygame.sprite.Sprite):
-    barrel_texture = CANNONS[1]["barrel_texture"]
-    wheel_texture = CANNONS[1]["wheel_texture"]
+    name = None
+    barrel_texture = None
+    wheel_texture = None
+    shell = None
 
     def __init__(self, group, stage, pos, vector):
         pygame.sprite.Sprite.__init__(self, group)
@@ -29,12 +31,13 @@ class Cannon(pygame.sprite.Sprite):
         self.vector = vector
         self.gravity = stage.gravity
 
-        self.texture = load_png(self.texture)
-        self.image, self.rect = self.texture
+        surf = pygame.surface.Surface((100, 100)).convert_alpha()
+        surf.fill((0, 0, 0, 0))
+        surf.blit(load_png(self.barrel_texture), (0, 0))
+        surf.blit(load_png(self.wheel_texture), (0, 0))
+        self.image, self.rect = surf, surf.get_rect()
         self.rect = self.rect.move(pos)
         self.mask = pygame.mask.from_surface(self.image)
-
-        self.add(self.stage.cannons)
         # screen = pygame.display.get_surface()
         # self.area = screen.get_rect()
 
@@ -44,8 +47,28 @@ class Cannon(pygame.sprite.Sprite):
         self.rect = self.rect.move(self.vector)
 
     def collide_check(self):
-        if pygame.sprite.spritecollide(self, self.stage.level_group, False, pygame.sprite.collide_mask):
+        if pygame.sprite.collide_mask(self, self.stage):
             self.vector = [0, 0]
 
     def shoot_shell(self):
         pass
+
+
+class BasicCannon(Cannon):
+    name = "Basic"
+    barrel_texture = TexturePath.Cannon.Barrel.barrel_1
+    wheel_texture = TexturePath.Cannon.Wheel.wheel_1
+    shell = BasicShell
+
+
+class TestCannon(Cannon):
+    name = "Test"
+    barrel_texture = TexturePath.Cannon.Barrel.barrel_2
+    wheel_texture = TexturePath.Cannon.Wheel.wheel_2
+    shell = Shell
+
+
+CANNONS = {
+    1: BasicCannon,
+    2: TestCannon
+}

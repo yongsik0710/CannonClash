@@ -51,11 +51,17 @@ class Shell(pygame.sprite.Sprite):
         self.rect = self.rect.move(self.vector)
 
     def collide_check(self):
-        if pygame.sprite.spritecollide(self, self.stage.level_group, False, pygame.sprite.collide_mask):
+        if pygame.sprite.collide_mask(self, self.stage):
             self.explode()
 
     def explode(self):
         # damage = self.damage * (((self.max_explosion_radius - distance) / 100) ** 2)
         pygame.mask.Mask.erase(self.stage.level.mask, self.explosion_mask, (self.rect.centerx - self.explosion_radius, self.rect.centery - self.explosion_radius))
-        self.stage.level.custom_update()
+        self.stage.custom_update()
         self.kill()
+
+
+class BasicShell(Shell):
+    texture = TexturePath.Shells.basic
+    damage = 100
+    explosion_radius = 50

@@ -10,20 +10,27 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-LEVELS = {
-    "test_level": {"level_image": resource_path("Images/Levels/test_level.png"),
-                   "background_image": resource_path("Images/Backgrounds/sky.png"),
-                   "gravity": 1.0,
-                   "air_resistance": 0.0},
-    "level_1": {"level_image": resource_path("Images/Levels/level_1.png"),
-                "background_image": resource_path("Images/Backgrounds/sky.png"),
-                "gravity": 1.0,
-                "air_resistance": 0.0},
-    "level_2": {"level_image": resource_path("Images/Levels/level_2.png"),
-                "background_image": resource_path("Images/Backgrounds/sky.png"),
-                "gravity": 1.0,
-                "air_resistance": 0.0}
-}
+class Levels:
+    class TestLevel:
+        level_image = resource_path("Images/Levels/test_level.png")
+        background_image = resource_path("Images/Backgrounds/sky.png")
+        gravity = 1.0
+        air_resistance = 0.0
+        spawn_points = [(100, 100), (100, 200), (2000, 100), (2000, 300), (300, 100), (700, 100)]
+
+    class Level1:
+        level_image = resource_path("Images/Levels/level_1.png")
+        background_image = resource_path("Images/Backgrounds/sky.png")
+        gravity = 1.0
+        air_resistance = 0.0
+        spawn_points = [(100, 100), (100, 200), (200, 100), (500, 300), (300, 100), (700, 100)]
+
+    class Level2:
+        level_image = resource_path("Images/Levels/rainbow.png.png")
+        background_image = resource_path("Images/Backgrounds/sky.png")
+        gravity = 1.0
+        air_resistance = 0.0
+        spawn_points = [(100, 100), (100, 200), (200, 100), (500, 300), (300, 100), (700, 100)]
 
 
 class TexturePath:
@@ -38,15 +45,3 @@ class TexturePath:
         class Wheel:
             wheel_1 = resource_path("Images/Cannons/Cannon_1/wheel.png")
             wheel_2 = resource_path("Images/Cannons/Cannon_2/wheel.png")
-
-
-CANNONS = {
-    1: {"id": 1,
-        "name": "Cannon 1",
-        "barrel_texture": TexturePath.Cannon.Barrel.barrel_1,
-        "wheel_texture": TexturePath.Cannon.Wheel.wheel_1},
-    2: {"id": 2,
-        "name": "Cannon 2",
-        "barrel_texture": TexturePath.Cannon.Barrel.barrel_2,
-        "wheel_texture": TexturePath.Cannon.Wheel.wheel_2}
-}

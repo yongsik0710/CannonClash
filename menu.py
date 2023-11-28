@@ -111,18 +111,39 @@ class NumberOfPlayerSelect(Menu):
 class CannonSelect(Menu):
     def __init__(self, game, number_of_player):
         super().__init__(game)
-        self.players = [Player(i + 1) for i in range(number_of_player)]
+        self.players = [Player(i) for i in range(number_of_player)]
         self.cannon_selector = []
 
         font = pygame.font.Font(None, 50)
-        title_font = pygame.font.Font(None, 70)
 
         self.next = Button(game.screen, 760, 800, 400, 100, 5, font, "Next")
         self.back = Button(game.screen, 760, 920, 400, 100, 5, font, "Back")
 
         if number_of_player == 2:
-            self.cannon_selector.append(CannonSelector(self.game.screen, 420, 200, 1.0, self.players[0]))
-            self.cannon_selector.append(CannonSelector(self.game.screen, 1120, 200, 1.0, self.players[1]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 450, 200, 1.0, self.players[0]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 1090, 200, 1.0, self.players[1]))
+        elif number_of_player == 3:
+            self.cannon_selector.append(CannonSelector(self.game.screen, 250, 200, 1.0, self.players[0]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 770, 200, 1.0, self.players[1]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 1290, 200, 1.0, self.players[2]))
+        elif number_of_player == 4:
+            self.cannon_selector.append(CannonSelector(self.game.screen, 150, 200, 0.95, self.players[0]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 570, 200, 0.95, self.players[1]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 990, 200, 0.95, self.players[2]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 1410, 200, 0.95, self.players[3]))
+        elif number_of_player == 5:
+            self.cannon_selector.append(CannonSelector(self.game.screen, 420, 60, 0.75, self.players[0]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 820, 60, 0.75, self.players[1]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 1220, 60, 0.75, self.players[2]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 420, 430, 0.75, self.players[3]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 820, 430, 0.75, self.players[4]))
+        elif number_of_player == 6:
+            self.cannon_selector.append(CannonSelector(self.game.screen, 415, 60, 0.75, self.players[0]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 815, 60, 0.75, self.players[1]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 1215, 60, 0.75, self.players[2]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 415, 430, 0.75, self.players[3]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 815, 430, 0.75, self.players[4]))
+            self.cannon_selector.append(CannonSelector(self.game.screen, 1215, 430, 0.75, self.players[5]))
 
     def loop(self):
         # 이벤트 핸들러
@@ -186,11 +207,11 @@ class StageSelect(Menu):
                     self.game.current_display = self.game.number_of_player_select
 
         if self.stage_1.is_clicked():  # 스테이지 1
-            self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, LEVELS["test_level"])
+            self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.TestLevel)
             self.game.current_display = self.game.missile_game
 
         if self.stage_2.is_clicked():  # 스테이지 2
-            self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, LEVELS["level_2"])
+            self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.Level2)
             self.game.current_display = self.game.missile_game
 
         if self.back.is_clicked():  # 메인 메뉴로 돌아가기

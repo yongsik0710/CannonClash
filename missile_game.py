@@ -1,22 +1,27 @@
 import pygame
+import random
 from camera import *
 from stage import *
-from shell import *
 
 
 class MissileGame:
     def __init__(self, game, players, level):
         self.game = game
         self.stop = False
+        self.turn = 0
         self.camera_group = CameraGroup()
         self.players = players
-        # for player in players:
-        #     player.cannon = Cannon
         self.stage = Stage(self.camera_group, level)
 
-        self.background = pygame.image.load(level["background_image"]).convert()
+        random.shuffle(level.spawn_points)
+        for i, player in enumerate(players):
+            player.cannon = player.cannon(self.camera_group, self.stage, level.spawn_points[i], [0, 0])
+
+        self.background = pygame.image.load(level.background_image).convert()
 
     def loop(self):
+        # 플레이어 행동
+        self.players[self.turn].process()
         # 이벤트 핸들러
         self.event_check()
         # 화면 그리기
