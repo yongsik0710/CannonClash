@@ -214,8 +214,8 @@ class StageSelect(Menu):
             self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.Level2)
             self.game.current_display = self.game.missile_game
 
-        if self.back.is_clicked():  # 메인 메뉴로 돌아가기
-            self.game.current_display = self.game.number_of_player_select
+        if self.back.is_clicked():  # 대포 선택으로 돌아가기
+            self.game.current_display = self.game.cannon_select
 
 
 class GameMenu(Menu):
