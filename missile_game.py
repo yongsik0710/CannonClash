@@ -2,6 +2,23 @@ import pygame
 import random
 from camera import *
 from stage import *
+from config import *
+
+
+def load_png(name):
+    """ Load image and return image object"""
+    fullname = os.path.join("Images", name)
+    try:
+        image = pygame.image.load(fullname)
+        image = pygame.transform.scale(image, (240, 240))
+        if image.get_alpha() is None:
+            image = image.convert()
+        else:
+            image = image.convert_alpha()
+    except FileNotFoundError:
+        print(f"Cannot load image: {fullname}")
+        raise SystemExit
+    return image
 
 
 class MissileGame:
@@ -10,6 +27,7 @@ class MissileGame:
         self.stop = False
         self.current_turn = 0
         self.camera_group = CameraGroup()
+        self.cannon_group = pygame.sprite.Group()
         self.players = players
         self.stage = Stage(self.camera_group, level)
 
@@ -17,7 +35,6 @@ class MissileGame:
         for i, player in enumerate(players):
             player.missile_game = self
             player.cannon = player.cannon(self.camera_group, self.stage, level.spawn_points[i], [0, 0])
-        self.test_image = self.players[0].cannon.image
 
         self.background = pygame.image.load(level.background_image).convert()
 
@@ -27,42 +44,22 @@ class MissileGame:
         # 화면 그리기
         self.camera_group.update()
         self.camera_group.custom_draw()
-
-        surf = pygame.surface.Surface((32, 32)).convert_alpha()
-        surf.fill((0, 0, 0, 0))
-        surf.blit(self.stage.image, (-(self.players[0].cannon.collide_pos[0] - 16), -(self.players[0].cannon.collide_pos[1])))
-        mask = pygame.mask.from_surface(surf)
-        a = mask.outline()
-        b = []
-        for x in range(32):
-            for y in range(32):
-                if mask.get_at((x, y)):
-                    b.append((x, y))
-                    break
-
-        c = [0, 0]
-        for i in range(len(b)):
-            c[0] += b[i][0] - b[0][0]
-            c[1] += b[i][1] - b[0][1]
-
-        try:
-            pygame.draw.line(surf, (255, 255, 0), b[0], (b[0][0] + c[0], b[0][1] + c[1]), 1)
-            angle = pygame.Vector2(self.players[0].cannon.rect.x + 38 - self.players[0].cannon.collide_pos[0], self.players[0].cannon.rect.y + 75 - self.players[0].cannon.collide_pos[1])
-            angle = angle.rotate(90)
-            angle = angle.angle_to((0, 0))
-            test_surf = pygame.transform.rotate(self.test_image, angle)
-        except:
-            pass
-        # self.game.screen.blit(test_surf, (200, 100))
-        # self.game.screen.blit(surf, (100, 100))
         # 화면 업데이트
         pygame.display.update()
         self.game.clock.tick(self.game.FPS)
 
     def event_check(self):
         keys = pygame.key.get_pressed()
+
         if keys[pygame.K_RIGHT]:
-            self.players[0].cannon.move_right()
+            self.players[self.current_turn].cannon.move_right()
+
+        if keys[pygame.K_LEFT]:
+            self.players[self.current_turn].cannon.move_left()
+
+        if keys[pygame.K_SPACE]:
+            self.players[self.current_turn].power += 1
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.stop = True
@@ -71,8 +68,11 @@ class MissileGame:
                 if event.key == pygame.K_ESCAPE:
                     self.game.current_display = self.game.game_menu
 
-            # 플레이어 행동
-            self.players[self.current_turn].process(event)
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_SPACE:
+                    self.players[self.current_turn].shoot_shell()
+                    self.players[self.current_turn].power = 0
+                    self.next_turn()
 
     def next_turn(self):
         if self.current_turn + 1 < len(self.players):

@@ -26,7 +26,7 @@ class Levels:
         spawn_points = [(100, 100), (250, 200), (1800, 100), (2200, 300), (400, 100), (800, 100)]
 
     class Level2:
-        level_image = resource_path("Images/Levels/rainbow.png")
+        level_image = resource_path("Images/Levels/level_2.png")
         background_image = resource_path("Images/Backgrounds/sky.png")
         gravity = 1.0
         air_resistance = 0.0
@@ -39,9 +39,9 @@ class TexturePath:
 
     class Cannon:
         class Barrel:
-            barrel_1 = resource_path("Images/Cannons/Basic/barrel.png")
+            barrel_1 = resource_path("Images/Cannons/Basic/barrel_1.png")
             barrel_2 = resource_path("Images/Cannons/Test/barrel.png")
 
         class Wheel:
-            wheel_1 = resource_path("Images/Cannons/Basic/wheel.png")
+            wheel_1 = resource_path("Images/Cannons/Basic/wheel_1.png")
             wheel_2 = resource_path("Images/Cannons/Test/wheel.png")
