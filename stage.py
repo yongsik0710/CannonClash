@@ -20,6 +20,7 @@ def load_png(name):
 class Stage(pygame.sprite.Sprite):
     def __init__(self, group, level):
         pygame.sprite.Sprite.__init__(self, group)
+        self.depth = 1
         self.image, self.rect = load_png(level.level_image)
         self.mask = pygame.mask.from_surface(self.image)
 

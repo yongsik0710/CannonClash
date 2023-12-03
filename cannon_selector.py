@@ -34,10 +34,10 @@ class CannonSelector:
         font = pygame.font.Font(None, int(50 * size))
         title_font = pygame.font.Font(None, int(80 * size))
 
-        self.cannon_image = pygame.surface.Surface((240 * size, 240 * size)).convert_alpha()
+        self.cannon_image = pygame.surface.Surface((360 * size, 360 * size)).convert_alpha()
         self.cannon_image.fill((0, 0, 0, 0))
-        self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (240 * self.size, 240 * self.size)), (0, 0))
-        self.cannon_image.blit(load_png(CANNONS[self.cannon_id].wheel_texture, (240 * self.size, 240 * self.size)), (0, 0))
+        self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (360 * self.size, 360 * self.size)), (0, 0))
+        self.cannon_image.blit(load_png(CANNONS[self.cannon_id].wheel_texture, (360 * self.size, 360 * self.size)), (0, 0))
 
         self.player_name = TextBox(surface, x, y, 380 * size, 80 * size, title_font, '#808080', self.player.name)
         self.cannon_name = TextBox(surface, x + 90 * size, y + 360 * size, 200 * size, 80 * size, font, '#808080', CANNONS[self.cannon_id].name)
@@ -47,14 +47,14 @@ class CannonSelector:
     def update(self):
         self.player.cannon = CANNONS[self.cannon_id]
         self.cannon_image.fill((0, 0, 0, 0))
-        self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (240 * self.size, 240 * self.size)), (0, 0))
-        self.cannon_image.blit(load_png(CANNONS[self.cannon_id].wheel_texture, (240 * self.size, 240 * self.size)), (0, 0))
+        self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (360 * self.size, 360 * self.size)), (0, 0))
+        self.cannon_image.blit(load_png(CANNONS[self.cannon_id].wheel_texture, (360 * self.size, 360 * self.size)), (0, 0))
         self.cannon_name.text = CANNONS[self.cannon_id].name
 
     def draw(self):
         self.player_name.draw()
         self.cannon_name.draw()
-        self.screen.blit(self.cannon_image, (self.x + 70 * self.size, self.y + 90 * self.size))
+        self.screen.blit(self.cannon_image, (self.x * self.size, self.y + 80 * self.size))
         self.next.draw()
         self.prev.draw()
 

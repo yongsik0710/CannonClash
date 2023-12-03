@@ -1,4 +1,5 @@
 from shell import *
+from bar import *
 import pygame
 import os
 import math
@@ -28,7 +29,9 @@ class Cannon(pygame.sprite.Sprite):
 
     def __init__(self, group, stage, pos, vector):
         pygame.sprite.Sprite.__init__(self, group)
-        self.camera = group
+        self.camera = group[0]
+        self.cannon_group = group[1]
+        self.depth = 3
         self.max_health = 1000
         self.health = self.max_health
         self.angle = 0.0
@@ -43,59 +46,54 @@ class Cannon(pygame.sprite.Sprite):
         self.barrel = self.Barrel(self.barrel_texture)
         self.wheel = self.Wheel(self.wheel_texture)
 
-        self.image = self.draw_cannon()
+        self.image = self.blit_cannon()
         self.rect = self.image.get_rect()
         self.rect = self.rect.move(pos)
 
         self.mask = self.wheel.mask
 
         self.collide_pos = (0, 0)
-        # screen = pygame.display.get_surface()
-        # self.area = screen.get_rect()
-
-    def draw_cannon(self):
-        surf = pygame.surface.Surface((240, 240)).convert_alpha()
-        surf.fill((0, 0, 0, 0))
-        if self.direction == "right":
-            self.barrel.draw(surf, (0, 0), self.angle - 20 + self.delta_angle)
-            self.wheel.draw(surf, (0, 0))
-        elif self.direction == "left":
-            self.barrel.draw(surf, (0, 0), -self.angle - 20 + self.delta_angle)
-            surf = pygame.transform.flip(surf, True, False)
-            self.wheel.draw(surf, (0, 0))
-        return surf
+        self.screen = pygame.display.get_surface()
 
     def update(self):
         if not self.on_ground:
             self.vector.y += self.gravity / 5
         self.collide_check()
+        self.angle_update()
+        self.image = self.blit_cannon()
+        self.rect = self.rect.move(self.vector)
 
+    def blit_cannon(self):
+        surf = pygame.surface.Surface((240, 240)).convert_alpha()
+        surf.fill((0, 0, 0, 0))
+        if self.direction == "right":
+            self.barrel.blit(surf, (0, 0), self.angle - 20 + self.delta_angle)
+            self.wheel.blit(surf, (0, 0))
+        elif self.direction == "left":
+            self.barrel.blit(surf, (0, 0), - (self.angle + 20) + self.delta_angle)
+            surf = pygame.transform.flip(surf, True, False)
+            self.wheel.blit(surf, (0, 0))
+        return surf
+
+    def angle_update(self):
         surf = pygame.surface.Surface((50, 50)).convert_alpha()
         surf.fill((0, 0, 0, 0))
-        surf.blit(self.stage.image,
-                  (-(self.rect.centerx - 25), -(self.rect.centery)))
+        surf.blit(self.stage.image, (-(self.rect.centerx - 25), -self.rect.centery))
         mask = pygame.mask.from_surface(surf)
 
-        b = []
+        border_bits = []
         for x in range(50):
             for y in range(40):
                 if mask.get_at((x, y)):
-                    b.append((x, y))
+                    border_bits.append((x, y))
                     break
 
-        c = [0, 0]
-        for i in range(len(b)):
-            c[0] += b[i][0] - b[0][0]
-            c[1] += b[i][1] - b[0][1]
+        sum_of_angles = [0, 0]
+        for i in range(len(border_bits)):
+            sum_of_angles[0] += border_bits[i][0] - border_bits[0][0]
+            sum_of_angles[1] += border_bits[i][1] - border_bits[0][1]
 
-        try:
-            # pygame.draw.line(surf, (255, 255, 0), b[0], (b[0][0] + c[0], b[0][1] + c[1]), 1)
-            self.angle = pygame.Vector2((b[0][0] + c[0] - b[0][0], b[0][1] + c[1] - b[0][1])).angle_to((0, 0))
-        except:
-            pass
-
-        self.image = self.draw_cannon()
-        self.rect = self.rect.move(self.vector)
+        self.angle = pygame.Vector2(sum_of_angles[0], sum_of_angles[1]).angle_to((0, 0))
 
     def collide_check(self):
         if pygame.sprite.collide_mask(self, self.stage):
@@ -109,28 +107,24 @@ class Cannon(pygame.sprite.Sprite):
         else:
             self.on_ground = False
 
-    def shoot_shell(self, power):
+    def shoot_shell(self, power, owner):
         if self.direction == "right":
             vector = pygame.Vector2([math.cos(math.radians(self.angle)), - math.sin(math.radians(self.angle))])
-            vector.scale_to_length(power / 3)
-            vector2 = vector.copy()
-            vector3 = vector.copy()
-            vector3.scale_to_length(70)
-            vector2 = vector2.rotate(90)
-            vector2.scale_to_length(45)
-            vector2 = vector2 - vector3
-            self.shell(self.camera, self.stage, self.rect.center - vector2, vector)
+            rotated_launch_vector = vector.copy().rotate(90)
+
         else:
             vector = pygame.Vector2([- math.cos(math.radians(-self.angle)), - math.sin(math.radians(-self.angle))])
-            vector.scale_to_length(power / 3)
-            vector2 = vector.copy()
-            vector3 = vector.copy()
-            vector3.scale_to_length(70)
-            vector2 = vector2.rotate(-90)
-            vector2.scale_to_length(45)
-            vector2 = vector2 - vector3
-            self.shell(self.camera, self.stage, self.rect.center - vector2, vector)
+            rotated_launch_vector = vector.copy().rotate(-90)
 
+        vector.scale_to_length(power / 3)
+        scaled_launch_vector = vector.copy()
+        scaled_launch_vector.scale_to_length(80)
+        rotated_launch_vector.scale_to_length(45)
+        rotated_launch_vector -= scaled_launch_vector
+        self.camera.target = self.shell(self.camera, self.stage, self.rect.center - rotated_launch_vector, vector, owner, self.cannon_group)
+
+    def damage(self, damage):
+        self.health -= damage
 
     def move_right(self):
         self.direction = "right"
@@ -147,7 +141,7 @@ class Cannon(pygame.sprite.Sprite):
             self.image = load_png(texture)
             self.rect = self.image.get_rect()
 
-        def draw(self, surf, topleft, angle):
+        def blit(self, surf, topleft, angle):
             rotated_image = pygame.transform.rotate(self.image, angle)
             new_rect = rotated_image.get_rect(center=self.image.get_rect(topleft=topleft).center)
 
@@ -159,7 +153,7 @@ class Cannon(pygame.sprite.Sprite):
             self.mask = pygame.mask.from_surface(self.image)
             self.angle = 0.0
 
-        def draw(self, surf, topleft):
+        def blit(self, surf, topleft):
             rotated_image = pygame.transform.rotate(self.image, self.angle)
             new_rect = rotated_image.get_rect(center=self.image.get_rect(topleft=topleft).center)
 

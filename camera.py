@@ -27,7 +27,14 @@ class CameraGroup(pygame.sprite.Group):
         self.keyboard_speed = 5
         self.mouse_speed = 0.2
 
-    def center_target_camera(self, target):
+        # target
+        self.target = None
+
+    def center_target_camera(self):
+        self.offset.x = self.target.rect.centerx - self.half_w
+        self.offset.y = self.target.rect.centery - self.half_h
+
+    def center_target_camera_align(self, target):
         self.offset.x = target.rect.centerx - self.half_w
         self.offset.y = target.rect.centery - self.half_h
 
@@ -86,26 +93,30 @@ class CameraGroup(pygame.sprite.Group):
             if mouse.y > bottom_border:
                 mouse_offset_vector.y = mouse.y - bottom_border
 
-        if 0 <= self.offset.x + mouse_offset_vector[0] * self.mouse_speed <= 4400 - 1920:
-            self.offset.x += mouse_offset_vector[0] * self.mouse_speed
-        if 0 <= self.offset.y + mouse_offset_vector[1] * self.mouse_speed <= 2000 - 1080:
-            self.offset.y += mouse_offset_vector[1] * self.mouse_speed
-        if self.offset.x + mouse_offset_vector[0] * self.mouse_speed < 0:
-            self.offset.x = 0
-        if self.offset.x + mouse_offset_vector[0] * self.mouse_speed > 4400 - 1920:
+        self.offset.x += mouse_offset_vector[0] * self.mouse_speed
+        self.offset.y += mouse_offset_vector[1] * self.mouse_speed
+
+    def out_of_border(self):
+        if self.offset.x > 4400 - 1920:
             self.offset.x = 4400 - 1920
-        if self.offset.y + mouse_offset_vector[1] * self.mouse_speed < 0:
-            self.offset.y = 0
-        if self.offset.y + mouse_offset_vector[1] * self.mouse_speed > 2000 - 1080:
+        if self.offset.x < 0:
+            self.offset.x = 0
+        if self.offset.y > 2000 - 1080:
             self.offset.y = 2000 - 1080
+        if self.offset.y < 0:
+            self.offset.y = 0
 
     def custom_draw(self):
 
-        # self.center_target_camera(player)
+        if self.target is not None:
+            self.center_target_camera()
+        else:
+            self.mouse_control()
+
         # self.box_target_camera(player)
         # self.keyboard_control()
-        self.mouse_control()
-        # self.zoom_keyboard_control()
+
+        self.out_of_border()
 
         self.display_surface.fill('#000000')
 
@@ -114,6 +125,6 @@ class CameraGroup(pygame.sprite.Group):
         self.display_surface.blit(self.ground_surf, ground_offset)
 
         # active elements
-        for sprite in self.sprites():
+        for sprite in sorted(self.sprites(), key=lambda sprite: sprite.depth):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)

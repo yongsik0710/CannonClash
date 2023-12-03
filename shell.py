@@ -24,11 +24,16 @@ class Shell(pygame.sprite.Sprite):
     damage = 100
     explosion_radius = 50
 
-    def __init__(self, group, stage, pos, vector):
+    def __init__(self, group, stage, pos, vector, owner, cannon_group):
         pygame.sprite.Sprite.__init__(self, group)
+        self.camera = group
+        self.depth = 2
         self.damage = self.damage
+        self.radius = self.explosion_radius
         self.stage = stage
+        self.cannon_group = cannon_group
         self.vector = vector
+        self.owner = owner
         self.gravity = stage.gravity
 
         self.texture = load_png(self.texture)
@@ -46,20 +51,35 @@ class Shell(pygame.sprite.Sprite):
     def update(self):
         self.vector.y += self.gravity / 2
         self.collide_check()
+        self.out_of_border()
         self.rect = self.rect.move(self.vector)
 
     def collide_check(self):
-        if pygame.sprite.collide_mask(self, self.stage):
+        if pygame.sprite.collide_mask(self, self.stage) or \
+                pygame.sprite.spritecollide(self, self.cannon_group, False, pygame.sprite.collide_mask):
             self.explode()
 
     def explode(self):
-        # damage = self.damage * (((self.max_explosion_radius - distance) / 100) ** 2)
+        for cannon in pygame.sprite.spritecollide(self, self.cannon_group, False, pygame.sprite.collide_circle):
+            pos = pygame.Vector2(self.rect.center)
+            distance = pos.distance_to(cannon.rect.center)
+            damage = self.damage * (((self.explosion_radius - distance) / self.explosion_radius) ** 2)
+            cannon.damage(damage)
+            print(distance, damage)
         pygame.mask.Mask.erase(self.stage.mask, self.explosion_mask, (self.rect.centerx - self.explosion_radius, self.rect.centery - self.explosion_radius))
         self.stage.custom_update()
+        self.camera.target = None
         self.kill()
+        self.owner.next_turn()
+
+    def out_of_border(self):
+        if self.rect.top > 2000:
+            self.camera.target = None
+            self.kill()
+            self.owner.next_turn()
 
 
 class BasicShell(Shell):
     texture = TexturePath.Shells.basic
     damage = 100
-    explosion_radius = 50
+    explosion_radius = 60
