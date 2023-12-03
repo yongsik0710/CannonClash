@@ -21,7 +21,7 @@ def load_png(name):
 
 class Shell(pygame.sprite.Sprite):
     texture = TexturePath.Shells.basic
-    damage = 100
+    damage = 500
     explosion_radius = 50
 
     def __init__(self, group, stage, pos, vector, owner, cannon_group):
@@ -60,12 +60,12 @@ class Shell(pygame.sprite.Sprite):
             self.explode()
 
     def explode(self):
-        for cannon in pygame.sprite.spritecollide(self, self.cannon_group, False, pygame.sprite.collide_circle):
+        for cannon in self.cannon_group:
             pos = pygame.Vector2(self.rect.center)
             distance = pos.distance_to(cannon.rect.center)
-            damage = self.damage * (((self.explosion_radius - distance) / self.explosion_radius) ** 2)
-            cannon.damage(damage)
-            print(distance, damage)
+            if distance - 25 < self.explosion_radius:
+                damage = self.damage * (((self.explosion_radius - (distance - 25)) / self.explosion_radius) ** 2)
+                cannon.damage(damage)
         pygame.mask.Mask.erase(self.stage.mask, self.explosion_mask, (self.rect.centerx - self.explosion_radius, self.rect.centery - self.explosion_radius))
         self.stage.custom_update()
         self.camera.target = None
@@ -81,5 +81,5 @@ class Shell(pygame.sprite.Sprite):
 
 class BasicShell(Shell):
     texture = TexturePath.Shells.basic
-    damage = 100
-    explosion_radius = 60
+    damage = 400
+    explosion_radius = 80

@@ -11,8 +11,14 @@ class Player:
         self.missile_game = None
         self.player_ui = None
         self.turn = False
+        self.is_death = False
         self.max_power = 180
         self.power = 0
+
+    def death(self):
+        self.turn = False
+        self.is_death = True
+        self.next_turn()
 
     def init_player_ui(self):
         self.player_ui = self.PlayerUI(self)
@@ -26,6 +32,9 @@ class Player:
         self.turn = False
 
     def next_turn(self):
+        self.missile_game.next_turn()
+
+    def skip(self):
         self.missile_game.next_turn()
 
     def draw_player_ui(self):
@@ -44,7 +53,7 @@ class Player:
             self.health_bar.level = self.player.cannon.health
             self.power_bar.level = self.player.power
             if self.skip.is_clicked():
-                self.player.next_turn()
+                self.player.skip()
 
         def draw(self):
             surf = pygame.surface.Surface((1600, 250)).convert_alpha()

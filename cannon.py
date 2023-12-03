@@ -27,16 +27,18 @@ class Cannon(pygame.sprite.Sprite):
     wheel_texture = None
     shell = None
 
-    def __init__(self, group, stage, pos, vector):
+    def __init__(self, group, stage, pos, vector, player):
         pygame.sprite.Sprite.__init__(self, group)
         self.camera = group[0]
         self.cannon_group = group[1]
+        self.player = player
         self.depth = 3
         self.max_health = 1000
         self.health = self.max_health
         self.angle = 0.0
         self.delta_angle = 0.0
         self.on_ground = False
+        self.is_death = False
         self.direction = "right"
 
         self.stage = stage
@@ -62,6 +64,7 @@ class Cannon(pygame.sprite.Sprite):
         self.angle_update()
         self.image = self.blit_cannon()
         self.rect = self.rect.move(self.vector)
+        self.out_of_border()
 
     def blit_cannon(self):
         surf = pygame.surface.Surface((240, 240)).convert_alpha()
@@ -125,6 +128,15 @@ class Cannon(pygame.sprite.Sprite):
 
     def damage(self, damage):
         self.health -= damage
+        if self.health <= 0:
+            self.is_death = True
+            self.player.death()
+
+    def out_of_border(self):
+        if self.rect.top > 2000:
+            self.is_death = True
+            self.player.death()
+            self.kill()
 
     def move_right(self):
         self.direction = "right"

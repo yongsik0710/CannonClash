@@ -16,6 +16,7 @@ class Game:
         self.number_of_player_select = NumberOfPlayerSelect(self)
         self.cannon_select = None
         self.stage_select = StageSelect(self)
+        self.game_end = None
         self.current_display = self.main_menu
 
     def start_game(self):

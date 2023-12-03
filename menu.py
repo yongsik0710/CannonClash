@@ -59,14 +59,14 @@ class NumberOfPlayerSelect(Menu):
         font = pygame.font.Font(None, 50)
         title_font = pygame.font.Font(None, 80)
         self.number_of_player = 2
-        self.title = TextBox(game.screen, 560, 240, 800, 150, title_font, '#808080', 'Select number of players')
+        self.title = TextBox(game.screen, 560, 200, 800, 150, title_font, '#808080', 'Select number of players')
 
-        self.up = Button(game.screen, 1020, 540, 100, 100, 5, font, ">")
-        self.player_count = TextBox(game.screen, 910, 540, 100, 100, font, '#475F77', str(self.number_of_player))
-        self.down = Button(game.screen, 800, 540, 100, 100, 5, font, "<")
+        self.up = Button(game.screen, 1020, 500, 100, 100, 5, font, ">")
+        self.player_count = TextBox(game.screen, 910, 500, 100, 100, font, '#475F77', str(self.number_of_player))
+        self.down = Button(game.screen, 800, 500, 100, 100, 5, font, "<")
 
-        self.next = Button(game.screen, 760, 700, 400, 100, 5, font, "Next")
-        self.back = Button(game.screen, 760, 820, 400, 100, 5, font, "Back")
+        self.next = Button(game.screen, 760, 650, 400, 100, 5, font, "Next")
+        self.back = Button(game.screen, 760, 770, 400, 100, 5, font, "Back")
 
     def loop(self):
         # 이벤트 핸들러
