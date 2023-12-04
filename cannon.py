@@ -36,8 +36,9 @@ class Cannon(pygame.sprite.Sprite):
         self.depth = 3
         self.max_health = 1000
         self.health = self.max_health
-        self.angle = 0.0
+        self.incline_angle = 0.0
         self.delta_angle = 0.0
+        self.launch_angle = 0.0
         self.on_ground = False
         self.is_death = False
         self.direction = "right"
@@ -72,10 +73,10 @@ class Cannon(pygame.sprite.Sprite):
         surf = pygame.surface.Surface((240, 240)).convert_alpha()
         surf.fill((0, 0, 0, 0))
         if self.direction == "right":
-            self.barrel.blit(surf, (0, 0), self.angle - 20 + self.delta_angle)
+            self.barrel.blit(surf, (0, 0), self.launch_angle - 20)
             self.wheel.blit(surf, (0, 0))
         elif self.direction == "left":
-            self.barrel.blit(surf, (0, 0), - (self.angle + 20) + self.delta_angle)
+            self.barrel.blit(surf, (0, 0), self.launch_angle - 20)
             surf = pygame.transform.flip(surf, True, False)
             self.wheel.blit(surf, (0, 0))
         return surf
@@ -98,7 +99,11 @@ class Cannon(pygame.sprite.Sprite):
             sum_of_angles[0] += border_bits[i][0] - border_bits[0][0]
             sum_of_angles[1] += border_bits[i][1] - border_bits[0][1]
 
-        self.angle = pygame.Vector2(sum_of_angles[0], sum_of_angles[1]).angle_to((0, 0))
+        self.incline_angle = pygame.Vector2(sum_of_angles[0], sum_of_angles[1]).angle_to((0, 0))
+        if self.direction == "right":
+            self.launch_angle = self.incline_angle + self.delta_angle
+        else:
+            self.launch_angle = -self.incline_angle + self.delta_angle
 
     def collide_check(self):
         if pygame.sprite.collide_mask(self, self.stage):
@@ -114,11 +119,11 @@ class Cannon(pygame.sprite.Sprite):
 
     def shoot_shell(self, power, owner):
         if self.direction == "right":
-            vector = pygame.Vector2([math.cos(math.radians(self.angle + self.delta_angle)), - math.sin(math.radians(self.angle + self.delta_angle))])
+            vector = pygame.Vector2([math.cos(math.radians(self.incline_angle + self.delta_angle)), - math.sin(math.radians(self.launch_angle))])
             rotated_launch_vector = vector.copy().rotate(90)
 
         else:
-            vector = pygame.Vector2([- math.cos(math.radians(-self.angle + self.delta_angle)), - math.sin(math.radians(-self.angle + self.delta_angle))])
+            vector = pygame.Vector2([- math.cos(math.radians(-self.incline_angle + self.delta_angle)), - math.sin(math.radians(self.launch_angle))])
             rotated_launch_vector = vector.copy().rotate(-90)
 
         vector.scale_to_length(power / 3)

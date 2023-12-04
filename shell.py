@@ -35,6 +35,7 @@ class Shell(pygame.sprite.Sprite):
         self.vector = vector
         self.owner = owner
         self.gravity = stage.gravity
+        self.wind = stage.wind
 
         self.texture = load_png(self.texture)
         self.image, self.rect = self.texture
@@ -50,6 +51,7 @@ class Shell(pygame.sprite.Sprite):
 
     def update(self):
         self.vector.y += self.gravity / 2
+        self.vector.x += self.wind / 550
         self.collide_check()
         self.out_of_border()
         self.rect = self.rect.move(self.vector)

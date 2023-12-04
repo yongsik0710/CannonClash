@@ -91,6 +91,7 @@ class MissileGame:
     def next_turn(self):
         # 게임 종료 테스트
         self.is_game_end()
+        self.wind_change()
 
         if self.current_turn + 1 < len(self.players):
             self.current_turn += 1
@@ -103,9 +104,17 @@ class MissileGame:
         else:
             self.players[self.current_turn].skip()
 
+    def wind_change(self):
+        self.stage.wind += random.randint(-30, 30)
+        if self.stage.wind > 100:
+            self.stage.wind = 100
+        elif self.stage.wind < -100:
+            self.stage.wind = -100
+
     def is_game_end(self):
-        if len([player for player in self.players if not player.is_death]) <= 1:
-            self.game_end(self.players[0])
+        alive_players = [player for player in self.players if not player.is_death]
+        if len(alive_players) <= 1:
+            self.game_end(alive_players[0])
 
     def game_end(self, winner):
         self.game.current_display = GameEnd(self.game, winner)

@@ -1,5 +1,6 @@
 import pygame
 import os
+import random
 
 
 def load_png(name):
@@ -26,6 +27,7 @@ class Stage(pygame.sprite.Sprite):
 
         self.gravity = level.gravity
         self.air_resistance = level.air_resistance
+        self.wind = random.randint(-100, 100)
 
     def custom_update(self):
         self.image = self.mask.to_surface(setsurface=self.image, unsetcolor=(255, 0, 0, 0))
