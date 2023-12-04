@@ -204,7 +204,7 @@ class StageSelect(Menu):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self.game.current_display = self.game.number_of_player_select
+                    self.game.current_display = self.game.cannon_select
 
         if self.stage_1.is_clicked():  # 스테이지 1
             self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.TestLevel)

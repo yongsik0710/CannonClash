@@ -26,6 +26,7 @@ class Cannon(pygame.sprite.Sprite):
     barrel_texture = None
     wheel_texture = None
     shell = None
+    max_delta_angle = 20
 
     def __init__(self, group, stage, pos, vector, player):
         pygame.sprite.Sprite.__init__(self, group)
@@ -64,6 +65,7 @@ class Cannon(pygame.sprite.Sprite):
         self.angle_update()
         self.image = self.blit_cannon()
         self.rect = self.rect.move(self.vector)
+        self.vector.x = 0
         self.out_of_border()
 
     def blit_cannon(self):
@@ -104,19 +106,19 @@ class Cannon(pygame.sprite.Sprite):
             if self.mask.overlap(self.stage.mask, (-self.rect.x, -self.rect.y + 3)):
                 self.vector.y = -2
             else:
-                self.collide_pos = self.mask.overlap(self.stage.mask, (-self.rect.x, -self.rect.y))
-                self.collide_pos = (self.collide_pos[0] + self.rect.x, self.collide_pos[1] + self.rect.y)
+                self.collide_pos = self.mask.overlap(self.stage.mask, (-self.rect.centerx, -self.rect.centery))
+                # self.collide_pos = (self.collide_pos[0] + self.rect.x, self.collide_pos[1] + self.rect.y)
                 self.vector.y = 0
         else:
             self.on_ground = False
 
     def shoot_shell(self, power, owner):
         if self.direction == "right":
-            vector = pygame.Vector2([math.cos(math.radians(self.angle)), - math.sin(math.radians(self.angle))])
+            vector = pygame.Vector2([math.cos(math.radians(self.angle + self.delta_angle)), - math.sin(math.radians(self.angle + self.delta_angle))])
             rotated_launch_vector = vector.copy().rotate(90)
 
         else:
-            vector = pygame.Vector2([- math.cos(math.radians(-self.angle)), - math.sin(math.radians(-self.angle))])
+            vector = pygame.Vector2([- math.cos(math.radians(-self.angle + self.delta_angle)), - math.sin(math.radians(-self.angle + self.delta_angle))])
             rotated_launch_vector = vector.copy().rotate(-90)
 
         vector.scale_to_length(power / 3)
@@ -138,14 +140,26 @@ class Cannon(pygame.sprite.Sprite):
             self.player.death()
             self.kill()
 
+    def angle_up(self):
+        if self.delta_angle + 1 <= self.max_delta_angle:
+            self.delta_angle += 1
+        else:
+            self.delta_angle = self.max_delta_angle
+
+    def angle_down(self):
+        if self.delta_angle - 1 >= -self.max_delta_angle:
+            self.delta_angle -= 1
+        else:
+            self.delta_angle = -self.max_delta_angle
+
     def move_right(self):
         self.direction = "right"
-        self.rect = self.rect.move(1, 0)
+        self.vector.x = 1
         self.wheel.roll_cw()
 
     def move_left(self):
         self.direction = "left"
-        self.rect = self.rect.move(-1, 0)
+        self.vector.x = -1
         self.wheel.roll_acw()
 
     class Barrel:
@@ -183,6 +197,7 @@ class BasicCannon(Cannon):
     barrel_texture = TexturePath.Cannon.Barrel.barrel_1
     wheel_texture = TexturePath.Cannon.Wheel.wheel_1
     shell = BasicShell
+    max_delta_angle = 20
 
 
 class TestCannon(Cannon):

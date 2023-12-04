@@ -54,7 +54,7 @@ class CannonSelector:
     def draw(self):
         self.player_name.draw()
         self.cannon_name.draw()
-        self.screen.blit(self.cannon_image, (self.x * self.size, self.y + 80 * self.size))
+        self.screen.blit(self.cannon_image, (self.x, self.y + 80 * self.size))
         self.next.draw()
         self.prev.draw()
 

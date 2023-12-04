@@ -1,5 +1,6 @@
 from bar import *
 from button import *
+from config import *
 import pygame
 
 
@@ -48,6 +49,7 @@ class Player:
             self.power_bar = Bar(400, 100, 1000, 30, self.player.max_power)
             self.screen = pygame.display.get_surface()
             self.skip = Button(self.screen, 1600, 800, 100, 50, 4, pygame.font.Font(None, 40), "Skip")
+            self.current_player = pygame.image.load(TexturePath.Util.current_player)
 
         def update(self):
             self.health_bar.level = self.player.cannon.health
@@ -62,3 +64,4 @@ class Player:
             self.power_bar.draw(surf)
             self.screen.blit(surf, (160, 780))
             self.skip.draw()
+            self.screen.blit(self.current_player, self.player.cannon.rect.midtop - self.player.missile_game.camera_group.offset)

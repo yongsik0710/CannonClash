@@ -58,15 +58,21 @@ class MissileGame:
 
         if self.players[self.current_turn].turn:
 
-            if keys[pygame.K_RIGHT]:
-                self.players[self.current_turn].cannon.move_right()
-
-            if keys[pygame.K_LEFT]:
-                self.players[self.current_turn].cannon.move_left()
-
             if keys[pygame.K_SPACE]:
                 if self.players[self.current_turn].power < self.players[self.current_turn].max_power:
                     self.players[self.current_turn].power += 1
+            else:
+                if keys[pygame.K_RIGHT]:
+                    self.players[self.current_turn].cannon.move_right()
+
+                if keys[pygame.K_LEFT]:
+                    self.players[self.current_turn].cannon.move_left()
+
+                if keys[pygame.K_UP]:
+                    self.players[self.current_turn].cannon.angle_up()
+
+                if keys[pygame.K_DOWN]:
+                    self.players[self.current_turn].cannon.angle_down()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

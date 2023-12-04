@@ -45,3 +45,6 @@ class TexturePath:
         class Wheel:
             wheel_1 = resource_path("Images/Cannons/Basic/wheel_1.png")
             wheel_2 = resource_path("Images/Cannons/Test/wheel.png")
+
+    class Util:
+        current_player = resource_path("Images/Utilities/current_player.png")
