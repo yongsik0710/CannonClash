@@ -2,7 +2,8 @@ import pygame
 
 
 class Button:
-    def __init__(self, surface, x, y, width, height, elevation, font, text="button"):
+    def __init__(self, surface, x, y, width, height, elevation, font, text="button",
+                 top_color="#475f77", bottom_color="#354b5e", change_color="#d74b4b"):
         # Core attributes
         self.surface = surface
         self.clicked = False
@@ -12,16 +13,20 @@ class Button:
         self.original_y_pos = y
         self.original_height = height
 
+        self.top_original_color = top_color
+        self.bottom_color = bottom_color
+        self.change_color = change_color
+
         # interact rectangle
         self.interact_rect = pygame.Rect((x, y - self.elevation), (width, height))
 
         # top rectangle
         self.top_rect = pygame.Rect((x, y), (width, height))
-        self.top_color = '#475F77'
+        self.top_color = self.top_original_color
 
         # bottom rectangle
         self.bottom_rect = pygame.Rect((x, y), (width, height))
-        self.bottom_color = '#354B5E'
+
         # text
         self.text_surf = font.render(text, True, '#FFFFFF')
         self.text_rect = self.text_surf.get_rect(center=self.top_rect.center)
@@ -34,15 +39,15 @@ class Button:
         self.bottom_rect.midtop = self.top_rect.midtop
         self.bottom_rect.height = self.top_rect.height + self.dynamic_elecation
 
-        pygame.draw.rect(self.surface, self.bottom_color, self.bottom_rect, border_radius=12)
-        pygame.draw.rect(self.surface, self.top_color, self.top_rect, border_radius=12)
+        pygame.draw.rect(self.surface, self.bottom_color, self.bottom_rect, border_radius=int(self.original_height/5))
+        pygame.draw.rect(self.surface, self.top_color, self.top_rect, border_radius=int(self.original_height/5))
         self.surface.blit(self.text_surf, self.text_rect)
         self.check_click()
 
     def check_click(self):
         mouse_pos = pygame.mouse.get_pos()
         if self.interact_rect.collidepoint(mouse_pos):
-            self.top_color = '#D74B4B'
+            self.top_color = self.change_color
             if pygame.mouse.get_pressed()[0]:
                 self.interact_rect.height = self.original_height + self.elevation
                 self.dynamic_elecation = 0
@@ -57,7 +62,7 @@ class Button:
             self.interact_rect.height = self.original_height
             self.pressed = False
             self.dynamic_elecation = self.elevation
-            self.top_color = '#475F77'
+            self.top_color = self.top_original_color
 
     def is_clicked(self):
         if self.clicked:

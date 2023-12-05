@@ -17,21 +17,29 @@ class AngleMonitor:
         pygame.draw.circle(surf, "#f0f0f0", rect.center, radius)
         pygame.draw.circle(surf, "#333333", rect.center, radius * 0.9)
 
+        # 수평선 그리기
+        angle_vector = self.get_vector(0.0, radius)
+        pygame.draw.line(surf, (255, 255, 255), rect.center, rect.center + angle_vector, 2)
+        pygame.draw.line(surf, (255, 255, 255), rect.center, rect.center - angle_vector, 2)
+
         # 경사각 선 그리기
         angle_vector = self.get_vector(-self.cannon.incline_angle, radius)
         pygame.draw.line(surf, (255, 0, 0), rect.center, rect.center + angle_vector)
         pygame.draw.line(surf, (255, 0, 0), rect.center, rect.center - angle_vector)
 
-        # 발사가능한 각 그리기
-        max_angle = self.cannon.incline_angle + self.cannon.max_delta_angle
-        min_angle = self.cannon.incline_angle - self.cannon.max_delta_angle
-
+        # 발사 가능한 각 그리기
         if self.cannon.direction == "right":
+            max_angle = self.cannon.default_angle + self.cannon.incline_angle + self.cannon.max_delta_angle
+            min_angle = self.cannon.default_angle + self.cannon.incline_angle - self.cannon.max_delta_angle
+
             angle_vector = self.get_vector(-max_angle, radius)
             pygame.draw.line(surf, (255, 255, 0), rect.center, rect.center + angle_vector)
             angle_vector = self.get_vector(-min_angle, radius)
             pygame.draw.line(surf, (255, 255, 0), rect.center, rect.center + angle_vector)
         else:
+            max_angle = - self.cannon.default_angle + self.cannon.incline_angle + self.cannon.max_delta_angle
+            min_angle = - self.cannon.default_angle + self.cannon.incline_angle - self.cannon.max_delta_angle
+
             angle_vector = self.get_vector(-max_angle, radius)
             pygame.draw.line(surf, (255, 255, 0), rect.center, rect.center - angle_vector)
             angle_vector = self.get_vector(-min_angle, radius)
@@ -44,11 +52,6 @@ class AngleMonitor:
         else:
             angle_vector = self.get_vector(self.cannon.launch_angle, radius)
             pygame.draw.line(surf, (0, 255, 0), rect.center, rect.center - angle_vector)
-
-        # 수평선 그리기
-        angle_vector = self.get_vector(0.0, radius)
-        pygame.draw.line(surf, (255, 255, 255), rect.center, rect.center + angle_vector, 2)
-        pygame.draw.line(surf, (255, 255, 255), rect.center, rect.center - angle_vector, 2)
 
         pygame.draw.circle(surf, "#808080", rect.center, radius * 0.1)
 

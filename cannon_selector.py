@@ -1,5 +1,5 @@
-from button import *
-from textbox import *
+from ui_component.button import *
+from ui_component.textbox import *
 from cannon import *
 import os
 
@@ -32,31 +32,35 @@ class CannonSelector:
         self.player.cannon = CANNONS[self.cannon_id]
 
         font = pygame.font.Font(None, int(50 * size))
-        title_font = pygame.font.Font(None, int(80 * size))
+        title_font = pygame.font.Font(None, int(70 * size))
 
         self.cannon_image = pygame.surface.Surface((360 * size, 360 * size)).convert_alpha()
         self.cannon_image.fill((0, 0, 0, 0))
         self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (360 * self.size, 360 * self.size)), (0, 0))
         self.cannon_image.blit(load_png(CANNONS[self.cannon_id].wheel_texture, (360 * self.size, 360 * self.size)), (0, 0))
 
-        self.player_name = TextBox(surface, x, y, 380 * size, 80 * size, title_font, '#808080', self.player.name)
-        self.cannon_name = TextBox(surface, x + 90 * size, y + 360 * size, 200 * size, 80 * size, font, '#808080', CANNONS[self.cannon_id].name)
-        self.next = Button(surface, x + 300 * size, y + 360 * size, 80 * size, 80 * size, 5 * size, font, ">")
-        self.prev = Button(surface, x, y + 360 * size, 80 * size, 80 * size, 5 * size, font, "<")
+        self.player_name = TextBox(surface, x, y, 380 * size, 80 * size, title_font, self.player.name)
+        self.cannon_name = TextBox(surface, x + 90 * size, y + 360 * size, 200 * size, 80 * size, font, CANNONS[self.cannon_id].name)
+        self.next = Button(surface, x + 310 * size, y + 367 * size, 70 * size, 70 * size, 4 * size, font, ">")
+        self.prev = Button(surface, x, y + 367 * size, 70 * size, 70 * size, 4 * size, font, "<")
+        self.next_off = TextBox(surface, x + 310 * size, y + 365 * size, 70 * size, 70 * size, font, text=">", background_color="#354b5e")
+        self.prev_off = TextBox(surface, x, y + 365 * size, 70 * size, 70 * size, font, text="<", background_color="#354b5e")
 
     def update(self):
         self.player.cannon = CANNONS[self.cannon_id]
         self.cannon_image.fill((0, 0, 0, 0))
         self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (360 * self.size, 360 * self.size)), (0, 0))
         self.cannon_image.blit(load_png(CANNONS[self.cannon_id].wheel_texture, (360 * self.size, 360 * self.size)), (0, 0))
-        self.cannon_name.text = CANNONS[self.cannon_id].name
+        self.cannon_name.text_update(CANNONS[self.cannon_id].name)
 
     def draw(self):
         self.player_name.draw()
         self.cannon_name.draw()
         self.screen.blit(self.cannon_image, (self.x, self.y + 80 * self.size))
-        self.next.draw()
-        self.prev.draw()
+        if self.cannon_id < len(CANNONS): self.next.draw()
+        else: self.next_off.draw()
+        if self.cannon_id > 1: self.prev.draw()
+        else: self.prev_off.draw()
 
     def event_check(self):
         if self.next.is_clicked():

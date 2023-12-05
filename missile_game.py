@@ -1,10 +1,8 @@
-import pygame
-import random
 from camera import *
 from stage import *
 from config import *
-from button import *
-from textbox import *
+from ui_component.button import *
+from ui_component.textbox import *
 
 
 def load_png(name):
@@ -82,6 +80,8 @@ class MissileGame:
                 if event.key == pygame.K_ESCAPE:
                     self.game.current_display = self.game.game_menu
 
+                if event.key == pygame.K_LCTRL:
+                    self.camera_group.center_target_camera_align(self.players[self.current_turn].cannon)
             if self.players[self.current_turn].turn:
 
                 if event.type == pygame.KEYUP:
@@ -92,6 +92,7 @@ class MissileGame:
         # 게임 종료 테스트
         self.is_game_end()
         self.wind_change()
+        self.players[self.current_turn].cannon.mobility = self.players[self.current_turn].cannon.max_mobility
 
         if self.current_turn + 1 < len(self.players):
             self.current_turn += 1
@@ -128,7 +129,7 @@ class GameEnd:
         title_font = pygame.font.Font(None, 80)
         font = pygame.font.Font(None, 50)
 
-        self.winner_text = TextBox(game.screen, 560, 300, 800, 150, title_font, "#808080", f"{self.winner.name} win this game!!")
+        self.winner_text = TextBox(game.screen, 560, 300, 800, 150, title_font, f"{self.winner.name} win this game!!")
         self.back_to_main_menu = Button(game.screen, 760, 700, 400, 100, 5, font, "Back to Main Menu")
 
         # my_surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)

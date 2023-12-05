@@ -1,7 +1,3 @@
-import pygame
-from button import *
-from textbox import *
-from config import *
 from missile_game import *
 from cannon_selector import *
 from player import *
@@ -23,6 +19,8 @@ class MainMenu(Menu):
     def __init__(self, game):
         super().__init__(game)
         font = pygame.font.Font(None, 50)
+        title_font = pygame.font.Font(None, 160)
+        self.title = TextBox(game.screen, 460, 260, 1000, 200, title_font, "Cannon Clash")
         self.game_start = Button(game.screen, 760, 700, 400, 100, 5, font, "Game Start")
         self.quit = Button(game.screen, 760, 820, 400, 100, 5, font, "Quit")
 
@@ -30,7 +28,8 @@ class MainMenu(Menu):
         # 이벤트 핸들러
         self.event_check()
         # 화면 그리기
-        self.game.screen.fill((200, 200, 200))
+        self.game.screen.fill("#e0e0e0")
+        self.title.draw()
         self.game_start.draw()
         self.quit.draw()
         # 화면 업데이트
@@ -59,23 +58,27 @@ class NumberOfPlayerSelect(Menu):
         font = pygame.font.Font(None, 50)
         title_font = pygame.font.Font(None, 80)
         self.number_of_player = 2
-        self.title = TextBox(game.screen, 560, 200, 800, 150, title_font, '#808080', 'Select number of players')
+        self.title = TextBox(game.screen, 560, 200, 800, 150, title_font, text='Select number of players')
 
-        self.up = Button(game.screen, 1020, 500, 100, 100, 5, font, ">")
-        self.player_count = TextBox(game.screen, 910, 500, 100, 100, font, '#475F77', str(self.number_of_player))
-        self.down = Button(game.screen, 800, 500, 100, 100, 5, font, "<")
+        self.player_count = TextBox(game.screen, 910, 500, 100, 100, font, text=str(self.number_of_player))
+        self.up = Button(game.screen, 1030, 510, 80, 80, 4, font, ">")
+        self.down = Button(game.screen, 810, 510, 80, 80, 4, font, "<")
+        self.up_off = TextBox(game.screen, 1030, 508, 80, 80, font, ">", background_color="#354b5e")
+        self.down_off = TextBox(game.screen, 810, 508, 80, 80, font, "<", background_color="#354b5e")
 
-        self.next = Button(game.screen, 760, 650, 400, 100, 5, font, "Next")
-        self.back = Button(game.screen, 760, 770, 400, 100, 5, font, "Back")
+        self.next = Button(game.screen, 760, 750, 400, 100, 5, font, "Next")
+        self.back = Button(game.screen, 760, 870, 400, 100, 5, font, "Back")
 
     def loop(self):
         # 이벤트 핸들러
         self.event_check()
         # 화면 그리기
-        self.game.screen.fill((200, 200, 200))
+        self.game.screen.fill("#e0e0e0")
         self.title.draw()
         if self.number_of_player < 6: self.up.draw()
+        else: self.up_off.draw()
         if self.number_of_player > 2: self.down.draw()
+        else: self.down_off.draw()
         self.player_count.draw()
         self.next.draw()
         self.back.draw()
@@ -94,11 +97,11 @@ class NumberOfPlayerSelect(Menu):
 
         if self.up.is_clicked():  # 플레이어 수 증가
             self.number_of_player += 1
-            self.player_count.text = str(self.number_of_player)
+            self.player_count.text_update(str(self.number_of_player))
 
         if self.down.is_clicked():  # 플레이어 수 감소
             self.number_of_player -= 1
-            self.player_count.text = str(self.number_of_player)
+            self.player_count.text_update(str(self.number_of_player))
 
         if self.next.is_clicked():  # 다음으로
             self.game.cannon_select = CannonSelect(self.game, self.number_of_player)
@@ -116,8 +119,12 @@ class CannonSelect(Menu):
 
         font = pygame.font.Font(None, 50)
 
-        self.next = Button(game.screen, 760, 800, 400, 100, 5, font, "Next")
-        self.back = Button(game.screen, 760, 920, 400, 100, 5, font, "Back")
+        if number_of_player <= 4:
+            self.next = Button(game.screen, 760, 750, 400, 100, 5, font, "Next")
+            self.back = Button(game.screen, 760, 870, 400, 100, 5, font, "Back")
+        else:
+            self.next = Button(game.screen, 760, 800, 400, 100, 5, font, "Next")
+            self.back = Button(game.screen, 760, 920, 400, 100, 5, font, "Back")
 
         if number_of_player == 2:
             self.cannon_selector.append(CannonSelector(self.game.screen, 450, 200, 1.0, self.players[0]))
@@ -149,7 +156,7 @@ class CannonSelect(Menu):
         # 이벤트 핸들러
         self.event_check()
         # 화면 그리기
-        self.game.screen.fill((200, 200, 200))
+        self.game.screen.fill("#e0e0e0")
         self.next.draw()
         self.back.draw()
         for ui in self.cannon_selector:
@@ -183,13 +190,13 @@ class StageSelect(Menu):
         font = pygame.font.Font(None, 50)
         self.stage_1 = Button(game.screen, 760, 580, 400, 100, 5, font, "Stage 1")
         self.stage_2 = Button(game.screen, 760, 700, 400, 100, 5, font, "Stage 2")
-        self.back = Button(game.screen, 760, 820, 400, 100, 5, font, "Back")
+        self.back = Button(game.screen, 760, 870, 400, 100, 5, font, "Back")
 
     def loop(self):
         # 이벤트 핸들러
         self.event_check()
         # 화면 그리기
-        self.game.screen.fill((200, 200, 200))
+        self.game.screen.fill("#e0e0e0")
         self.stage_1.draw()
         self.stage_2.draw()
         self.back.draw()
