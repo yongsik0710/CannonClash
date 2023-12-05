@@ -1,5 +1,6 @@
 from missile_game import *
 from cannon_selector import *
+from ui_component.stage_button import *
 from player import *
 
 
@@ -187,9 +188,13 @@ class CannonSelect(Menu):
 class StageSelect(Menu):
     def __init__(self, game):
         super().__init__(game)
+        title_font = pygame.font.Font(None, 80)
         font = pygame.font.Font(None, 50)
-        self.stage_1 = Button(game.screen, 760, 580, 400, 100, 5, font, "Stage 1")
-        self.stage_2 = Button(game.screen, 760, 700, 400, 100, 5, font, "Stage 2")
+        self.stage_select = TextBox(game.screen, 660, 100, 600, 100, title_font, "Stage Select")
+        self.stage_1 = StageButton(game.screen, 480, 300, 440, 200, 5, Levels.Level1)
+        self.stage_2 = StageButton(game.screen, 1000, 300, 440, 200, 5, Levels.Level2)
+        self.stage_3 = StageButton(game.screen, 480, 560, 440, 200, 5, Levels.Level3)
+        self.stage_4 = StageButton(game.screen, 1000, 560, 440, 200, 5, Levels.Level4)
         self.back = Button(game.screen, 760, 870, 400, 100, 5, font, "Back")
 
     def loop(self):
@@ -197,8 +202,11 @@ class StageSelect(Menu):
         self.event_check()
         # 화면 그리기
         self.game.screen.fill("#e0e0e0")
+        self.stage_select.draw()
         self.stage_1.draw()
         self.stage_2.draw()
+        self.stage_3.draw()
+        self.stage_4.draw()
         self.back.draw()
         # 화면 업데이트
         pygame.display.update()
@@ -214,11 +222,19 @@ class StageSelect(Menu):
                     self.game.current_display = self.game.cannon_select
 
         if self.stage_1.is_clicked():  # 스테이지 1
-            self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.TestLevel)
+            self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.Level1)
             self.game.current_display = self.game.missile_game
 
         if self.stage_2.is_clicked():  # 스테이지 2
             self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.Level2)
+            self.game.current_display = self.game.missile_game
+
+        if self.stage_3.is_clicked():  # 스테이지 3
+            self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.Level3)
+            self.game.current_display = self.game.missile_game
+
+        if self.stage_4.is_clicked():  # 스테이지 4
+            self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.Level4)
             self.game.current_display = self.game.missile_game
 
         if self.back.is_clicked():  # 대포 선택으로 돌아가기

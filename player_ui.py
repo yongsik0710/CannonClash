@@ -13,7 +13,8 @@ class PlayerUI:
         self.player = player
         self.screen = pygame.display.get_surface()
         self.canvas = pygame.surface.Surface((1400, 290)).convert_alpha()
-        self.canvas.fill((255, 255, 255, 150))
+        self.canvas.fill((0, 0, 0, 0))
+        self.canvas_rect = self.canvas.get_rect()
 
         self.current_player = pygame.image.load(TexturePath.Util.current_player)
 
@@ -46,6 +47,7 @@ class PlayerUI:
     def draw(self):
         self.screen.blit(self.current_player, self.player.cannon.rect.midtop - self.player.missile_game.camera_group.offset)
 
+        pygame.draw.rect(self.canvas, (255, 255, 255, 150), self.canvas_rect, border_radius=20)
         self.angle_monitor.draw()
         self.health_bar.draw(self.canvas)
         self.power_bar.draw(self.canvas)

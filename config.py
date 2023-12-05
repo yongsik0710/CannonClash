@@ -11,13 +11,6 @@ def resource_path(relative_path):
 
 
 class Levels:
-    class TestLevel:
-        level_image = resource_path("Images/Levels/test_level.png")
-        background_image = resource_path("Images/Backgrounds/sky.png")
-        gravity = 1.0
-        air_resistance = 0.0
-        spawn_points = [(100, 100), (250, 200), (1800, 100), (2200, 300), (400, 100), (800, 100)]
-
     class Level1:
         level_image = resource_path("Images/Levels/level_1.png")
         background_image = resource_path("Images/Backgrounds/sky.png")
@@ -27,6 +20,20 @@ class Levels:
 
     class Level2:
         level_image = resource_path("Images/Levels/level_2.png")
+        background_image = resource_path("Images/Backgrounds/sky.png")
+        gravity = 1.0
+        air_resistance = 0.0
+        spawn_points = [(100, 100), (250, 200), (1800, 100), (2200, 300), (400, 100), (800, 100)]
+
+    class Level3:
+        level_image = resource_path("Images/Levels/level_3.png")
+        background_image = resource_path("Images/Backgrounds/sky.png")
+        gravity = 1.0
+        air_resistance = 0.0
+        spawn_points = [(100, 100), (250, 200), (1800, 100), (2200, 300), (400, 100), (800, 100)]
+
+    class Level4:
+        level_image = resource_path("Images/Levels/level_4.png")
         background_image = resource_path("Images/Backgrounds/sky.png")
         gravity = 1.0
         air_resistance = 0.0

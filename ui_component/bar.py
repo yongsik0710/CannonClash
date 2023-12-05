@@ -3,7 +3,7 @@ import pygame
 
 class Bar:
     def __init__(self, x, y, width, height, border_thickness, max_level,
-                 border_color="#333333", background_color="#eeeeee", bar_color="#00ff00"):
+                 border_color="#444444", background_color="#eeeeee", bar_color="#00ff00"):
         self.original_width = width
         self.border_color = border_color
         self.background_color = background_color
