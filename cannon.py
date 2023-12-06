@@ -234,7 +234,7 @@ class Cannon(pygame.sprite.Sprite):
 
 
 class BasicCannon(Cannon):
-    name = "기본"
+    name = "대포"
     barrel_texture = TexturePath.Cannon.Barrel.basic_barrel
     wheel_texture = TexturePath.Cannon.Wheel.basic_wheel
     shell = BasicShell

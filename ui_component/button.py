@@ -7,7 +7,7 @@ class Button:
                  top_color="#475f77", bottom_color="#354b5e", change_color="#d74b4b"):
         # Core attributes
         self.surface = surface
-        font = pygame.font.Font(font_path, int(font_size * 0.70))
+        font = pygame.font.Font(font_path, int(font_size))
         self.clicked = False
         self.pressed = False
         self.elevation = elevation

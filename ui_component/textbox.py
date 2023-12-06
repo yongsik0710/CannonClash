@@ -8,7 +8,7 @@ class TextBox:
         # Core attributes
         self.surface = surface
         self.text = text
-        self.font = pygame.font.Font(font_path, int(font_size * 0.7))
+        self.font = pygame.font.Font(font_path, int(font_size))
         self.original_height = height
         self.background_color = background_color
         self.text_color = text_color

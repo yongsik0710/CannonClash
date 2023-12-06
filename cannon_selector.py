@@ -36,13 +36,13 @@ class CannonSelector:
         self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (360 * self.size, 360 * self.size)), (0, 0))
         self.cannon_image.blit(load_png(CANNONS[self.cannon_id].wheel_texture, (360 * self.size, 360 * self.size)), (0, 0))
 
-        self.player_name = TextBox(surface, x, y, 380 * size, 80 * size, (70 * size), self.player.name)
-        self.cannon_name = TextBox(surface, x + 90 * size, y + 360 * size, 200 * size, 80 * size, (50 * size), CANNONS[self.cannon_id].name, border_ratio=2)
-        self.next = Button(surface, x + 310 * size, y + 367 * size, 70 * size, 70 * size, 4 * size, (50 * size), ">", border_ratio=2)
-        self.prev = Button(surface, x, y + 367 * size, 70 * size, 70 * size, 4 * size, (50 * size), "<", border_ratio=2)
-        self.next_off = TextBox(surface, x + 310 * size, y + 365 * size, 70 * size, 70 * size, (50 * size), ">",
+        self.player_name = TextBox(surface, x, y, 380 * size, 80 * size, (55 * size), self.player.name)
+        self.cannon_name = TextBox(surface, x + 90 * size, y + 360 * size, 200 * size, 80 * size, (40 * size), CANNONS[self.cannon_id].name, border_ratio=2)
+        self.next = Button(surface, x + 310 * size, y + 367 * size, 70 * size, 70 * size, 4 * size, (40 * size), ">", border_ratio=2)
+        self.prev = Button(surface, x, y + 367 * size, 70 * size, 70 * size, 4 * size, (40 * size), "<", border_ratio=2)
+        self.next_off = TextBox(surface, x + 310 * size, y + 365 * size, 70 * size, 70 * size, (40 * size), ">",
                                 background_color="#354b5e", border_ratio=2)
-        self.prev_off = TextBox(surface, x, y + 365 * size, 70 * size, 70 * size, (50 * size), "<",
+        self.prev_off = TextBox(surface, x, y + 365 * size, 70 * size, 70 * size, (40 * size), "<",
                                 background_color="#354b5e", border_ratio=2)
 
     def update(self):

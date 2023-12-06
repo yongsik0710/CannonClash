@@ -97,14 +97,15 @@ class MissileGame:
         self.is_game_end()
         self.wind_change()
         self.players[self.current_turn].cannon.mobility = self.players[self.current_turn].cannon.max_mobility
-        if self.players[self.current_turn].cannon.is_on_fire:
-            self.players[self.current_turn].cannon.damage(random.randint(50, 100))
-            self.players[self.current_turn].cannon.is_on_fire = random.choice([True, False])
 
         if self.current_turn + 1 < len(self.players):
             self.current_turn += 1
         else:
             self.current_turn = 0
+
+        if self.players[self.current_turn].cannon.is_on_fire:
+            self.players[self.current_turn].cannon.damage(random.randint(50, 100))
+            self.players[self.current_turn].cannon.is_on_fire = random.choice([True, False])
 
         if not self.players[self.current_turn].is_death:
             self.camera_group.center_target_camera_align(self.players[self.current_turn].cannon)
@@ -134,12 +135,8 @@ class GameEnd:
         self.stop = False
         self.winner = winner
 
-        self.winner_text = TextBox(game.screen, 560, 300, 800, 150, 80, f"{self.winner.name} 님이 승리했습니다!")
-        self.back_to_main_menu = Button(game.screen, 760, 700, 400, 100, 5, 50, "메인 메뉴로 돌아가기")
-
-        # my_surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
-        # my_surface.fill((255, 255, 255, 100))
-        # self.game.screen.blit(my_surface, (0, 0))
+        self.winner_text = TextBox(game.screen, 510, 300, 900, 150, 70, f"{self.winner.name} 님이 승리했습니다!")
+        self.back_to_main_menu = Button(game.screen, 760, 700, 400, 100, 5, 40, "메인 메뉴로 돌아가기")
 
     def loop(self):
         # 이벤트 핸들러
@@ -158,7 +155,7 @@ class GameEnd:
                 self.stop = True
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+                if event.key == pygame.K_ESCAPE:  # 메인 메뉴로 이동
                     self.game.current_display = self.game.main_menu
 
         if self.back_to_main_menu.is_clicked():  # 메인 메뉴로 이동

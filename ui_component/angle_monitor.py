@@ -10,8 +10,8 @@ class AngleMonitor:
         self.x = x
         self.y = y
 
-        self.incline_angle_text = TextBox(self.surface, 50, 130, 40, 20, 20, str(int(self.cannon.incline_angle)), background_color="#606060")
-        self.launch_angle_text = TextBox(self.surface, 110, 130, 40, 20, 20, str(int(self.cannon.launch_angle)), background_color="#606060")
+        self.incline_angle_text = TextBox(self.surface, 50, 130, 40, 20, 16, str(int(self.cannon.incline_angle)), background_color="#606060")
+        self.launch_angle_text = TextBox(self.surface, 110, 130, 40, 20, 16, str(int(self.cannon.launch_angle)), background_color="#606060")
 
     def draw(self):
         surf = pygame.surface.Surface((200, 200)).convert_alpha()
