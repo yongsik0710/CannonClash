@@ -44,8 +44,7 @@ class StageButton:
         self.image_surf = pygame.transform.scale(self.original_image,
                                                  (width - (2 * border_thickness),
                                                   height - (2 * border_thickness)))
-        self.image_rect = self.image_surf.get_rect()
-        self.image_rect.center = self.border_rect.center
+        self.image_rect = self.image_surf.get_rect(center=self.border_rect.center)
 
         # inflate border
         self.inflate_border_rect = self.border_rect.scale_by(inflation_size, inflation_size)
@@ -54,8 +53,7 @@ class StageButton:
         self.inflate_image_surf = pygame.transform.scale(self.original_image,
                                                          (width * inflation_size - (2 * border_thickness),
                                                           height * inflation_size - (2 * border_thickness)))
-        self.inflate_image_rect = self.inflate_image_surf.get_rect()
-        self.inflate_image_rect.center = self.inflate_border_rect.center
+        self.inflate_image_rect = self.inflate_image_surf.get_rect(center=self.inflate_border_rect.center)
 
     def draw(self):
         if self.hover:

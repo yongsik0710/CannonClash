@@ -39,16 +39,19 @@ class MissileGame:
             player.init_player_ui()
         self.players[self.current_turn].turn = True
 
+        self.escape = False
+
     def loop(self):
         # 이벤트 핸들러
         self.event_check()
         # 화면 그리기
-        self.camera_group.update()
-        self.camera_group.custom_draw()
-        self.players[self.current_turn].draw_player_ui()
-        # 화면 업데이트
-        pygame.display.update()
-        self.game.clock.tick(self.game.FPS)
+        if not self.escape:
+            self.camera_group.update()
+            self.camera_group.custom_draw()
+            self.players[self.current_turn].draw_player_ui()
+            # 화면 업데이트
+            pygame.display.update()
+            self.game.clock.tick(self.game.FPS)
 
     def event_check(self):
         keys = pygame.key.get_pressed()
@@ -77,7 +80,11 @@ class MissileGame:
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    self.escape = True
                     self.game.current_display = self.game.game_menu
+                    my_surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
+                    my_surface.fill((255, 255, 255, 160))
+                    self.game.screen.blit(my_surface, (0, 0))
 
                 if event.key == pygame.K_LCTRL:
                     self.camera_group.center_target_camera_align(self.players[self.current_turn].cannon)

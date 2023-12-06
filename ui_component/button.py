@@ -3,7 +3,7 @@ import pygame
 
 
 class Button:
-    def __init__(self, surface, x, y, width, height, elevation, font_size, text="button", font_path=FontPath.font,
+    def __init__(self, surface, x, y, width, height, elevation, font_size, text="button", font_path=FontPath.font_2, border_ratio=6,
                  top_color="#475f77", bottom_color="#354b5e", change_color="#d74b4b"):
         # Core attributes
         self.surface = surface
@@ -18,6 +18,8 @@ class Button:
         self.top_original_color = top_color
         self.bottom_color = bottom_color
         self.change_color = change_color
+
+        self.border_ratio = border_ratio
 
         # interact rectangle
         self.interact_rect = pygame.Rect((x, y - self.elevation), (width, height))
@@ -41,8 +43,8 @@ class Button:
         self.bottom_rect.midtop = self.top_rect.midtop
         self.bottom_rect.height = self.top_rect.height + self.dynamic_elecation
 
-        pygame.draw.rect(self.surface, self.bottom_color, self.bottom_rect, border_radius=int(self.original_height/5))
-        pygame.draw.rect(self.surface, self.top_color, self.top_rect, border_radius=int(self.original_height/5))
+        pygame.draw.rect(self.surface, self.bottom_color, self.bottom_rect, border_radius=int(self.original_height / self.border_ratio))
+        pygame.draw.rect(self.surface, self.top_color, self.top_rect, border_radius=int(self.original_height / self.border_ratio))
         self.surface.blit(self.text_surf, self.text_rect)
         self.check_click()
 

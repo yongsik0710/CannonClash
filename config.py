@@ -11,7 +11,8 @@ def resource_path(relative_path):
 
 
 class FontPath:
-    font = resource_path("EliceDXNeolli-Medium.ttf")
+    font = resource_path("Fonts/EliceDXNeolli-Medium.ttf")
+    font_2 = resource_path("Fonts/LINESeedKR-Bd.ttf")
 
 
 class Levels:
@@ -24,14 +25,14 @@ class Levels:
 
     class Level2:
         level_image = resource_path("Images/Levels/level_2.png")
-        background_image = resource_path("Images/Backgrounds/sky.png")
+        background_image = resource_path("Images/Backgrounds/christmas_ornament.png")
         gravity = 1.0
         air_resistance = 0.0
         spawn_points = [(100, 100), (250, 200), (1800, 100), (2200, 300), (400, 100), (800, 100)]
 
     class Level3:
         level_image = resource_path("Images/Levels/level_3.png")
-        background_image = resource_path("Images/Backgrounds/sky.png")
+        background_image = resource_path("Images/Backgrounds/snow.png")
         gravity = 1.0
         air_resistance = 0.0
         spawn_points = [(100, 100), (250, 200), (1800, 100), (2200, 300), (400, 100), (800, 100)]

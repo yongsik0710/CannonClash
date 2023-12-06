@@ -1,3 +1,4 @@
+from ui_component.textbox import *
 import pygame
 import math
 
@@ -9,13 +10,27 @@ class AngleMonitor:
         self.x = x
         self.y = y
 
+        self.incline_angle_text = TextBox(self.surface, 50, 130, 40, 20, 20, str(int(self.cannon.incline_angle)), background_color="#606060")
+        self.launch_angle_text = TextBox(self.surface, 110, 130, 40, 20, 20, str(int(self.cannon.launch_angle)), background_color="#606060")
+
     def draw(self):
         surf = pygame.surface.Surface((200, 200)).convert_alpha()
         surf.fill((0, 0, 0, 0))
         rect = surf.get_rect()
         radius = 100
-        pygame.draw.circle(surf, "#f0f0f0", rect.center, radius)
+        pygame.draw.circle(surf, "#000000", rect.center, radius)
+        pygame.draw.circle(surf, "#f0f0f0", rect.center, radius - 2)
         pygame.draw.circle(surf, "#333333", rect.center, radius * 0.9)
+
+        # 경사각 텍스트
+        self.incline_angle_text.surface = surf
+        self.incline_angle_text.text_update(str(int(self.cannon.incline_angle)))
+        self.incline_angle_text.draw()
+
+        # 발사각 텍스트
+        self.launch_angle_text.surface = surf
+        self.launch_angle_text.text_update(str(int(self.cannon.launch_angle)))
+        self.launch_angle_text.draw()
 
         # 수평선 그리기
         angle_vector = self.get_vector(0.0, radius)

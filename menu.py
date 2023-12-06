@@ -57,11 +57,11 @@ class NumberOfPlayerSelect(Menu):
         self.number_of_player = 2
         self.title = TextBox(game.screen, 460, 200, 1000, 150, 80, text='참가할 플레이어 수를 정해주세요')
 
-        self.player_count = TextBox(game.screen, 910, 500, 100, 100, 50, text=str(self.number_of_player))
-        self.up = Button(game.screen, 1030, 510, 80, 80, 4, 50, ">")
-        self.down = Button(game.screen, 810, 510, 80, 80, 4, 50, "<")
-        self.up_off = TextBox(game.screen, 1030, 508, 80, 80, 50, ">", background_color="#354b5e")
-        self.down_off = TextBox(game.screen, 810, 508, 80, 80, 50, "<", background_color="#354b5e")
+        self.player_count = TextBox(game.screen, 910, 500, 100, 100, 50, text=str(self.number_of_player), border_ratio=2)
+        self.up = Button(game.screen, 1030, 510, 80, 80, 4, 50, ">", border_ratio=2)
+        self.down = Button(game.screen, 810, 510, 80, 80, 4, 50, "<", border_ratio=2)
+        self.up_off = TextBox(game.screen, 1030, 508, 80, 80, 50, ">", background_color="#354b5e", border_ratio=2)
+        self.down_off = TextBox(game.screen, 810, 508, 80, 80, 50, "<", background_color="#354b5e", border_ratio=2)
 
         self.next = Button(game.screen, 760, 750, 400, 100, 5, 50, "다음")
         self.back = Button(game.screen, 760, 870, 400, 100, 5, 50, "뒤로")
@@ -183,10 +183,10 @@ class StageSelect(Menu):
     def __init__(self, game):
         super().__init__(game)
         self.stage_select = TextBox(game.screen, 660, 100, 600, 100, 80, "스테이지 선택")
-        self.stage_1 = StageButton(game.screen, 480, 300, 440, 200, 5, Levels.Level1)
-        self.stage_2 = StageButton(game.screen, 1000, 300, 440, 200, 5, Levels.Level2)
-        self.stage_3 = StageButton(game.screen, 480, 560, 440, 200, 5, Levels.Level3)
-        self.stage_4 = StageButton(game.screen, 1000, 560, 440, 200, 5, Levels.Level4)
+        self.stage_1 = StageButton(game.screen, 450, 300, 440, 200, 5, Levels.Level1)
+        self.stage_2 = StageButton(game.screen, 1030, 300, 440, 200, 5, Levels.Level2)
+        self.stage_3 = StageButton(game.screen, 450, 560, 440, 200, 5, Levels.Level3)
+        self.stage_4 = StageButton(game.screen, 1030, 560, 440, 200, 5, Levels.Level4)
         self.back = Button(game.screen, 760, 870, 400, 100, 5, 50, "뒤로")
 
     def loop(self):
@@ -239,10 +239,6 @@ class GameMenu(Menu):
         self.resume = Button(game.screen, 760, 580, 400, 100, 5, 50, "계속하기")
         self.back_to_main_menu = Button(game.screen, 760, 700, 400, 100, 5, 50, "메인 메뉴로 돌아가기")
 
-        # my_surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
-        # my_surface.fill((255, 255, 255, 100))
-        # self.game.screen.blit(my_surface, (0, 0))
-
     def loop(self):
         # 이벤트 핸들러
         self.event_check()
@@ -261,6 +257,7 @@ class GameMenu(Menu):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.game.current_display = self.game.missile_game
+                    self.game.missile_game.escape = False
 
         if self.resume.is_clicked():  # 게임으로
             self.game.current_display = self.game.missile_game

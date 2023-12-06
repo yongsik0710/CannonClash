@@ -9,7 +9,7 @@ def load_png(name):
     fullname = os.path.join("Images", name)
     try:
         image = pygame.image.load(fullname)
-        image = pygame.transform.scale(image, (240, 240))
+        image = pygame.transform.scale(image, (200, 200))
         if image.get_alpha() is None:
             image = image.convert()
         else:
@@ -76,7 +76,7 @@ class Cannon(pygame.sprite.Sprite):
         self.out_of_border()
 
     def blit_cannon(self):
-        surf = pygame.surface.Surface((240, 240)).convert_alpha()
+        surf = pygame.surface.Surface((200, 200)).convert_alpha()
         surf.fill((0, 0, 0, 0))
         if self.direction == "right":
             self.barrel.blit(surf, (0, 0), self.launch_angle)
@@ -88,14 +88,14 @@ class Cannon(pygame.sprite.Sprite):
         return surf
 
     def angle_update(self):
-        surf = pygame.surface.Surface((50, 50)).convert_alpha()
+        surf = pygame.surface.Surface((48, 48)).convert_alpha()
         surf.fill((0, 0, 0, 0))
-        surf.blit(self.stage.image, (-(self.rect.centerx - 25), -self.rect.centery))
+        surf.blit(self.stage.image, (-(self.rect.centerx - 24), -self.rect.centery))
         mask = pygame.mask.from_surface(surf)
 
         border_bits = []
-        for x in range(50):
-            for y in range(40):
+        for x in range(48):
+            for y in range(48):
                 if mask.get_at((x, y)):
                     border_bits.append((x, y))
                     break
@@ -165,7 +165,7 @@ class Cannon(pygame.sprite.Sprite):
 
     def move_right(self):
         self.direction = "right"
-        if self.mobility > 0 and self.incline_angle <= 60:
+        if self.mobility > 0 and self.incline_angle <= 55:
             self.vector.x = 1
             self.wheel.roll_cw()
             if self.incline_angle >= 0:
@@ -179,7 +179,7 @@ class Cannon(pygame.sprite.Sprite):
 
     def move_left(self):
         self.direction = "left"
-        if self.mobility > 0 and self.incline_angle >= -60:
+        if self.mobility > 0 and self.incline_angle >= -55:
             self.vector.x = -1
             self.wheel.roll_acw()
             if self.incline_angle <= 0:
