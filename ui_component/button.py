@@ -3,7 +3,7 @@ import pygame
 
 
 class Button:
-    def __init__(self, surface, x, y, width, height, elevation, font_size, text="button", font_path=FontPath.font_2, border_ratio=6,
+    def __init__(self, surface, x, y, width, height, elevation, font_size, text="button", font_path=FontPath.font, border_ratio=6,
                  top_color="#475f77", bottom_color="#354b5e", change_color="#d74b4b"):
         # Core attributes
         self.surface = surface

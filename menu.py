@@ -257,7 +257,6 @@ class GameMenu(Menu):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.game.current_display = self.game.missile_game
-                    self.game.missile_game.escape = False
 
         if self.resume.is_clicked():  # 게임으로
             self.game.current_display = self.game.missile_game

@@ -48,6 +48,7 @@ class Cannon(pygame.sprite.Sprite):
         self.on_ground = False
         self.is_death = False
         self.direction = "right"
+        self.is_on_fire = False
 
         self.stage = stage
         self.vector = pygame.math.Vector2(vector)
@@ -58,7 +59,7 @@ class Cannon(pygame.sprite.Sprite):
 
         self.image = self.blit_cannon()
         self.rect = self.image.get_rect()
-        self.rect = self.rect.move(pos)
+        self.rect.center = self.rect.move(pos).topleft
 
         self.mask = self.wheel.mask
 
@@ -78,13 +79,23 @@ class Cannon(pygame.sprite.Sprite):
     def blit_cannon(self):
         surf = pygame.surface.Surface((200, 200)).convert_alpha()
         surf.fill((0, 0, 0, 0))
+
         if self.direction == "right":
             self.barrel.blit(surf, (0, 0), self.launch_angle)
+            if self.is_on_fire:
+                fire = load_png(TexturePath.Shells.fireball)
+                fire = pygame.transform.rotozoom(fire, -90, 0.5)
+                surf.blit(fire, (50, 50))
             self.wheel.blit(surf, (0, 0))
         elif self.direction == "left":
             self.barrel.blit(surf, (0, 0), self.launch_angle)
+            if self.is_on_fire:
+                fire = load_png(TexturePath.Shells.fireball)
+                fire = pygame.transform.rotozoom(fire, -90, 0.5)
+                surf.blit(fire, (50, 50))
             surf = pygame.transform.flip(surf, True, False)
             self.wheel.blit(surf, (0, 0))
+
         return surf
 
     def angle_update(self):
@@ -106,6 +117,7 @@ class Cannon(pygame.sprite.Sprite):
             sum_of_angles[1] += border_bits[i][1] - border_bits[0][1]
 
         self.incline_angle = pygame.Vector2(sum_of_angles[0], sum_of_angles[1]).angle_to((0, 0))
+
         if self.direction == "right":
             self.launch_angle = self.default_angle + self.incline_angle + self.delta_angle
         else:
@@ -234,10 +246,22 @@ class Ballista(Cannon):
     name = "발리스타"
     barrel_texture = TexturePath.Cannon.Barrel.ballista_barrel
     wheel_texture = TexturePath.Cannon.Wheel.ballista_wheel
-    shell = Shell
+    shell = Arrow
+    default_angle = 40
+    max_delta_angle = 10
+
+
+class FlameCannon(Cannon):
+    name = "화포"
+    barrel_texture = TexturePath.Cannon.Barrel.flame_cannon_barrel
+    wheel_texture = TexturePath.Cannon.Wheel.flame_cannon_wheel
+    shell = FireBall
+    default_angle = 20
+    max_delta_angle = 30
 
 
 CANNONS = {
     1: BasicCannon,
-    2: Ballista
+    2: Ballista,
+    3: FlameCannon
 }

@@ -1,24 +1,10 @@
+import pygame
+
 from camera import *
 from stage import *
 from config import *
 from ui_component.button import *
 from ui_component.textbox import *
-
-
-def load_png(name):
-    """ Load image and return image object"""
-    fullname = os.path.join("Images", name)
-    try:
-        image = pygame.image.load(fullname)
-        image = pygame.transform.scale(image, (240, 240))
-        if image.get_alpha() is None:
-            image = image.convert()
-        else:
-            image = image.convert_alpha()
-    except FileNotFoundError:
-        print(f"Cannot load image: {fullname}")
-        raise SystemExit
-    return image
 
 
 class MissileGame:
@@ -36,22 +22,27 @@ class MissileGame:
         for i, player in enumerate(players):
             player.missile_game = self
             player.cannon = player.cannon([self.camera_group, self.cannon_group], self.stage, level.spawn_points[i], [0, 0], player)
+            player.cannon.direction = random.choice(["right", "left"])
             player.init_player_ui()
         self.players[self.current_turn].turn = True
+        self.camera_group.center_target_camera_align(self.players[self.current_turn].cannon)
 
-        self.escape = False
+        self.game_menu_on = False
 
     def loop(self):
         # 이벤트 핸들러
         self.event_check()
         # 화면 그리기
-        if not self.escape:
+        if not self.game_menu_on:
             self.camera_group.update()
             self.camera_group.custom_draw()
             self.players[self.current_turn].draw_player_ui()
             # 화면 업데이트
             pygame.display.update()
             self.game.clock.tick(self.game.FPS)
+        else:
+            self.game_menu_pop()
+            self.game_menu_on = False
 
     def event_check(self):
         keys = pygame.key.get_pressed()
@@ -80,25 +71,35 @@ class MissileGame:
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self.escape = True
-                    self.game.current_display = self.game.game_menu
-                    my_surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
-                    my_surface.fill((255, 255, 255, 160))
-                    self.game.screen.blit(my_surface, (0, 0))
+                    self.game_menu_on = True
 
                 if event.key == pygame.K_LCTRL:
                     self.camera_group.center_target_camera_align(self.players[self.current_turn].cannon)
+
             if self.players[self.current_turn].turn:
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_SPACE:
                         self.players[self.current_turn].shoot_shell()
 
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        print(pygame.mouse.get_pos() + self.camera_group.offset)
+
+    def game_menu_pop(self):
+        self.game.current_display = self.game.game_menu
+        surf = pygame.Surface((1920, 1080), pygame.SRCALPHA)
+        surf.fill((255, 255, 255, 160))
+        self.game.screen.blit(surf, (0, 0))
+
     def next_turn(self):
         # 게임 종료 테스트
         self.is_game_end()
         self.wind_change()
         self.players[self.current_turn].cannon.mobility = self.players[self.current_turn].cannon.max_mobility
+        if self.players[self.current_turn].cannon.is_on_fire:
+            self.players[self.current_turn].cannon.damage(random.randint(50, 100))
+            self.players[self.current_turn].cannon.is_on_fire = random.choice([True, False])
 
         if self.current_turn + 1 < len(self.players):
             self.current_turn += 1
@@ -112,7 +113,7 @@ class MissileGame:
             self.players[self.current_turn].skip()
 
     def wind_change(self):
-        self.stage.wind += random.randint(-30, 30)
+        self.stage.wind += random.randint(-40, 40)
         if self.stage.wind > 100:
             self.stage.wind = 100
         elif self.stage.wind < -100:
