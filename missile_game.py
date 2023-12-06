@@ -26,7 +26,8 @@ class MissileGame:
         self.game = game
         self.stop = False
         self.current_turn = 0
-        self.camera_group = CameraGroup()
+        self.background = pygame.image.load(level.background_image).convert()
+        self.camera_group = CameraGroup(self.background)
         self.cannon_group = pygame.sprite.Group()
         self.players = players
         self.stage = Stage(self.camera_group, level)
@@ -37,8 +38,6 @@ class MissileGame:
             player.cannon = player.cannon([self.camera_group, self.cannon_group], self.stage, level.spawn_points[i], [0, 0], player)
             player.init_player_ui()
         self.players[self.current_turn].turn = True
-
-        self.background = pygame.image.load(level.background_image).convert()
 
     def loop(self):
         # 이벤트 핸들러
@@ -126,11 +125,9 @@ class GameEnd:
         self.game = game
         self.stop = False
         self.winner = winner
-        title_font = pygame.font.Font(None, 80)
-        font = pygame.font.Font(None, 50)
 
-        self.winner_text = TextBox(game.screen, 560, 300, 800, 150, title_font, f"{self.winner.name} win this game!!")
-        self.back_to_main_menu = Button(game.screen, 760, 700, 400, 100, 5, font, "Back to Main Menu")
+        self.winner_text = TextBox(game.screen, 560, 300, 800, 150, 80, f"{self.winner.name} 님이 승리했습니다!")
+        self.back_to_main_menu = Button(game.screen, 760, 700, 400, 100, 5, 50, "메인 메뉴로 돌아가기")
 
         # my_surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
         # my_surface.fill((255, 255, 255, 100))

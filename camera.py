@@ -2,7 +2,7 @@ import pygame
 
 
 class CameraGroup(pygame.sprite.Group):
-    def __init__(self):
+    def __init__(self, background):
         super().__init__()
         self.display_surface = pygame.display.get_surface()
 
@@ -20,7 +20,7 @@ class CameraGroup(pygame.sprite.Group):
         self.camera_rect = pygame.Rect(l, t, w, h)
 
         # ground
-        self.ground_surf = pygame.image.load('Images/Backgrounds/sky.png').convert_alpha()
+        self.ground_surf = background
         self.ground_rect = self.ground_surf.get_rect(topleft=(0, 0))
 
         # camera speed

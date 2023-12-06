@@ -19,11 +19,9 @@ class Menu:
 class MainMenu(Menu):
     def __init__(self, game):
         super().__init__(game)
-        font = pygame.font.Font(None, 50)
-        title_font = pygame.font.Font(None, 160)
-        self.title = TextBox(game.screen, 460, 260, 1000, 200, title_font, "Cannon Clash")
-        self.game_start = Button(game.screen, 760, 700, 400, 100, 5, font, "Game Start")
-        self.quit = Button(game.screen, 760, 820, 400, 100, 5, font, "Quit")
+        self.title = TextBox(game.screen, 460, 260, 1000, 200, 160, "Cannon Clash")
+        self.game_start = Button(game.screen, 760, 700, 400, 100, 5, 50, "게임 시작")
+        self.quit = Button(game.screen, 760, 820, 400, 100, 5, 50, "게임 종료")
 
     def loop(self):
         # 이벤트 핸들러
@@ -56,19 +54,17 @@ class MainMenu(Menu):
 class NumberOfPlayerSelect(Menu):
     def __init__(self, game):
         super().__init__(game)
-        font = pygame.font.Font(None, 50)
-        title_font = pygame.font.Font(None, 80)
         self.number_of_player = 2
-        self.title = TextBox(game.screen, 560, 200, 800, 150, title_font, text='Select number of players')
+        self.title = TextBox(game.screen, 460, 200, 1000, 150, 80, text='참가할 플레이어 수를 정해주세요')
 
-        self.player_count = TextBox(game.screen, 910, 500, 100, 100, font, text=str(self.number_of_player))
-        self.up = Button(game.screen, 1030, 510, 80, 80, 4, font, ">")
-        self.down = Button(game.screen, 810, 510, 80, 80, 4, font, "<")
-        self.up_off = TextBox(game.screen, 1030, 508, 80, 80, font, ">", background_color="#354b5e")
-        self.down_off = TextBox(game.screen, 810, 508, 80, 80, font, "<", background_color="#354b5e")
+        self.player_count = TextBox(game.screen, 910, 500, 100, 100, 50, text=str(self.number_of_player))
+        self.up = Button(game.screen, 1030, 510, 80, 80, 4, 50, ">")
+        self.down = Button(game.screen, 810, 510, 80, 80, 4, 50, "<")
+        self.up_off = TextBox(game.screen, 1030, 508, 80, 80, 50, ">", background_color="#354b5e")
+        self.down_off = TextBox(game.screen, 810, 508, 80, 80, 50, "<", background_color="#354b5e")
 
-        self.next = Button(game.screen, 760, 750, 400, 100, 5, font, "Next")
-        self.back = Button(game.screen, 760, 870, 400, 100, 5, font, "Back")
+        self.next = Button(game.screen, 760, 750, 400, 100, 5, 50, "다음")
+        self.back = Button(game.screen, 760, 870, 400, 100, 5, 50, "뒤로")
 
     def loop(self):
         # 이벤트 핸들러
@@ -118,14 +114,12 @@ class CannonSelect(Menu):
         self.players = [Player(i) for i in range(number_of_player)]
         self.cannon_selector = []
 
-        font = pygame.font.Font(None, 50)
-
         if number_of_player <= 4:
-            self.next = Button(game.screen, 760, 750, 400, 100, 5, font, "Next")
-            self.back = Button(game.screen, 760, 870, 400, 100, 5, font, "Back")
+            self.next = Button(game.screen, 760, 750, 400, 100, 5, 50, "다음")
+            self.back = Button(game.screen, 760, 870, 400, 100, 5, 50, "뒤로")
         else:
-            self.next = Button(game.screen, 760, 800, 400, 100, 5, font, "Next")
-            self.back = Button(game.screen, 760, 920, 400, 100, 5, font, "Back")
+            self.next = Button(game.screen, 760, 800, 400, 100, 5, 50, "다음")
+            self.back = Button(game.screen, 760, 920, 400, 100, 5, 50, "뒤로")
 
         if number_of_player == 2:
             self.cannon_selector.append(CannonSelector(self.game.screen, 450, 200, 1.0, self.players[0]))
@@ -188,14 +182,12 @@ class CannonSelect(Menu):
 class StageSelect(Menu):
     def __init__(self, game):
         super().__init__(game)
-        title_font = pygame.font.Font(None, 80)
-        font = pygame.font.Font(None, 50)
-        self.stage_select = TextBox(game.screen, 660, 100, 600, 100, title_font, "Stage Select")
+        self.stage_select = TextBox(game.screen, 660, 100, 600, 100, 80, "스테이지 선택")
         self.stage_1 = StageButton(game.screen, 480, 300, 440, 200, 5, Levels.Level1)
         self.stage_2 = StageButton(game.screen, 1000, 300, 440, 200, 5, Levels.Level2)
         self.stage_3 = StageButton(game.screen, 480, 560, 440, 200, 5, Levels.Level3)
         self.stage_4 = StageButton(game.screen, 1000, 560, 440, 200, 5, Levels.Level4)
-        self.back = Button(game.screen, 760, 870, 400, 100, 5, font, "Back")
+        self.back = Button(game.screen, 760, 870, 400, 100, 5, 50, "뒤로")
 
     def loop(self):
         # 이벤트 핸들러
@@ -244,9 +236,8 @@ class StageSelect(Menu):
 class GameMenu(Menu):
     def __init__(self, game):
         super().__init__(game)
-        font = pygame.font.Font(None, 50)
-        self.resume = Button(game.screen, 760, 580, 400, 100, 5, font, "Resume")
-        self.back_to_main_menu = Button(game.screen, 760, 700, 400, 100, 5, font, "Back to Main Menu")
+        self.resume = Button(game.screen, 760, 580, 400, 100, 5, 50, "계속하기")
+        self.back_to_main_menu = Button(game.screen, 760, 700, 400, 100, 5, 50, "메인 메뉴로 돌아가기")
 
         # my_surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
         # my_surface.fill((255, 255, 255, 100))

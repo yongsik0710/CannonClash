@@ -79,10 +79,10 @@ class Cannon(pygame.sprite.Sprite):
         surf = pygame.surface.Surface((240, 240)).convert_alpha()
         surf.fill((0, 0, 0, 0))
         if self.direction == "right":
-            self.barrel.blit(surf, (0, 0), self.launch_angle - 20)
+            self.barrel.blit(surf, (0, 0), self.launch_angle)
             self.wheel.blit(surf, (0, 0))
         elif self.direction == "left":
-            self.barrel.blit(surf, (0, 0), self.launch_angle - 20)
+            self.barrel.blit(surf, (0, 0), self.launch_angle)
             surf = pygame.transform.flip(surf, True, False)
             self.wheel.blit(surf, (0, 0))
         return surf
@@ -222,22 +222,22 @@ class Cannon(pygame.sprite.Sprite):
 
 
 class BasicCannon(Cannon):
-    name = "Basic"
-    barrel_texture = TexturePath.Cannon.Barrel.barrel_1
-    wheel_texture = TexturePath.Cannon.Wheel.wheel_1
+    name = "기본"
+    barrel_texture = TexturePath.Cannon.Barrel.basic_barrel
+    wheel_texture = TexturePath.Cannon.Wheel.basic_wheel
     shell = BasicShell
     default_angle = 20
     max_delta_angle = 20
 
 
-class TestCannon(Cannon):
-    name = "Test"
-    barrel_texture = TexturePath.Cannon.Barrel.barrel_2
-    wheel_texture = TexturePath.Cannon.Wheel.wheel_2
+class Ballista(Cannon):
+    name = "발리스타"
+    barrel_texture = TexturePath.Cannon.Barrel.ballista_barrel
+    wheel_texture = TexturePath.Cannon.Wheel.ballista_wheel
     shell = Shell
 
 
 CANNONS = {
     1: BasicCannon,
-    2: TestCannon
+    2: Ballista
 }

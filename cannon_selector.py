@@ -31,20 +31,17 @@ class CannonSelector:
         self.player.name = "Player " + str(player.number + 1)
         self.player.cannon = CANNONS[self.cannon_id]
 
-        font = pygame.font.Font(None, int(50 * size))
-        title_font = pygame.font.Font(None, int(70 * size))
-
         self.cannon_image = pygame.surface.Surface((360 * size, 360 * size)).convert_alpha()
         self.cannon_image.fill((0, 0, 0, 0))
         self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (360 * self.size, 360 * self.size)), (0, 0))
         self.cannon_image.blit(load_png(CANNONS[self.cannon_id].wheel_texture, (360 * self.size, 360 * self.size)), (0, 0))
 
-        self.player_name = TextBox(surface, x, y, 380 * size, 80 * size, title_font, self.player.name)
-        self.cannon_name = TextBox(surface, x + 90 * size, y + 360 * size, 200 * size, 80 * size, font, CANNONS[self.cannon_id].name)
-        self.next = Button(surface, x + 310 * size, y + 367 * size, 70 * size, 70 * size, 4 * size, font, ">")
-        self.prev = Button(surface, x, y + 367 * size, 70 * size, 70 * size, 4 * size, font, "<")
-        self.next_off = TextBox(surface, x + 310 * size, y + 365 * size, 70 * size, 70 * size, font, text=">", background_color="#354b5e")
-        self.prev_off = TextBox(surface, x, y + 365 * size, 70 * size, 70 * size, font, text="<", background_color="#354b5e")
+        self.player_name = TextBox(surface, x, y, 380 * size, 80 * size, (70 * size), self.player.name)
+        self.cannon_name = TextBox(surface, x + 90 * size, y + 360 * size, 200 * size, 80 * size, (50 * size), CANNONS[self.cannon_id].name)
+        self.next = Button(surface, x + 310 * size, y + 367 * size, 70 * size, 70 * size, 4 * size, (50 * size), ">")
+        self.prev = Button(surface, x, y + 367 * size, 70 * size, 70 * size, 4 * size, (50 * size), "<")
+        self.next_off = TextBox(surface, x + 310 * size, y + 365 * size, 70 * size, 70 * size, (50 * size), text=">", background_color="#354b5e")
+        self.prev_off = TextBox(surface, x, y + 365 * size, 70 * size, 70 * size, (50 * size), text="<", background_color="#354b5e")
 
     def update(self):
         self.player.cannon = CANNONS[self.cannon_id]

@@ -18,23 +18,23 @@ class PlayerUI:
 
         self.current_player = pygame.image.load(TexturePath.Util.current_player)
 
-        self.player_name = TextBox(self.canvas, 40, 10, 200, 50, pygame.font.Font(None, 50), self.player.name,
+        self.player_name = TextBox(self.canvas, 40, 10, 200, 50, 50, self.player.name,
                                    background_color="#555555")
 
         self.health_bar = Bar(450, 85, 900, 40, 5, self.player.cannon.max_health, bar_color="#f25246")
         self.power_bar = PowerBar(450, 145, 900, 40, 5, self.player.max_power, bar_color="#5fe84d")
         self.move_bar = Bar(450, 205, 900, 40, 5, self.player.cannon.max_mobility, bar_color="#ffcd45")
 
-        self.health = TextBox(self.canvas, 270, 80, 170, 50, pygame.font.Font(None, 45), "HEALTH",
+        self.health = TextBox(self.canvas, 270, 80, 170, 50, 45, "HEALTH",
                               background_color="#f25246")
-        self.power = TextBox(self.canvas, 270, 140, 170, 50, pygame.font.Font(None, 45), "POWER",
+        self.power = TextBox(self.canvas, 270, 140, 170, 50, 45, "POWER",
                              background_color="#5fe84d")
-        self.move = TextBox(self.canvas, 270, 200, 170, 50, pygame.font.Font(None, 45), "MOVE",
+        self.move = TextBox(self.canvas, 270, 200, 170, 50, 45, "MOVE",
                             background_color="#ffcd45")
 
         self.angle_monitor = AngleMonitor(self.canvas, 40, 70, self.player.cannon)
         self.wind_bar = WindBar(50, 245, 180, 25, 2, 100, bar_color="#75e8ff")
-        self.skip = Button(self.screen, 1530, 790, 100, 45, 4, pygame.font.Font(None, 35), "Skip >")
+        self.skip = Button(self.screen, 1530, 790, 100, 45, 4, 35, "Skip >")
 
     def update(self):
         self.health_bar.level = self.player.cannon.health
