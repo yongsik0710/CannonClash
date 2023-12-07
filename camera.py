@@ -121,7 +121,7 @@ class CameraGroup(pygame.sprite.Group):
         self.display_surface.fill('#000000')
 
         # ground
-        ground_offset = self.ground_rect.topleft - self.offset
+        ground_offset = self.ground_rect.topleft - (self.offset / 2)
         self.display_surface.blit(self.ground_surf, ground_offset)
 
         # active elements

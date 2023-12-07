@@ -8,6 +8,7 @@ class PowerBar(Bar):
                      border_color, background_color, bar_color)
 
         self.prev_power = 1
+        self.line_x = 0
 
     def draw(self, surface):
         self.update()
