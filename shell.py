@@ -1,6 +1,6 @@
 from config import *
+from spritesheet import *
 import pygame
-import math
 import os
 
 
@@ -47,8 +47,6 @@ class Shell(pygame.sprite.Sprite):
         self.surf.fill((0, 0, 0, 0))
         pygame.draw.ellipse(self.surf, "#000000", ellipse_rect)
         self.explosion_mask = pygame.mask.from_surface(self.surf)
-        # screen = pygame.display.get_surface()
-        # self.area = screen.get_rect()
 
     def update(self):
         self.vector.y += self.gravity / 2
@@ -133,14 +131,31 @@ class Arrow(Shell):
 
 
 class FireBall(Shell):
-    texture = TexturePath.Shells.fireball
-    texture_size = 1
+    texture = TexturePath.Util.fireball
+    texture_size = 0.5
     damage = 250
     explosion_radius = 60
+
+    def __init__(self, group, stage, pos, vector, owner, cannon_group):
+        Shell.__init__(self, group, stage, pos, vector, owner, cannon_group)
+        self.sprites = SpriteSheet(self.texture, 5, self.texture_size).sprites
+        self.current_frame = 0
+        self.anim_speed = 0.25
+
+        self.image = self.sprites[self.current_frame]
+        self.rect = self.image.get_rect()
+        self.rect = self.rect.move(pos)
+        self.original_image = self.image.copy()
 
     def update(self):
         self.vector.y += self.gravity / 2
         self.vector.x += self.wind / 550
+
+        self.image = self.sprites[int(self.current_frame)]
+        self.original_image = self.image.copy()
+        self.current_frame += self.anim_speed
+        if int(self.current_frame) >= len(self.sprites):
+            self.current_frame = 0
         angle = self.vector.angle_to((0, 0))
         self.image, self.rect = self.rot_center(angle, self.rect.centerx, self.rect.centery)
         self.collide_check()

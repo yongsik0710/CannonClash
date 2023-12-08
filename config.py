@@ -63,3 +63,4 @@ class TexturePath:
 
     class Util:
         current_player = resource_path("Images/Utilities/current_player.png")
+        fireball = resource_path("Images/Utilities/fireball.png")
