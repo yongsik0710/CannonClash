@@ -50,7 +50,7 @@ class TexturePath:
         arrow = resource_path("Images/Shells/arrow.png")
         fireball = resource_path("Images/Shells/fireball.png")
 
-    class Cannon:
+    class Cannons:
         class Barrel:
             basic_barrel = resource_path("Images/Cannons/Basic/barrel.png")
             ballista_barrel = resource_path("Images/Cannons/Ballista/barrel.png")
@@ -63,4 +63,3 @@ class TexturePath:
 
     class Util:
         current_player = resource_path("Images/Utilities/current_player.png")
-        fireball = resource_path("Images/Utilities/fireball.png")

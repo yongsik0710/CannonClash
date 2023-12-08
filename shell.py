@@ -131,7 +131,7 @@ class Arrow(Shell):
 
 
 class FireBall(Shell):
-    texture = TexturePath.Util.fireball
+    texture = TexturePath.Shells.fireball
     texture_size = 0.55
     damage = 250
     explosion_radius = 60
