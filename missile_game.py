@@ -1,8 +1,6 @@
-import pygame
-
+from config import *
 from camera import *
 from stage import *
-from config import *
 from ui_component.button import *
 from ui_component.textbox import *
 
