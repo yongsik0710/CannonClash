@@ -40,7 +40,7 @@ class Shell(pygame.sprite.Sprite):
         self.wind = stage.wind
 
         self.image, self.rect = load_png(self.texture, self.texture_size)
-        self.rect = self.rect.move(pos)
+        self.rect.center = self.rect.move(pos).topleft
         self.original_image = self.image.copy()
 
         ellipse_rect = pygame.rect.Rect((0, 0), (self.explosion_radius * 3, self.explosion_radius * 2))
@@ -144,7 +144,7 @@ class FireBall(Shell):
 
         self.image = self.sprites[self.current_frame]
         self.rect = self.image.get_rect()
-        self.rect = self.rect.move(pos)
+        self.rect.center = self.rect.move(pos).topleft
         self.original_image = self.image.copy()
 
     def update(self):

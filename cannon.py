@@ -25,6 +25,9 @@ class Cannon(pygame.sprite.Sprite):
     barrel_texture = None
     wheel_texture = None
     shell = None
+    barrel_length = 80
+    barrel_distance = 30
+
     default_angle = 10
     max_delta_angle = 20
     max_health = 1000
@@ -137,18 +140,18 @@ class Cannon(pygame.sprite.Sprite):
     def shoot_shell(self, power, owner):
         if self.direction == "right":
             vector = pygame.Vector2([math.cos(math.radians(self.launch_angle)), - math.sin(math.radians(self.launch_angle))])
-            rotated_launch_vector = vector.copy().rotate(90)
+            rotated_launch_vector = vector.copy().rotate(90).normalize()
 
         else:
             vector = pygame.Vector2([- math.cos(math.radians(self.launch_angle)), - math.sin(math.radians(self.launch_angle))])
-            rotated_launch_vector = vector.copy().rotate(-90)
+            rotated_launch_vector = vector.copy().rotate(-90).normalize()
 
         vector.scale_to_length(power / 3)
-        scaled_launch_vector = vector.copy()
-        scaled_launch_vector.scale_to_length(80)
-        rotated_launch_vector.scale_to_length(30)
-        rotated_launch_vector -= scaled_launch_vector
-        self.camera.target = self.shell(self.camera, self.stage, self.rect.center - rotated_launch_vector, vector, owner, self.cannon_group)
+        scaled_launch_vector = vector.copy().normalize()
+        scaled_launch_vector.scale_to_length(self.barrel_length)
+        rotated_launch_vector.scale_to_length(self.barrel_distance)
+        scaled_launch_vector -= rotated_launch_vector
+        self.camera.target = self.shell(self.camera, self.stage, self.rect.center + scaled_launch_vector, vector, owner, self.cannon_group)
 
     def damage(self, damage):
         self.health -= damage
@@ -237,8 +240,13 @@ class BasicCannon(Cannon):
     barrel_texture = TexturePath.Cannons.Barrel.basic_barrel
     wheel_texture = TexturePath.Cannons.Wheel.basic_wheel
     shell = BasicShell
+    barrel_length = 85
+    barrel_distance = 25
+
     default_angle = 20
     max_delta_angle = 20
+    max_health = 1000
+    max_mobility = 1000
 
 
 class Ballista(Cannon):
@@ -246,8 +254,13 @@ class Ballista(Cannon):
     barrel_texture = TexturePath.Cannons.Barrel.ballista_barrel
     wheel_texture = TexturePath.Cannons.Wheel.ballista_wheel
     shell = Arrow
+    barrel_length = 100
+    barrel_distance = 30
+
     default_angle = 40
     max_delta_angle = 10
+    max_health = 1000
+    max_mobility = 1000
 
 
 class FlameCannon(Cannon):
@@ -255,8 +268,13 @@ class FlameCannon(Cannon):
     barrel_texture = TexturePath.Cannons.Barrel.flame_cannon_barrel
     wheel_texture = TexturePath.Cannons.Wheel.flame_cannon_wheel
     shell = FireBall
+    barrel_length = 100
+    barrel_distance = 20
+
     default_angle = 20
     max_delta_angle = 30
+    max_health = 1000
+    max_mobility = 1000
 
 
 CANNONS = {
