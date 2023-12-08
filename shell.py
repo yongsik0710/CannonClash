@@ -1,6 +1,5 @@
 from config import *
 from spritesheet import *
-from explosion import *
 import pygame
 import os
 
@@ -74,8 +73,9 @@ class Shell(pygame.sprite.Sprite):
 
         pygame.mask.Mask.erase(self.stage.mask, self.explosion_mask, (self.rect.centerx - self.explosion_radius, self.rect.centery - self.explosion_radius))
         self.stage.custom_update()
-        Explosion(self.camera, self.rect.center, self.owner)
+        self.camera.target = None
         self.kill()
+        self.owner.next_turn()
 
     def out_of_border(self):
         if self.rect.top > 2000:
@@ -131,8 +131,8 @@ class Arrow(Shell):
 
 
 class FireBall(Shell):
-    texture = TexturePath.Shells.fireball
-    texture_size = 0.4
+    texture = TexturePath.Util.fireball
+    texture_size = 0.55
     damage = 250
     explosion_radius = 60
 
@@ -140,7 +140,7 @@ class FireBall(Shell):
         Shell.__init__(self, group, stage, pos, vector, owner, cannon_group)
         self.sprites = SpriteSheet(self.texture, 5, self.texture_size).sprites
         self.current_frame = 0
-        self.animation_speed = 0.25
+        self.anim_speed = 0.25
 
         self.image = self.sprites[self.current_frame]
         self.rect = self.image.get_rect()
@@ -153,10 +153,9 @@ class FireBall(Shell):
 
         self.image = self.sprites[int(self.current_frame)]
         self.original_image = self.image.copy()
-        self.current_frame += self.animation_speed
+        self.current_frame += self.anim_speed
         if int(self.current_frame) >= len(self.sprites):
             self.current_frame = 0
-
         angle = self.vector.angle_to((0, 0))
         self.image, self.rect = self.rot_center(angle, self.rect.centerx, self.rect.centery)
         self.collide_check()
