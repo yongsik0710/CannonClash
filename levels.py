@@ -24,8 +24,8 @@ class Levels:
         spawn_points = [(100, 100), (250, 200), (1800, 100), (2200, 300), (400, 100), (800, 100)]
 
     class Level4:
-        level_image = Resources.Levels.Level3.level_image
-        background_image = Resources.Levels.Level3.background_image
+        level_image = Resources.Levels.Level4.level_image
+        background_image = Resources.Levels.Level4.background_image
         gravity = 1.0
         air_resistance = 0.0
         spawn_points = [(350, 440), (895, 600), (1800, 805), (2600, 790), (3150, 750), (3950, 585)]

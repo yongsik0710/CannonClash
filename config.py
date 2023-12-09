@@ -49,7 +49,7 @@ class Resources:
 
         class Level4:
             level_image = resource_path("Images/Levels/level_4.png")
-            background_image = resource_path("Images/Backgrounds/night.png")
+            background_image = resource_path("Images/Backgrounds/level_4.png")
 
     class Cannons:
         class Barrel:

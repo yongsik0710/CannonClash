@@ -77,7 +77,6 @@ class Shell(pygame.sprite.Sprite):
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
         Explosion(self.camera, self.rect.center, Resources.Effects.explosion_3, 42, 1, 1, self.owner)
-        explode_sound.play()
         self.kill()
 
     def out_of_border(self):
