@@ -21,6 +21,7 @@ class CameraGroup(pygame.sprite.Group):
 
         # ground
         self.ground_surf = background
+        self.ground_surf = pygame.transform.scale(self.ground_surf, (1920 + 1240, 1080 + 460))
         self.ground_rect = self.ground_surf.get_rect(topleft=(0, 0))
 
         # camera speed

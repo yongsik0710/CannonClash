@@ -257,9 +257,11 @@ class GameMenu(Menu):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.unpause()
                     self.game.current_display = self.game.missile_game
 
         if self.resume.is_clicked():  # 게임으로
+            pygame.mixer.unpause()
             self.game.current_display = self.game.missile_game
 
         if self.back_to_main_menu.is_clicked():  # 메인 메뉴로 이동
