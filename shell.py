@@ -1,5 +1,6 @@
 from config import *
 from effect import *
+from sounds import *
 import pygame
 import os
 
@@ -21,7 +22,7 @@ def load_png(name, size):
 
 
 class Shell(pygame.sprite.Sprite):
-    texture = TexturePath.Shells.basic
+    texture = Resources.Shells.basic
     texture_size = 1
     damage = 100
     explosion_radius = 50
@@ -75,7 +76,7 @@ class Shell(pygame.sprite.Sprite):
                                (self.rect.centerx - (self.explosion_rect.width / 2),
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        Explosion(self.camera, self.rect.center, TexturePath.Effect.explosion, 1.2, self.owner)
+        Explosion(self.camera, self.rect.center, Resources.Effects.explosion_3, 42, 1, 1, self.owner)
         self.kill()
 
     def out_of_border(self):
@@ -86,14 +87,14 @@ class Shell(pygame.sprite.Sprite):
 
 
 class BasicShell(Shell):
-    texture = TexturePath.Shells.basic
+    texture = Resources.Shells.basic
     texture_size = 0.7
     damage = 300
     explosion_radius = 60
 
 
 class Arrow(Shell):
-    texture = TexturePath.Shells.arrow
+    texture = Resources.Shells.arrow
     texture_size = 1
     damage = 100
     explosion_radius = 30
@@ -130,12 +131,12 @@ class Arrow(Shell):
                                (self.rect.centerx - (self.explosion_rect.width / 2),
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        Explosion(self.camera, self.rect.center, TexturePath.Effect.explosion, 0.6, self.owner)
+        Explosion(self.camera, self.rect.center, Resources.Effects.explosion, 7, 0.6, 0.3, self.owner)
         self.kill()
 
 
 class FireBall(Shell):
-    texture = TexturePath.Shells.fireball
+    texture = Resources.Shells.fireball
     texture_size = 0.55
     damage = 250
     explosion_radius = 60
@@ -190,5 +191,5 @@ class FireBall(Shell):
                                (self.rect.centerx - (self.explosion_rect.width / 2),
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        Explosion(self.camera, self.rect.center, TexturePath.Effect.explosion, 1.2, self.owner)
+        Explosion(self.camera, self.rect.center, Resources.Effects.explosion_3, 42, 1, 1, self.owner)
         self.kill()

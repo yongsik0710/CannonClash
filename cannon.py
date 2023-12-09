@@ -85,14 +85,14 @@ class Cannon(pygame.sprite.Sprite):
         if self.direction == "right":
             self.barrel.blit(surf, (0, 0), self.launch_angle)
             if self.is_on_fire:
-                fire = load_png(TexturePath.Shells.fireball)
+                fire = load_png(Resources.Shells.fireball)
                 fire = pygame.transform.rotozoom(fire, -90, 0.5)
                 surf.blit(fire, (50, 50))
             self.wheel.blit(surf, (0, 0))
         elif self.direction == "left":
             self.barrel.blit(surf, (0, 0), self.launch_angle)
             if self.is_on_fire:
-                fire = load_png(TexturePath.Shells.fireball)
+                fire = load_png(Resources.Shells.fireball)
                 fire = pygame.transform.rotozoom(fire, -90, 0.5)
                 surf.blit(fire, (50, 50))
             surf = pygame.transform.flip(surf, True, False)
@@ -237,8 +237,8 @@ class Cannon(pygame.sprite.Sprite):
 
 class BasicCannon(Cannon):
     name = "대포"
-    barrel_texture = TexturePath.Cannons.Barrel.basic_barrel
-    wheel_texture = TexturePath.Cannons.Wheel.basic_wheel
+    barrel_texture = Resources.Cannons.Barrel.basic_barrel
+    wheel_texture = Resources.Cannons.Wheel.basic_wheel
     shell = BasicShell
     barrel_length = 85
     barrel_distance = 25
@@ -251,8 +251,8 @@ class BasicCannon(Cannon):
 
 class Ballista(Cannon):
     name = "발리스타"
-    barrel_texture = TexturePath.Cannons.Barrel.ballista_barrel
-    wheel_texture = TexturePath.Cannons.Wheel.ballista_wheel
+    barrel_texture = Resources.Cannons.Barrel.ballista_barrel
+    wheel_texture = Resources.Cannons.Wheel.ballista_wheel
     shell = Arrow
     barrel_length = 100
     barrel_distance = 30
@@ -265,8 +265,8 @@ class Ballista(Cannon):
 
 class FlameCannon(Cannon):
     name = "화포"
-    barrel_texture = TexturePath.Cannons.Barrel.flame_cannon_barrel
-    wheel_texture = TexturePath.Cannons.Wheel.flame_cannon_wheel
+    barrel_texture = Resources.Cannons.Barrel.flame_cannon_barrel
+    wheel_texture = Resources.Cannons.Wheel.flame_cannon_wheel
     shell = FireBall
     barrel_length = 100
     barrel_distance = 20
