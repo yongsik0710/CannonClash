@@ -1,4 +1,5 @@
 from shell import *
+from cannon_ui import *
 import pygame
 import os
 import math
@@ -59,6 +60,7 @@ class Cannon(pygame.sprite.Sprite):
 
         self.barrel = self.Barrel(self.barrel_texture)
         self.wheel = self.Wheel(self.wheel_texture)
+        self.cannon_ui = CannonUI(self)
 
         self.image = self.blit_cannon()
         self.rect = self.image.get_rect()
@@ -100,6 +102,10 @@ class Cannon(pygame.sprite.Sprite):
             self.wheel.blit(surf, (0, 0))
 
         return surf
+
+    def draw_cannon_ui(self):
+        self.cannon_ui.update()
+        self.cannon_ui.draw()
 
     def angle_update(self):
         surf = pygame.surface.Surface((48, 48)).convert_alpha()
@@ -153,11 +159,13 @@ class Cannon(pygame.sprite.Sprite):
         rotated_launch_vector.scale_to_length(self.barrel_distance)
         scaled_launch_vector -= rotated_launch_vector
         self.shoot_sound.sound.play()
+        for i in range(20):
+            self.camera.particle_circle.add_particles(self.rect.center + scaled_launch_vector)
         self.camera.target = self.shell(self.camera, self.stage, self.rect.center + scaled_launch_vector, vector, owner, self.cannon_group)
 
     def damage(self, damage):
         self.health -= damage
-        if self.health <= 0:
+        if self.health <= 0 and not self.is_death:
             self.is_death = True
             self.player.death()
 

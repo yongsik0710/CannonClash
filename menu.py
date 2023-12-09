@@ -21,7 +21,8 @@ class MainMenu(Menu):
     def __init__(self, game):
         super().__init__(game)
         self.title = TextBox(game.screen, 460, 260, 1000, 200, 115, "Cannon Clash")
-        self.game_start = Button(game.screen, 760, 700, 400, 100, 5, 40, "게임 시작")
+        self.game_start = Button(game.screen, 760, 580, 400, 100, 5, 40, "게임 시작")
+        self.options = Button(game.screen, 760, 700, 400, 100, 5, 40, "설정")
         self.quit = Button(game.screen, 760, 820, 400, 100, 5, 40, "게임 종료")
 
     def loop(self):
@@ -31,6 +32,7 @@ class MainMenu(Menu):
         self.game.screen.fill("#e0e0e0")
         self.title.draw()
         self.game_start.draw()
+        self.options.draw()
         self.quit.draw()
         # 화면 업데이트
         pygame.display.update()
@@ -48,8 +50,73 @@ class MainMenu(Menu):
         if self.game_start.is_clicked():  # 스테이지 선택
             self.game.current_display = self.game.number_of_player_select
 
+        if self.options.is_clicked():  # 설정 화면
+            self.game.current_display = self.game.option
+
         if self.quit.is_clicked():  # 게임 종료
             self.stop = True
+
+
+class Option(Menu):
+    def __init__(self, game):
+        super().__init__(game)
+        self.volume = int(Options.Audio.volume * 10)
+        self.title = TextBox(game.screen, 760, 100, 400, 100, 65, text='설정')
+
+        self.audio = TextBox(game.screen, 860, 350, 200, 100, 50, text='볼륨')
+
+        self.volume_display = TextBox(game.screen, 910, 500, 100, 100, 40, text=str(self.volume), border_ratio=2)
+        self.up = Button(game.screen, 1030, 510, 80, 80, 4, 35, ">", border_ratio=2)
+        self.down = Button(game.screen, 810, 510, 80, 80, 4, 35, "<", border_ratio=2)
+        self.up_off = TextBox(game.screen, 1030, 508, 80, 80, 35, ">", background_color="#354b5e", border_ratio=2)
+        self.down_off = TextBox(game.screen, 810, 508, 80, 80, 35, "<", background_color="#354b5e", border_ratio=2)
+
+        self.apply = Button(game.screen, 760, 750, 400, 100, 5, 40, "적용")
+        self.back = Button(game.screen, 760, 870, 400, 100, 5, 40, "뒤로")
+
+    def loop(self):
+        # 이벤트 핸들러
+        self.event_check()
+        # 화면 그리기
+        self.game.screen.fill("#e0e0e0")
+        self.title.draw()
+        self.audio.draw()
+        if self.volume < 10: self.up.draw()
+        else: self.up_off.draw()
+        if self.volume > 0: self.down.draw()
+        else: self.down_off.draw()
+        self.volume_display.draw()
+        self.apply.draw()
+        self.back.draw()
+        # 화면 업데이트
+        pygame.display.update()
+        self.game.clock.tick(self.game.FPS)
+
+    def event_check(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.stop = True
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.game.current_display = self.game.main_menu
+
+        if self.up.is_clicked():  # 볼륨 증가
+            self.volume += 1
+            self.volume_display.text_update(str(self.volume))
+
+        if self.down.is_clicked():  # 볼륨 감소
+            self.volume -= 1
+            self.volume_display.text_update(str(self.volume))
+
+        if self.apply.is_clicked():  # 적용
+            Options.Audio.volume = self.volume / 10
+            all_sounds.set_volume(Options.Audio.volume)
+
+        if self.back.is_clicked():  # 뒤로 가기
+            self.volume = int(Options.Audio.volume * 10)
+            self.volume_display.text_update(str(self.volume))
+            self.game.current_display = self.game.main_menu
 
 
 class NumberOfPlayerSelect(Menu):
@@ -216,18 +283,22 @@ class StageSelect(Menu):
 
         if self.stage_1.is_clicked():  # 스테이지 1
             self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.Level1)
+            pygame.mixer_music.fadeout(1000)
             self.game.current_display = self.game.missile_game
 
         if self.stage_2.is_clicked():  # 스테이지 2
             self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.Level2)
+            pygame.mixer_music.fadeout(1000)
             self.game.current_display = self.game.missile_game
 
         if self.stage_3.is_clicked():  # 스테이지 3
             self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.Level3)
+            pygame.mixer_music.fadeout(1000)
             self.game.current_display = self.game.missile_game
 
         if self.stage_4.is_clicked():  # 스테이지 4
             self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.Level4)
+            pygame.mixer_music.fadeout(1000)
             self.game.current_display = self.game.missile_game
 
         if self.back.is_clicked():  # 대포 선택으로 돌아가기
@@ -265,4 +336,6 @@ class GameMenu(Menu):
             self.game.current_display = self.game.missile_game
 
         if self.back_to_main_menu.is_clicked():  # 메인 메뉴로 이동
+            pygame.mixer_music.load(Resources.Music.lobby)
+            pygame.mixer_music.play()
             self.game.current_display = self.game.main_menu

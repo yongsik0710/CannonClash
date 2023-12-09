@@ -9,6 +9,7 @@ class SoundGroup:
         self.sounds = []
 
     def set_volume(self, volume):
+        pygame.mixer_music.set_volume(volume)
         for sound in self.sounds:
             sound.set_volume(volume)
 

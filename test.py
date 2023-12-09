@@ -18,8 +18,8 @@ class ParticlePrinciple:
         pos_x = pygame.mouse.get_pos()[0]
         pos_y = pygame.mouse.get_pos()[1]
         radius = 10
-        direction_x = random.randint(-3, 3)
-        direction_y = random.randint(-3, 3)
+        direction_x = random.randint(-30, 30) / 10
+        direction_y = random.randint(-30, 30) / 10
         particle_circle = [[pos_x, pos_y], radius, [direction_x, direction_y]]
         self.particles.append(particle_circle)
 
@@ -94,7 +94,7 @@ clock = pygame.time.Clock()
 particle1 = ParticlePrinciple()
 
 PARTICLE_EVENT = pygame.USEREVENT + 1
-pygame.time.set_timer(PARTICLE_EVENT, 40)
+pygame.time.set_timer(PARTICLE_EVENT, 1000)
 
 while True:
     for event in pygame.event.get():
@@ -102,7 +102,8 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == PARTICLE_EVENT:
-            particle1.add_particles()
+            for i in range(20):
+                particle1.add_particles()
             # particle2.add_particles(-30,pygame.Color("Red"))
             # particle2.add_particles(-18,pygame.Color("Orange"))
             # particle2.add_particles(-6,pygame.Color("Yellow"))

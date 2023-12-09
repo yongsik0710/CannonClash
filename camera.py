@@ -1,10 +1,12 @@
 import pygame
+from particle import *
 
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self, background):
         super().__init__()
         self.display_surface = pygame.display.get_surface()
+        self.particle_circle = Particle.Circle(self.display_surface)
 
         # camera offset
         self.offset = pygame.math.Vector2()
@@ -38,20 +40,6 @@ class CameraGroup(pygame.sprite.Group):
     def center_target_camera_align(self, target):
         self.offset.x = target.rect.centerx - self.half_w
         self.offset.y = target.rect.centery - self.half_h
-
-    def box_target_camera(self, target):
-
-        if target.rect.left < self.camera_rect.left:
-            self.camera_rect.left = target.rect.left
-        if target.rect.right > self.camera_rect.right:
-            self.camera_rect.right = target.rect.right
-        if target.rect.top < self.camera_rect.top:
-            self.camera_rect.top = target.rect.top
-        if target.rect.bottom > self.camera_rect.bottom:
-            self.camera_rect.bottom = target.rect.bottom
-
-        self.offset.x = self.camera_rect.left - self.camera_borders['left']
-        self.offset.y = self.camera_rect.top - self.camera_borders['top']
 
     def keyboard_control(self):
         keys = pygame.key.get_pressed()
@@ -114,7 +102,6 @@ class CameraGroup(pygame.sprite.Group):
         else:
             self.mouse_control()
 
-        # self.box_target_camera(player)
         # self.keyboard_control()
 
         self.out_of_border()
@@ -129,3 +116,6 @@ class CameraGroup(pygame.sprite.Group):
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.depth):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)
+
+        # particle
+        self.particle_circle.emit(self.offset)

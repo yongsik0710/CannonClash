@@ -35,6 +35,8 @@ class MissileGame:
         if not self.game_menu_on:
             self.camera_group.update()
             self.camera_group.custom_draw()
+            for player in self.players:
+                player.cannon.draw_cannon_ui()
             self.players[self.current_turn].draw_player_ui()
             # 화면 업데이트
             pygame.display.update()

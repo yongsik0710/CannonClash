@@ -13,6 +13,7 @@ class Game:
         self.missile_game = None
         self.game_menu = GameMenu(self)
         self.main_menu = MainMenu(self)
+        self.option = Option(self)
         self.number_of_player_select = NumberOfPlayerSelect(self)
         self.cannon_select = None
         self.stage_select = StageSelect(self)
@@ -20,6 +21,8 @@ class Game:
         self.current_display = self.main_menu
 
     def start_game(self):
+        pygame.mixer_music.load(Resources.Music.lobby)
+        pygame.mixer_music.play()
         self.main_loop()
 
     def main_loop(self):

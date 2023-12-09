@@ -3,12 +3,13 @@ import pygame
 
 class Bar:
     def __init__(self, x, y, width, height, border_thickness, max_level,
-                 border_color="#444444", background_color="#eeeeee", bar_color="#00ff00"):
+                 border_color="#444444", background_color="#eeeeee", bar_color="#00ff00", border_radius=5):
         self.original_width = width
         self.border_color = border_color
         self.background_color = background_color
         self.bar_color = bar_color
         self.border_thickness = border_thickness
+        self.border_radius = border_radius
         self.level = max_level
         self.max_level = max_level
 
@@ -29,6 +30,6 @@ class Bar:
 
     def draw(self, surface):
         self.update()
-        pygame.draw.rect(surface, self.border_color, self.border_rect, border_radius=5)
+        pygame.draw.rect(surface, self.border_color, self.border_rect, border_radius=self.border_radius)
         pygame.draw.rect(surface, self.background_color, self.background_rect)
         pygame.draw.rect(surface, self.bar_color, self.bar_rect)

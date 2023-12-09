@@ -30,6 +30,9 @@ class Resources:
     class Util:
         current_player = resource_path("Images/Utilities/current_player.png")
 
+    class Music:
+        lobby = resource_path("Sounds/Background/1.wav")
+
     class Sounds:
         explode = resource_path("Sounds/explode.wav")
         shoot = resource_path("Sounds/shoot.wav")
@@ -37,15 +40,15 @@ class Resources:
     class Levels:
         class Level1:
             level_image = resource_path("Images/Levels/level_1.png")
-            background_image = resource_path("Images/Backgrounds/snowman.png")
+            background_image = resource_path("Images/Backgrounds/level_1.png")
 
         class Level2:
             level_image = resource_path("Images/Levels/level_2.png")
-            background_image = resource_path("Images/Backgrounds/christmas_ornament.png")
+            background_image = resource_path("Images/Backgrounds/level_2.png")
 
         class Level3:
             level_image = resource_path("Images/Levels/level_3.png")
-            background_image = resource_path("Images/Backgrounds/level_3_background.png")
+            background_image = resource_path("Images/Backgrounds/level_3.png")
 
         class Level4:
             level_image = resource_path("Images/Levels/level_4.png")
