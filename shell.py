@@ -24,6 +24,7 @@ def load_png(name, size):
 class Shell(pygame.sprite.Sprite):
     texture = Resources.Shells.basic
     texture_size = 1
+    explode_sound = Sound(all_sounds, Resources.Sounds.explode)
     damage = 100
     explosion_radius = 50
 
@@ -77,6 +78,7 @@ class Shell(pygame.sprite.Sprite):
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
         Explosion(self.camera, self.rect.center, Resources.Effects.explosion_3, 42, 1, 1, self.owner)
+        self.explode_sound.sound.play()
         self.kill()
 
     def out_of_border(self):
@@ -178,11 +180,11 @@ class FireBall(Shell):
         for cannon in self.cannon_group:
             pos = pygame.Vector2(self.rect.center)
             distance = pos.distance_to(cannon.rect.center)
-            if 0 <= distance - 30 <= self.explosion_radius:
-                damage = self.damage * (((self.explosion_radius - (distance - 30)) / self.explosion_radius) ** 2)
+            if 0 <= distance - 40 <= self.explosion_radius:
+                damage = self.damage * (((self.explosion_radius - (distance - 40)) / self.explosion_radius) ** 2)
                 cannon.damage(damage)
                 cannon.is_on_fire = True
-            elif distance < 30:
+            elif distance < 40:
                 damage = self.damage
                 cannon.damage(damage)
                 cannon.is_on_fire = True

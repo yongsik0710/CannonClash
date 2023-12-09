@@ -25,6 +25,7 @@ class Cannon(pygame.sprite.Sprite):
     barrel_texture = None
     wheel_texture = None
     shell = None
+    shoot_sound = Sound(all_sounds, Resources.Sounds.shoot)
     barrel_length = 80
     barrel_distance = 30
 
@@ -151,6 +152,7 @@ class Cannon(pygame.sprite.Sprite):
         scaled_launch_vector.scale_to_length(self.barrel_length)
         rotated_launch_vector.scale_to_length(self.barrel_distance)
         scaled_launch_vector -= rotated_launch_vector
+        self.shoot_sound.sound.play()
         self.camera.target = self.shell(self.camera, self.stage, self.rect.center + scaled_launch_vector, vector, owner, self.cannon_group)
 
     def damage(self, damage):

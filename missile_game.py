@@ -2,7 +2,6 @@ import pygame
 
 from camera import *
 from stage import *
-from config import *
 from ui_component.button import *
 from ui_component.textbox import *
 
@@ -87,6 +86,7 @@ class MissileGame:
                         print(pygame.mouse.get_pos() + self.camera_group.offset)
 
     def game_menu_pop(self):
+        pygame.mixer.pause()
         self.game.current_display = self.game.game_menu
         surf = pygame.Surface((1920, 1080), pygame.SRCALPHA)
         surf.fill((255, 255, 255, 160))
@@ -126,6 +126,7 @@ class MissileGame:
             self.game_end(alive_players[0])
 
     def game_end(self, winner):
+        pygame.mixer.stop()
         self.game.current_display = GameEnd(self.game, winner)
 
 
