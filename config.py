@@ -61,5 +61,8 @@ class TexturePath:
             ballista_wheel = resource_path("Images/Cannons/Ballista/wheel.png")
             flame_cannon_wheel = resource_path("Images/Cannons/FlameCannon/wheel.png")
 
+    class Effect:
+        explosion = resource_path("Images/Effects/explosion.png")
+
     class Util:
         current_player = resource_path("Images/Utilities/current_player.png")

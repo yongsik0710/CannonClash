@@ -18,15 +18,16 @@ def load_png(name):
 
 
 class SpriteSheet:
-    def __init__(self, image, frame, scale):
-        self.sprites = []
-        image = load_png(image)
-        frame_width = image.get_width() / frame
-        frame_height = image.get_height()
+    def __init__(self, image, frame):
+        self.sheet = load_png(image)
+        self.frame = frame
+        self.frame_width = self.sheet.get_width() / self.frame
+        self.frame_height = self.sheet.get_height()
 
-        for i in range(frame):
-            surf = pygame.surface.Surface((frame_width, frame_height)).convert_alpha()
-            surf.fill((0, 0, 0, 0))
-            surf.blit(image, (-(frame_width * i), 0))
-            surf = pygame.transform.scale_by(surf, scale)
-            self.sprites.append(surf)
+    def get_image(self, frame, scale):
+        surf = pygame.surface.Surface((self.frame_width, self.frame_height)).convert_alpha()
+        surf.fill((0, 0, 0, 0))
+        surf.blit(self.sheet, (-(self.frame_width * frame), 0))
+        surf = pygame.transform.scale_by(surf, scale)
+
+        return surf

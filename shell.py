@@ -1,5 +1,5 @@
 from config import *
-from spritesheet import *
+from effect import *
 import pygame
 import os
 
@@ -42,10 +42,10 @@ class Shell(pygame.sprite.Sprite):
         self.rect.center = self.rect.move(pos).topleft
         self.original_image = self.image.copy()
 
-        ellipse_rect = pygame.rect.Rect((0, 0), (self.explosion_radius * 3, self.explosion_radius * 2))
-        self.surf = pygame.surface.Surface(ellipse_rect.size).convert_alpha()
+        self.explosion_rect = pygame.rect.Rect((0, 0), (self.explosion_radius * 3, self.explosion_radius * 2))
+        self.surf = pygame.surface.Surface(self.explosion_rect.size).convert_alpha()
         self.surf.fill((0, 0, 0, 0))
-        pygame.draw.ellipse(self.surf, "#000000", ellipse_rect)
+        pygame.draw.ellipse(self.surf, "#000000", self.explosion_rect)
         self.explosion_mask = pygame.mask.from_surface(self.surf)
 
     def update(self):
@@ -71,11 +71,12 @@ class Shell(pygame.sprite.Sprite):
                 damage = self.damage
                 cannon.damage(damage)
 
-        pygame.mask.Mask.erase(self.stage.mask, self.explosion_mask, (self.rect.centerx - self.explosion_radius, self.rect.centery - self.explosion_radius))
+        pygame.mask.Mask.erase(self.stage.mask, self.explosion_mask,
+                               (self.rect.centerx - (self.explosion_rect.width / 2),
+                                self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        self.camera.target = None
+        Explosion(self.camera, self.rect.center, TexturePath.Effect.explosion, 1.2, self.owner)
         self.kill()
-        self.owner.next_turn()
 
     def out_of_border(self):
         if self.rect.top > 2000:
@@ -100,8 +101,10 @@ class Arrow(Shell):
     def update(self):
         self.vector.y += self.gravity / 2
         self.vector.x += self.wind / 550
+
         angle = self.vector.angle_to((0, 0))
         self.image, self.rect = self.rot_center(angle, self.rect.centerx, self.rect.centery)
+
         self.collide_check()
         self.out_of_border()
         self.rect = self.rect.move(self.vector)
@@ -123,11 +126,12 @@ class Arrow(Shell):
             elif distance < 50:
                 damage = self.damage * (self.vector.length_squared() / 500)
                 cannon.damage(damage)
-        pygame.mask.Mask.erase(self.stage.mask, self.explosion_mask, (self.rect.centerx - self.explosion_radius, self.rect.centery - self.explosion_radius))
+        pygame.mask.Mask.erase(self.stage.mask, self.explosion_mask,
+                               (self.rect.centerx - (self.explosion_rect.width / 2),
+                                self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        self.camera.target = None
+        Explosion(self.camera, self.rect.center, TexturePath.Effect.explosion, 0.6, self.owner)
         self.kill()
-        self.owner.next_turn()
 
 
 class FireBall(Shell):
@@ -138,11 +142,11 @@ class FireBall(Shell):
 
     def __init__(self, group, stage, pos, vector, owner, cannon_group):
         Shell.__init__(self, group, stage, pos, vector, owner, cannon_group)
-        self.sprites = SpriteSheet(self.texture, 5, self.texture_size).sprites
+        self.sprite_sheet = SpriteSheet(self.texture, 5)
         self.current_frame = 0
-        self.anim_speed = 0.25
+        self.animation_speed = 0.25
 
-        self.image = self.sprites[self.current_frame]
+        self.image = self.sprite_sheet.get_image(int(self.current_frame), self.texture_size)
         self.rect = self.image.get_rect()
         self.rect.center = self.rect.move(pos).topleft
         self.original_image = self.image.copy()
@@ -151,11 +155,12 @@ class FireBall(Shell):
         self.vector.y += self.gravity / 2
         self.vector.x += self.wind / 550
 
-        self.image = self.sprites[int(self.current_frame)]
+        self.image = self.sprite_sheet.get_image(int(self.current_frame), self.texture_size)
         self.original_image = self.image.copy()
-        self.current_frame += self.anim_speed
-        if int(self.current_frame) >= len(self.sprites):
+        self.current_frame += self.animation_speed
+        if int(self.current_frame) >= self.sprite_sheet.frame:
             self.current_frame = 0
+
         angle = self.vector.angle_to((0, 0))
         self.image, self.rect = self.rot_center(angle, self.rect.centerx, self.rect.centery)
         self.collide_check()
@@ -181,8 +186,9 @@ class FireBall(Shell):
                 cannon.damage(damage)
                 cannon.is_on_fire = True
 
-        pygame.mask.Mask.erase(self.stage.mask, self.explosion_mask, (self.rect.centerx - self.explosion_radius, self.rect.centery - self.explosion_radius))
+        pygame.mask.Mask.erase(self.stage.mask, self.explosion_mask,
+                               (self.rect.centerx - (self.explosion_rect.width / 2),
+                                self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        self.camera.target = None
+        Explosion(self.camera, self.rect.center, TexturePath.Effect.explosion, 1.2, self.owner)
         self.kill()
-        self.owner.next_turn()
