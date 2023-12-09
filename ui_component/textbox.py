@@ -3,7 +3,7 @@ import pygame
 
 
 class TextBox:
-    def __init__(self, surface, x, y, width, height, font_size, text="button", font_path=FontPath.font, border_ratio=6,
+    def __init__(self, surface, x, y, width, height, font_size, text="button", font_path=Resources.Fonts.font, border_ratio=6,
                  background_color="#808080", text_color="#ffffff", transparent=False):
         # Core attributes
         self.surface = surface

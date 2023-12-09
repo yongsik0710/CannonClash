@@ -2,6 +2,7 @@ from missile_game import *
 from cannon_selector import *
 from ui_component.stage_button import *
 from player import *
+from levels import *
 
 
 class Menu:

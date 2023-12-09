@@ -10,45 +10,46 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-class FontPath:
-    font = resource_path("Fonts/LINESeedKR-Bd.ttf")
+class Options:
+    class Video:
+        display_resolution = [1920, 1080]
+
+    class Audio:
+        volume = 1.0
 
 
-class Levels:
-    class Level1:
-        level_image = resource_path("Images/Levels/level_1.png")
-        background_image = resource_path("Images/Backgrounds/snowman.png")
-        gravity = 1.0
-        air_resistance = 0.0
-        spawn_points = [(350, 925), (900, 930), (1700, 925), (2300, 845), (3000, 890), (4000, 910)]
+class Resources:
+    class Fonts:
+        font = resource_path("Fonts/LINESeedKR-Bd.ttf")
 
-    class Level2:
-        level_image = resource_path("Images/Levels/level_2.png")
-        background_image = resource_path("Images/Backgrounds/christmas_ornament.png")
-        gravity = 1.0
-        air_resistance = 0.0
-        spawn_points = [(270, 540), (1150, 665), (1900, 1010), (2700, 1140), (3000, 360), (3800, 710)]
+    class Effects:
+        explosion = resource_path("Images/Effects/explosion.png")
+        explosion_2 = resource_path("Images/Effects/explosion_2.png")
+        explosion_3 = resource_path("Images/Effects/explosion_3.png")
 
-    class Level3:
-        level_image = resource_path("Images/Levels/level_3.png")
-        background_image = resource_path("Images/Backgrounds/snow.png")
-        gravity = 1.0
-        air_resistance = 0.0
-        spawn_points = [(100, 100), (250, 200), (1800, 100), (2200, 300), (400, 100), (800, 100)]
+    class Util:
+        current_player = resource_path("Images/Utilities/current_player.png")
 
-    class Level4:
-        level_image = resource_path("Images/Levels/level_4.png")
-        background_image = resource_path("Images/Backgrounds/night.png")
-        gravity = 1.0
-        air_resistance = 0.0
-        spawn_points = [(350, 440), (895, 600), (1800, 805), (2600, 790), (3150, 750), (3950, 585)]
+    class Sounds:
+        explode = resource_path("Sounds/explode.wav")
+        shoot = resource_path("Sounds/shoot.wav")
 
+    class Levels:
+        class Level1:
+            level_image = resource_path("Images/Levels/level_1.png")
+            background_image = resource_path("Images/Backgrounds/snowman.png")
 
-class TexturePath:
-    class Shells:
-        basic = resource_path("Images/Shells/basic.png")
-        arrow = resource_path("Images/Shells/arrow.png")
-        fireball = resource_path("Images/Shells/fireball.png")
+        class Level2:
+            level_image = resource_path("Images/Levels/level_2.png")
+            background_image = resource_path("Images/Backgrounds/christmas_ornament.png")
+
+        class Level3:
+            level_image = resource_path("Images/Levels/level_3.png")
+            background_image = resource_path("Images/Backgrounds/snow.png")
+
+        class Level4:
+            level_image = resource_path("Images/Levels/level_4.png")
+            background_image = resource_path("Images/Backgrounds/night.png")
 
     class Cannons:
         class Barrel:
@@ -61,8 +62,7 @@ class TexturePath:
             ballista_wheel = resource_path("Images/Cannons/Ballista/wheel.png")
             flame_cannon_wheel = resource_path("Images/Cannons/FlameCannon/wheel.png")
 
-    class Effect:
-        explosion = resource_path("Images/Effects/explosion.png")
-
-    class Util:
-        current_player = resource_path("Images/Utilities/current_player.png")
+    class Shells:
+        basic = resource_path("Images/Shells/basic.png")
+        arrow = resource_path("Images/Shells/arrow.png")
+        fireball = resource_path("Images/Shells/fireball.png")

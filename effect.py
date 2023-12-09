@@ -26,14 +26,14 @@ class Effect(pygame.sprite.Sprite):
 
 
 class Explosion(Effect):
-    def __init__(self, group, pos, image, scale, owner):
+    def __init__(self, group, pos, image, frame, scale, speed, owner):
         pygame.sprite.Sprite.__init__(self, group)
         self.camera = group
         self.depth = 4
         self.owner = owner
-        self.sprite_sheet = SpriteSheet(image, 7)
+        self.sprite_sheet = SpriteSheet(image, frame)
         self.current_frame = 0
-        self.animation_speed = 0.3
+        self.animation_speed = speed
         self.scale = scale
 
         self.image = self.sprite_sheet.get_image(int(self.current_frame), self.scale)
