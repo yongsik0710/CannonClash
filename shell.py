@@ -90,7 +90,7 @@ class Shell(pygame.sprite.Sprite):
                                (self.rect.centerx - (self.explosion_rect.width / 2),
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion, 7, 1.3, 0.20, self.owner)
+        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion_1, 7, 1.3, 0.20, self.owner)
         self.explode_sound.sound.play()
         self.kill()
 
@@ -148,7 +148,7 @@ class Arrow(Shell):
                                (self.rect.centerx - (self.explosion_rect.width / 2),
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion, 7, 0.6, 0.3, self.owner)
+        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion_1, 7, 0.6, 0.3, self.owner)
         self.explode_sound.sound.play()
         self.kill()
 
@@ -215,7 +215,7 @@ class FireBall(Shell):
                                (self.rect.centerx - (self.explosion_rect.width / 2),
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion, 7, 1.1, 0.2, self.owner)
+        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion_1, 7, 1.1, 0.2, self.owner)
         self.explode_sound.sound.play()
         self.kill()
 
@@ -242,7 +242,7 @@ class Stone(Shell):
                                (self.rect.centerx - (self.explosion_rect.width / 2),
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion, 7, 1.1, 0.2, self.owner)
+        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion_1, 7, 1.1, 0.2, self.owner)
         self.explode_sound.sound.play()
         self.kill()
 
@@ -286,6 +286,6 @@ class Missile(Shell):
                                (self.rect.centerx - (self.explosion_rect.width / 2),
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion_3, 42, 1, 1, self.owner)
+        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion_2, 42, 1, 1, self.owner)
         self.explode_sound.sound.play()
         self.kill()

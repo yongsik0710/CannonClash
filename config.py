@@ -89,9 +89,8 @@ class Resources:
 
     class Texture:
         class Effects:
-            explosion = resource_path("Images/Effects/explosion_1.png")
+            explosion_1 = resource_path("Images/Effects/explosion_1.png")
             explosion_2 = resource_path("Images/Effects/explosion_2.png")
-            explosion_3 = resource_path("Images/Effects/explosion_3.png")
 
             fire = resource_path("Images/Effects/fire.png")
 
