@@ -47,7 +47,7 @@ class PlayerUI:
     def draw(self):
         self.screen.blit(self.current_player,
                          (self.player.cannon.rect.centerx - self.player.missile_game.camera_group.offset.x - self.current_player.get_rect().centerx,
-                          self.player.cannon.rect.top - self.player.missile_game.camera_group.offset.y - self.current_player.get_rect().bottom - 10))
+                          self.player.cannon.rect.top - self.player.missile_game.camera_group.offset.y - self.current_player.get_rect().bottom - 20))
 
         pygame.draw.rect(self.canvas, (255, 255, 255, 150), self.canvas_rect, border_radius=20)
         self.angle_monitor.draw()

@@ -24,28 +24,47 @@ class Resources:
 
     class Sounds:
         class Music:
-            lobby = resource_path("Sounds/Background/1.wav")
+            lobby = resource_path("Sounds/Background/lobby.wav")
+            stage_1 = resource_path("Sounds/Background/stage_1.wav")
+            stage_2 = resource_path("Sounds/Background/stage_2.wav")
+            stage_3 = resource_path("Sounds/Background/stage_3.wav")
+            stage_4 = resource_path("Sounds/Background/stage_4.wav")
 
         class Cannon:
             class Basic:
                 shoot = resource_path("Sounds/Cannon/Basic/shoot.wav")
                 damage = resource_path("Sounds/Cannon/Basic/damage.wav")
+                barrel_move = resource_path("Sounds/Cannon/Basic/barrel_move.wav")
+                move = resource_path("Sounds/Cannon/Basic/move.wav")
+                burning = resource_path("Sounds/Cannon/Basic/burning.wav")
 
             class Ballista:
                 shoot = resource_path("Sounds/Cannon/Ballista/shoot.wav")
                 damage = resource_path("Sounds/Cannon/Ballista/damage.wav")
+                barrel_move = resource_path("Sounds/Cannon/Ballista/barrel_move.wav")
+                move = resource_path("Sounds/Cannon/Ballista/move.wav")
+                burning = resource_path("Sounds/Cannon/Ballista/burning.wav")
 
             class FlameCannon:
                 shoot = resource_path("Sounds/Cannon/FlameCannon/shoot.wav")
                 damage = resource_path("Sounds/Cannon/FlameCannon/damage.wav")
+                barrel_move = resource_path("Sounds/Cannon/FlameCannon/barrel_move.wav")
+                move = resource_path("Sounds/Cannon/FlameCannon/move.wav")
+                burning = resource_path("Sounds/Cannon/FlameCannon/burning.wav")
 
             class Catapult:
                 shoot = resource_path("Sounds/Cannon/Catapult/shoot.wav")
                 damage = resource_path("Sounds/Cannon/Catapult/damage.wav")
+                barrel_move = resource_path("Sounds/Cannon/Catapult/barrel_move.wav")
+                move = resource_path("Sounds/Cannon/Catapult/move.wav")
+                burning = resource_path("Sounds/Cannon/Catapult/burning.wav")
 
             class Tank:
                 shoot = resource_path("Sounds/Cannon/Tank/shoot.wav")
                 damage = resource_path("Sounds/Cannon/Tank/damage.wav")
+                barrel_move = resource_path("Sounds/Cannon/Tank/barrel_move.wav")
+                move = resource_path("Sounds/Cannon/Tank/move.wav")
+                burning = resource_path("Sounds/Cannon/Tank/burning.wav")
 
         class Shell:
             class Basic:
@@ -70,9 +89,11 @@ class Resources:
 
     class Texture:
         class Effects:
-            explosion = resource_path("Images/Effects/explosion.png")
+            explosion = resource_path("Images/Effects/explosion_1.png")
             explosion_2 = resource_path("Images/Effects/explosion_2.png")
             explosion_3 = resource_path("Images/Effects/explosion_3.png")
+
+            fire = resource_path("Images/Effects/fire.png")
 
         class Util:
             current_player = resource_path("Images/Utilities/current_player.png")

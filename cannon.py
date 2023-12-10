@@ -1,3 +1,5 @@
+import random
+
 from shell import *
 from cannon_ui import *
 import pygame
@@ -29,6 +31,9 @@ class Cannon(pygame.sprite.Sprite):
     shell = None
     shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.shoot)
     damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.damage)
+    barrel_move_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.barrel_move)
+    move_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.move)
+    burning_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.burning)
     barrel_length = 80
     barrel_distance = 30
 
@@ -54,7 +59,8 @@ class Cannon(pygame.sprite.Sprite):
         self.on_ground = False
         self.is_death = False
         self.direction = "right"
-        self.is_on_fire = False
+        self.fire_turn = 0
+        self.fire_effect = None
 
         self.stage = stage
         self.vector = pygame.math.Vector2(vector)
@@ -89,17 +95,9 @@ class Cannon(pygame.sprite.Sprite):
 
         if self.direction == "right":
             self.barrel.blit(surf, (0, 0), self.launch_angle)
-            if self.is_on_fire:
-                fire = load_png(Resources.Texture.Shells.fireball)
-                fire = pygame.transform.rotozoom(fire, -90, 0.5)
-                surf.blit(fire, (50, 50))
             self.wheel.blit(surf, (0, 0))
         elif self.direction == "left":
             self.barrel.blit(surf, (0, 0), self.launch_angle)
-            if self.is_on_fire:
-                fire = load_png(Resources.Texture.Shells.fireball)
-                fire = pygame.transform.rotozoom(fire, -90, 0.5)
-                surf.blit(fire, (50, 50))
             surf = pygame.transform.flip(surf, True, False)
             self.wheel.blit(surf, (0, 0))
 
@@ -165,13 +163,25 @@ class Cannon(pygame.sprite.Sprite):
             self.camera.particle_circle.add_particles(self.rect.center + scaled_launch_vector)
         self.camera.target = self.shell(self.camera, self.stage, self.rect.center + scaled_launch_vector, vector, owner, self.cannon_group)
 
-    def damage(self, damage):
-        if self.health > 0:
-            self.health -= damage
-            self.damage_sound.sound.play()
-        if self.health <= 0 and not self.is_death:
-            self.is_death = True
-            self.player.death()
+    def damage(self, damage, is_fire=False):
+        if is_fire and self.health - damage <= 0:
+            self.fire_turn = 0
+        else:
+            if self.health > 0:
+                self.health -= damage
+                if is_fire:
+                    self.burning_sound.sound.play()
+                Damage(self.camera,
+                       (self.rect.centerx + random.randint(-50, 50), self.rect.centery + random.randint(-50, 50)),
+                       120, Resources.Fonts.font,
+                       20 + 80 * (damage / self.max_health),
+                       str(int(damage)),
+                       text_color=(255,
+                                   255 - [300 * (damage / self.max_health) if 300 * (damage / self.max_health) <= 215 else 215][0],
+                                   255 - [300 * (damage / self.max_health) if 300 * (damage / self.max_health) <= 255 else 255][0]))
+            if self.health <= 0 and not self.is_death:
+                self.is_death = True
+                self.player.death()
 
     def out_of_border(self):
         if self.rect.top > 2000:
@@ -184,12 +194,14 @@ class Cannon(pygame.sprite.Sprite):
             self.delta_angle += 1
         else:
             self.delta_angle = self.max_delta_angle
+            self.barrel_move_sound.sound.stop()
 
     def angle_down(self):
         if self.delta_angle - 1 >= -self.max_delta_angle:
             self.delta_angle -= 1
         else:
             self.delta_angle = -self.max_delta_angle
+            self.barrel_move_sound.sound.stop()
 
     def move_right(self):
         self.direction = "right"
@@ -204,6 +216,8 @@ class Cannon(pygame.sprite.Sprite):
                 self.mobility -= delta_mobility
             else:
                 self.mobility = 0
+        else:
+            self.move_sound.sound.stop()
 
     def move_left(self):
         self.direction = "left"
@@ -218,6 +232,8 @@ class Cannon(pygame.sprite.Sprite):
                 self.mobility -= delta_mobility
             else:
                 self.mobility = 0
+        else:
+            self.move_sound.sound.stop()
 
     class Barrel:
         def __init__(self, texture):
@@ -256,6 +272,9 @@ class BasicCannon(Cannon):
     shell = BasicShell
     shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.shoot)
     damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.damage)
+    barrel_move_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.barrel_move)
+    move_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.move)
+    burning_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.burning)
     barrel_length = 85
     barrel_distance = 25
 
@@ -272,6 +291,9 @@ class Ballista(Cannon):
     shell = Arrow
     shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.Ballista.shoot)
     damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.Ballista.damage)
+    barrel_move_sound = Sound(all_sounds, Resources.Sounds.Cannon.Ballista.barrel_move)
+    move_sound = Sound(all_sounds, Resources.Sounds.Cannon.Ballista.move)
+    burning_sound = Sound(all_sounds, Resources.Sounds.Cannon.Ballista.burning)
     barrel_length = 100
     barrel_distance = 30
 
@@ -288,6 +310,9 @@ class FlameCannon(Cannon):
     shell = FireBall
     shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.FlameCannon.shoot)
     damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.FlameCannon.damage)
+    barrel_move_sound = Sound(all_sounds, Resources.Sounds.Cannon.FlameCannon.barrel_move)
+    move_sound = Sound(all_sounds, Resources.Sounds.Cannon.FlameCannon.move)
+    burning_sound = Sound(all_sounds, Resources.Sounds.Cannon.FlameCannon.burning)
     barrel_length = 100
     barrel_distance = 20
 
@@ -305,6 +330,9 @@ class Catapult(Cannon):
     shell = Stone
     shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.Catapult.shoot)
     damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.Catapult.damage)
+    barrel_move_sound = Sound(all_sounds, Resources.Sounds.Cannon.Catapult.barrel_move)
+    move_sound = Sound(all_sounds, Resources.Sounds.Cannon.Catapult.move)
+    burning_sound = Sound(all_sounds, Resources.Sounds.Cannon.Catapult.burning)
     barrel_length = 100
     barrel_distance = 20
 
@@ -330,7 +358,8 @@ class Catapult(Cannon):
         self.on_ground = False
         self.is_death = False
         self.direction = "right"
-        self.is_on_fire = False
+        self.fire_turn = 0
+        self.fire_effect = None
 
         self.stage = stage
         self.vector = pygame.math.Vector2(vector)
@@ -357,18 +386,10 @@ class Catapult(Cannon):
         if self.direction == "right":
             self.barrel.blit(surf, (0, 0), self.incline_angle)
             self.body.blit(surf, (0, 0), self.incline_angle)
-            if self.is_on_fire:
-                fire = load_png(Resources.Texture.Shells.fireball)
-                fire = pygame.transform.rotozoom(fire, -90, 0.5)
-                surf.blit(fire, (50, 50))
             self.wheel.blit(surf, (0, 0), self.incline_angle)
         elif self.direction == "left":
             self.barrel.blit(surf, (0, 0), -self.incline_angle)
             self.body.blit(surf, (0, 0), -self.incline_angle)
-            if self.is_on_fire:
-                fire = load_png(Resources.Texture.Shells.fireball)
-                fire = pygame.transform.rotozoom(fire, -90, 0.5)
-                surf.blit(fire, (50, 50))
             surf = pygame.transform.flip(surf, True, False)
             self.wheel.blit(surf, (0, 0), self.incline_angle)
 
@@ -386,6 +407,8 @@ class Catapult(Cannon):
                 self.mobility -= delta_mobility
             else:
                 self.mobility = 0
+        else:
+            self.move_sound.sound.stop()
 
     def move_left(self):
         self.direction = "left"
@@ -399,6 +422,8 @@ class Catapult(Cannon):
                 self.mobility -= delta_mobility
             else:
                 self.mobility = 0
+        else:
+            self.move_sound.sound.stop()
 
     class Barrel:
         def __init__(self, texture):
@@ -444,6 +469,9 @@ class Tank(Cannon):
     shell = Missile
     shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.Tank.shoot)
     damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.Tank.damage)
+    barrel_move_sound = Sound(all_sounds, Resources.Sounds.Cannon.Tank.barrel_move)
+    move_sound = Sound(all_sounds, Resources.Sounds.Cannon.Tank.move)
+    burning_sound = Sound(all_sounds, Resources.Sounds.Cannon.Tank.burning)
     barrel_length = 100
     barrel_distance = 20
 
@@ -469,7 +497,8 @@ class Tank(Cannon):
         self.on_ground = False
         self.is_death = False
         self.direction = "right"
-        self.is_on_fire = False
+        self.fire_turn = 0
+        self.fire_effect = None
 
         self.stage = stage
         self.vector = pygame.math.Vector2(vector)
@@ -503,10 +532,6 @@ class Tank(Cannon):
             rotated_launch_vector -= scaled_launch_vector
             self.barrel.blit(surf, (0, 0), self.launch_angle, rotated_launch_vector)
             self.body.blit(surf, (0, 0), self.incline_angle)
-            if self.is_on_fire:
-                fire = load_png(Resources.Texture.Shells.fireball)
-                fire = pygame.transform.rotozoom(fire, -90, 0.5)
-                surf.blit(fire, (50, 50))
             self.wheel.blit(surf, (0, 0), self.incline_angle)
         elif self.direction == "left":
             vector = pygame.Vector2(
@@ -518,10 +543,6 @@ class Tank(Cannon):
             rotated_launch_vector -= scaled_launch_vector
             self.barrel.blit(surf, (0, 0), self.launch_angle, rotated_launch_vector)
             self.body.blit(surf, (0, 0), -self.incline_angle)
-            if self.is_on_fire:
-                fire = load_png(Resources.Texture.Shells.fireball)
-                fire = pygame.transform.rotozoom(fire, -90, 0.5)
-                surf.blit(fire, (50, 50))
             surf = pygame.transform.flip(surf, True, False)
             self.wheel.blit(surf, (0, 0), self.incline_angle)
 
@@ -539,6 +560,8 @@ class Tank(Cannon):
                 self.mobility -= delta_mobility
             else:
                 self.mobility = 0
+        else:
+            self.move_sound.sound.stop()
 
     def move_left(self):
         self.direction = "left"
@@ -552,6 +575,9 @@ class Tank(Cannon):
                 self.mobility -= delta_mobility
             else:
                 self.mobility = 0
+        else:
+            self.move_sound.sound.stop()
+            self.move_sound.sound.stop()
 
     class Barrel:
         def __init__(self, texture):

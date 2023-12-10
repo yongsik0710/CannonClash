@@ -283,22 +283,30 @@ class StageSelect(Menu):
 
         if self.stage_1.is_clicked():  # 스테이지 1
             self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.Level1)
-            pygame.mixer_music.fadeout(1000)
+            pygame.mixer_music.fadeout(100)
+            pygame.mixer_music.load(Resources.Sounds.Music.stage_1)
+            pygame.mixer_music.play(-1)
             self.game.current_display = self.game.missile_game
 
         if self.stage_2.is_clicked():  # 스테이지 2
             self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.Level2)
-            pygame.mixer_music.fadeout(1000)
+            pygame.mixer_music.fadeout(100)
+            pygame.mixer_music.load(Resources.Sounds.Music.stage_2)
+            pygame.mixer_music.play(-1)
             self.game.current_display = self.game.missile_game
 
         if self.stage_3.is_clicked():  # 스테이지 3
             self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.Level3)
-            pygame.mixer_music.fadeout(1000)
+            pygame.mixer_music.fadeout(100)
+            pygame.mixer_music.load(Resources.Sounds.Music.stage_3)
+            pygame.mixer_music.play(-1)
             self.game.current_display = self.game.missile_game
 
         if self.stage_4.is_clicked():  # 스테이지 4
             self.game.missile_game = MissileGame(self.game, self.game.cannon_select.players, Levels.Level4)
-            pygame.mixer_music.fadeout(1000)
+            pygame.mixer_music.fadeout(100)
+            pygame.mixer_music.load(Resources.Sounds.Music.stage_4)
+            pygame.mixer_music.play(-1)
             self.game.current_display = self.game.missile_game
 
         if self.back.is_clicked():  # 대포 선택으로 돌아가기
@@ -337,5 +345,5 @@ class GameMenu(Menu):
 
         if self.back_to_main_menu.is_clicked():  # 메인 메뉴로 이동
             pygame.mixer_music.load(Resources.Sounds.Music.lobby)
-            pygame.mixer_music.play()
+            pygame.mixer_music.play(-1)
             self.game.current_display = self.game.main_menu

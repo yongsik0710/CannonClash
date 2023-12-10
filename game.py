@@ -22,7 +22,7 @@ class Game:
 
     def start_game(self):
         pygame.mixer_music.load(Resources.Sounds.Music.lobby)
-        pygame.mixer_music.play()
+        pygame.mixer_music.play(-1)
         self.main_loop()
 
     def main_loop(self):

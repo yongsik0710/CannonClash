@@ -12,13 +12,13 @@ class CannonUI:
     def __init__(self, cannon):
         self.cannon = cannon
         self.screen = pygame.display.get_surface()
-        self.canvas = pygame.surface.Surface((120, 200)).convert_alpha()
+        self.canvas = pygame.surface.Surface((120, 240)).convert_alpha()
         self.canvas.fill((0, 0, 0, 0))
         self.canvas_rect = self.canvas.get_rect()
 
-        self.player_name = TextBox(self.canvas, 0, 0, 120, 30, 20, self.cannon.player.name,
+        self.player_name = TextBox(self.canvas, 0, 10, 120, 30, 20, self.cannon.player.name,
                                    background_color="#666666", border_ratio=2)
-        self.health_bar = Bar(10, 130, 100, 20, 2, self.cannon.max_health, bar_color="#f25246", border_radius=2)
+        self.health_bar = Bar(10, 150, 100, 20, 2, self.cannon.max_health, bar_color="#f25246", border_radius=2)
 
     def update(self):
         self.health_bar.level = self.cannon.health

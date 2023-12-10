@@ -42,10 +42,6 @@ class CannonSelector:
         self.cannon_name = TextBox(surface, x + 90 * size, y + 360 * size, 200 * size, 80 * size, (40 * size), CANNONS[self.cannon_id].name, border_ratio=2)
         self.next = Button(surface, x + 310 * size, y + 367 * size, 70 * size, 70 * size, 4 * size, (40 * size), ">", border_ratio=2)
         self.prev = Button(surface, x, y + 367 * size, 70 * size, 70 * size, 4 * size, (40 * size), "<", border_ratio=2)
-        self.next_off = TextBox(surface, x + 310 * size, y + 365 * size, 70 * size, 70 * size, (40 * size), ">",
-                                background_color="#354b5e", border_ratio=2)
-        self.prev_off = TextBox(surface, x, y + 365 * size, 70 * size, 70 * size, (40 * size), "<",
-                                background_color="#354b5e", border_ratio=2)
 
     def update(self):
         self.player.cannon = CANNONS[self.cannon_id]
@@ -60,18 +56,20 @@ class CannonSelector:
         self.player_name.draw()
         self.cannon_name.draw()
         self.screen.blit(self.cannon_image, (self.x, self.y + 80 * self.size))
-        if self.cannon_id < len(CANNONS): self.next.draw()
-        else: self.next_off.draw()
-        if self.cannon_id > 1: self.prev.draw()
-        else: self.prev_off.draw()
+        self.next.draw()
+        self.prev.draw()
 
     def event_check(self):
         if self.next.is_clicked():
             if self.cannon_id < len(CANNONS):
                 self.cannon_id += 1
-                self.update()
+            else:
+                self.cannon_id = 1
+            self.update()
 
         if self.prev.is_clicked():
             if self.cannon_id > 1:
                 self.cannon_id -= 1
-                self.update()
+            else:
+                self.cannon_id = len(CANNONS)
+            self.update()

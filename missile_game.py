@@ -52,6 +52,8 @@ class MissileGame:
         if self.players[self.current_turn].turn:
 
             if keys[pygame.K_SPACE]:
+                self.players[self.current_turn].cannon.barrel_move_sound.sound.stop()
+                self.players[self.current_turn].cannon.move_sound.sound.stop()
                 if self.players[self.current_turn].power < self.players[self.current_turn].max_power:
                     self.players[self.current_turn].power += 1
             else:
@@ -84,9 +86,35 @@ class MissileGame:
                     if event.key == pygame.K_SPACE:
                         self.players[self.current_turn].shoot_shell()
 
+                    if event.key == pygame.K_RIGHT:
+                        self.players[self.current_turn].cannon.move_sound.sound.stop()
+
+                    if event.key == pygame.K_LEFT:
+                        self.players[self.current_turn].cannon.move_sound.sound.stop()
+
+                    if event.key == pygame.K_UP:
+                        self.players[self.current_turn].cannon.barrel_move_sound.sound.stop()
+
+                    if event.key == pygame.K_DOWN:
+                        self.players[self.current_turn].cannon.barrel_move_sound.sound.stop()
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         print(pygame.mouse.get_pos() + self.camera_group.offset)
+
+                if not keys[pygame.K_SPACE]:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_RIGHT:
+                            self.players[self.current_turn].cannon.move_sound.sound.play(-1)
+
+                        if event.key == pygame.K_LEFT:
+                            self.players[self.current_turn].cannon.move_sound.sound.play(-1)
+
+                        if event.key == pygame.K_UP:
+                            self.players[self.current_turn].cannon.barrel_move_sound.sound.play(-1)
+
+                        if event.key == pygame.K_DOWN:
+                            self.players[self.current_turn].cannon.barrel_move_sound.sound.play(-1)
 
     def game_menu_pop(self):
         pygame.mixer.pause()
@@ -106,9 +134,13 @@ class MissileGame:
         else:
             self.current_turn = 0
 
-        if self.players[self.current_turn].cannon.is_on_fire:
-            self.players[self.current_turn].cannon.damage(random.randint(80, 120))
-            self.players[self.current_turn].cannon.is_on_fire = random.choice([True, False])
+        if self.players[self.current_turn].cannon.fire_turn > 0:
+            self.players[self.current_turn].cannon.damage(random.randint(40, 100), is_fire=True)
+            self.players[self.current_turn].cannon.fire_turn -= 1
+            if self.players[self.current_turn].cannon.fire_turn <= 0:
+                if self.players[self.current_turn].cannon.fire_effect is not None:
+                    self.players[self.current_turn].cannon.fire_effect.kill()
+                    self.players[self.current_turn].cannon.fire_effect = None
 
         if not self.players[self.current_turn].is_death:
             self.camera_group.center_target_camera_align(self.players[self.current_turn].cannon)
@@ -160,7 +192,11 @@ class GameEnd:
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:  # 메인 메뉴로 이동
+                    pygame.mixer_music.load(Resources.Sounds.Music.lobby)
+                    pygame.mixer_music.play()
                     self.game.current_display = self.game.main_menu
 
         if self.back_to_main_menu.is_clicked():  # 메인 메뉴로 이동
+            pygame.mixer_music.load(Resources.Sounds.Music.lobby)
+            pygame.mixer_music.play()
             self.game.current_display = self.game.main_menu
