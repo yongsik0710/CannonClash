@@ -59,6 +59,7 @@ class Resources:
 
         class Util:
             class Button:
+                mouse_on = resource_path("Sounds/Util/mouse_on.wav")
                 click = resource_path("Sounds/Util/click.wav")
 
     class Levels:

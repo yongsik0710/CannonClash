@@ -9,7 +9,9 @@ class Button:
         # Core attributes
         self.surface = surface
         font = pygame.font.Font(font_path, int(font_size))
+        self.mouse_on_sound = Sound(all_sounds, Resources.Sounds.Util.Button.mouse_on)
         self.click_sound = Sound(all_sounds, Resources.Sounds.Util.Button.click)
+        self.mouse_on = False
         self.clicked = False
         self.pressed = False
         self.elevation = elevation
@@ -53,6 +55,9 @@ class Button:
     def check_click(self):
         mouse_pos = pygame.mouse.get_pos()
         if self.interact_rect.collidepoint(mouse_pos):
+            if not self.mouse_on:
+                self.mouse_on_sound.sound.play()
+                self.mouse_on = True
             self.top_color = self.change_color
             if pygame.mouse.get_pressed()[0]:
                 self.interact_rect.height = self.original_height + self.elevation
@@ -65,6 +70,7 @@ class Button:
                     self.interact_rect.height = self.original_height
                     self.pressed = False
         else:
+            self.mouse_on = False
             self.interact_rect.height = self.original_height
             self.pressed = False
             self.dynamic_elecation = self.elevation

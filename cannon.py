@@ -168,7 +168,7 @@ class Cannon(pygame.sprite.Sprite):
         if self.health > 0:
             self.health -= damage
             self.damage_sound.sound.play()
-        elif not self.is_death:
+        if self.health <= 0 and not self.is_death:
             self.is_death = True
             self.player.death()
 
