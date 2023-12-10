@@ -34,6 +34,8 @@ class CannonSelector:
         self.cannon_image = pygame.surface.Surface((360 * size, 360 * size)).convert_alpha()
         self.cannon_image.fill((0, 0, 0, 0))
         self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (360 * self.size, 360 * self.size)), (0, 0))
+        if CANNONS[self.cannon_id].body_texture is not None:
+            self.cannon_image.blit(load_png(CANNONS[self.cannon_id].body_texture, (360 * self.size, 360 * self.size)), (0, 0))
         self.cannon_image.blit(load_png(CANNONS[self.cannon_id].wheel_texture, (360 * self.size, 360 * self.size)), (0, 0))
 
         self.player_name = TextBox(surface, x, y, 380 * size, 80 * size, (55 * size), self.player.name)
@@ -49,6 +51,8 @@ class CannonSelector:
         self.player.cannon = CANNONS[self.cannon_id]
         self.cannon_image.fill((0, 0, 0, 0))
         self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (360 * self.size, 360 * self.size)), (0, 0))
+        if CANNONS[self.cannon_id].body_texture is not None:
+            self.cannon_image.blit(load_png(CANNONS[self.cannon_id].body_texture, (360 * self.size, 360 * self.size)), (0, 0))
         self.cannon_image.blit(load_png(CANNONS[self.cannon_id].wheel_texture, (360 * self.size, 360 * self.size)), (0, 0))
         self.cannon_name.text_update(CANNONS[self.cannon_id].name)
 

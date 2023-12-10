@@ -24,6 +24,7 @@ def load_png(name):
 class Cannon(pygame.sprite.Sprite):
     name = None
     barrel_texture = None
+    body_texture = None
     wheel_texture = None
     shell = None
     shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.shoot)
@@ -89,14 +90,14 @@ class Cannon(pygame.sprite.Sprite):
         if self.direction == "right":
             self.barrel.blit(surf, (0, 0), self.launch_angle)
             if self.is_on_fire:
-                fire = load_png(Resources.Shells.fireball)
+                fire = load_png(Resources.Texture.Shells.fireball)
                 fire = pygame.transform.rotozoom(fire, -90, 0.5)
                 surf.blit(fire, (50, 50))
             self.wheel.blit(surf, (0, 0))
         elif self.direction == "left":
             self.barrel.blit(surf, (0, 0), self.launch_angle)
             if self.is_on_fire:
-                fire = load_png(Resources.Shells.fireball)
+                fire = load_png(Resources.Texture.Shells.fireball)
                 fire = pygame.transform.rotozoom(fire, -90, 0.5)
                 surf.blit(fire, (50, 50))
             surf = pygame.transform.flip(surf, True, False)
@@ -250,8 +251,8 @@ class Cannon(pygame.sprite.Sprite):
 
 class BasicCannon(Cannon):
     name = "대포"
-    barrel_texture = Resources.Cannons.Barrel.basic_barrel
-    wheel_texture = Resources.Cannons.Wheel.basic_wheel
+    barrel_texture = Resources.Texture.Cannons.Barrel.basic_barrel
+    wheel_texture = Resources.Texture.Cannons.Wheel.basic_wheel
     shell = BasicShell
     shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.shoot)
     damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.damage)
@@ -266,24 +267,24 @@ class BasicCannon(Cannon):
 
 class Ballista(Cannon):
     name = "발리스타"
-    barrel_texture = Resources.Cannons.Barrel.ballista_barrel
-    wheel_texture = Resources.Cannons.Wheel.ballista_wheel
+    barrel_texture = Resources.Texture.Cannons.Barrel.ballista_barrel
+    wheel_texture = Resources.Texture.Cannons.Wheel.ballista_wheel
     shell = Arrow
     shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.Ballista.shoot)
     damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.Ballista.damage)
     barrel_length = 100
     barrel_distance = 30
 
-    default_angle = 40
-    max_delta_angle = 10
-    max_health = 1000
-    max_mobility = 1000
+    default_angle = 20
+    max_delta_angle = 40
+    max_health = 800
+    max_mobility = 2500
 
 
 class FlameCannon(Cannon):
     name = "화포"
-    barrel_texture = Resources.Cannons.Barrel.flame_cannon_barrel
-    wheel_texture = Resources.Cannons.Wheel.flame_cannon_wheel
+    barrel_texture = Resources.Texture.Cannons.Barrel.flame_cannon_barrel
+    wheel_texture = Resources.Texture.Cannons.Wheel.flame_cannon_wheel
     shell = FireBall
     shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.FlameCannon.shoot)
     damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.FlameCannon.damage)
@@ -296,8 +297,305 @@ class FlameCannon(Cannon):
     max_mobility = 1000
 
 
+class Catapult(Cannon):
+    name = "캐터펄트"
+    barrel_texture = Resources.Texture.Cannons.Barrel.catapult_barrel
+    body_texture = Resources.Texture.Cannons.Body.catapult_body
+    wheel_texture = Resources.Texture.Cannons.Wheel.catapult_wheel
+    shell = Stone
+    shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.Catapult.shoot)
+    damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.Catapult.damage)
+    barrel_length = 100
+    barrel_distance = 20
+
+    default_angle = 45
+    max_delta_angle = 45
+    max_health = 1200
+    max_mobility = 700
+
+    def __init__(self, group, stage, pos, vector, player):
+        pygame.sprite.Sprite.__init__(self, group)
+        self.camera = group[0]
+        self.cannon_group = group[1]
+        self.player = player
+        self.depth = 3
+
+        self.health = self.max_health
+        self.mobility = self.max_mobility
+
+        self.incline_angle = 0.0
+        self.delta_angle = 0.0
+        self.launch_angle = 0.0
+
+        self.on_ground = False
+        self.is_death = False
+        self.direction = "right"
+        self.is_on_fire = False
+
+        self.stage = stage
+        self.vector = pygame.math.Vector2(vector)
+        self.gravity = stage.gravity
+
+        self.barrel = self.Barrel(self.barrel_texture)
+        self.body = self.Body(self.body_texture)
+        self.wheel = self.Wheel(self.wheel_texture)
+        self.cannon_ui = CannonUI(self)
+
+        self.image = self.blit_cannon()
+        self.rect = self.image.get_rect()
+        self.rect.center = self.rect.move(pos).topleft
+
+        self.mask = self.wheel.mask
+
+        self.collide_pos = (0, 0)
+        self.screen = pygame.display.get_surface()
+
+    def blit_cannon(self):
+        surf = pygame.surface.Surface((200, 200)).convert_alpha()
+        surf.fill((0, 0, 0, 0))
+
+        if self.direction == "right":
+            self.barrel.blit(surf, (0, 0), self.incline_angle)
+            self.body.blit(surf, (0, 0), self.incline_angle)
+            if self.is_on_fire:
+                fire = load_png(Resources.Texture.Shells.fireball)
+                fire = pygame.transform.rotozoom(fire, -90, 0.5)
+                surf.blit(fire, (50, 50))
+            self.wheel.blit(surf, (0, 0), self.incline_angle)
+        elif self.direction == "left":
+            self.barrel.blit(surf, (0, 0), -self.incline_angle)
+            self.body.blit(surf, (0, 0), -self.incline_angle)
+            if self.is_on_fire:
+                fire = load_png(Resources.Texture.Shells.fireball)
+                fire = pygame.transform.rotozoom(fire, -90, 0.5)
+                surf.blit(fire, (50, 50))
+            surf = pygame.transform.flip(surf, True, False)
+            self.wheel.blit(surf, (0, 0), self.incline_angle)
+
+        return surf
+
+    def move_right(self):
+        self.direction = "right"
+        if self.mobility > 0 and self.incline_angle <= 55:
+            self.vector.x = 1
+            if self.incline_angle >= 0:
+                delta_mobility = (6 + abs(self.incline_angle) / 4)
+            else:
+                delta_mobility = 6
+            if self.mobility - delta_mobility >= 0:
+                self.mobility -= delta_mobility
+            else:
+                self.mobility = 0
+
+    def move_left(self):
+        self.direction = "left"
+        if self.mobility > 0 and self.incline_angle >= -55:
+            self.vector.x = -1
+            if self.incline_angle <= 0:
+                delta_mobility = (6 + abs(self.incline_angle) / 4)
+            else:
+                delta_mobility = 6
+            if self.mobility - delta_mobility >= 0:
+                self.mobility -= delta_mobility
+            else:
+                self.mobility = 0
+
+    class Barrel:
+        def __init__(self, texture):
+            self.image = load_png(texture)
+            self.rect = self.image.get_rect()
+
+        def blit(self, surf, topleft, angle):
+            rotated_image = pygame.transform.rotate(self.image, angle)
+            new_rect = rotated_image.get_rect(center=self.image.get_rect(topleft=topleft).center)
+
+            surf.blit(rotated_image, new_rect)
+
+    class Body:
+        def __init__(self, texture):
+            self.image = load_png(texture)
+            self.rect = self.image.get_rect()
+
+        def blit(self, surf, topleft, angle):
+            rotated_image = pygame.transform.rotate(self.image, angle)
+            new_rect = rotated_image.get_rect(center=self.image.get_rect(topleft=topleft).center)
+
+            surf.blit(rotated_image, new_rect)
+
+    class Wheel:
+        def __init__(self, texture):
+            self.image = load_png(texture)
+            self.mask_image = load_png(Resources.Texture.Cannons.Wheel.basic_wheel)
+            self.mask_image = pygame.transform.scale_by(self.mask_image, 0.96)
+            self.mask = pygame.mask.from_surface(self.mask_image)
+
+        def blit(self, surf, topleft, angle):
+            rotated_image = pygame.transform.rotate(self.image, angle)
+            new_rect = rotated_image.get_rect(center=self.image.get_rect(topleft=topleft).center)
+
+            surf.blit(rotated_image, new_rect)
+
+
+class Tank(Cannon):
+    name = "탱크"
+    barrel_texture = Resources.Texture.Cannons.Barrel.tank_barrel
+    body_texture = Resources.Texture.Cannons.Body.tank_body
+    wheel_texture = Resources.Texture.Cannons.Wheel.tank_wheel
+    shell = Missile
+    shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.Tank.shoot)
+    damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.Tank.damage)
+    barrel_length = 100
+    barrel_distance = 20
+
+    default_angle = 10
+    max_delta_angle = 20
+    max_health = 1400
+    max_mobility = 1000
+
+    def __init__(self, group, stage, pos, vector, player):
+        pygame.sprite.Sprite.__init__(self, group)
+        self.camera = group[0]
+        self.cannon_group = group[1]
+        self.player = player
+        self.depth = 3
+
+        self.health = self.max_health
+        self.mobility = self.max_mobility
+
+        self.incline_angle = 0.0
+        self.delta_angle = 0.0
+        self.launch_angle = 0.0
+
+        self.on_ground = False
+        self.is_death = False
+        self.direction = "right"
+        self.is_on_fire = False
+
+        self.stage = stage
+        self.vector = pygame.math.Vector2(vector)
+        self.gravity = stage.gravity
+
+        self.barrel = self.Barrel(self.barrel_texture)
+        self.body = self.Body(self.body_texture)
+        self.wheel = self.Wheel(self.wheel_texture)
+        self.cannon_ui = CannonUI(self)
+
+        self.image = self.blit_cannon()
+        self.rect = self.image.get_rect()
+        self.rect.center = self.rect.move(pos).topleft
+
+        self.mask = self.wheel.mask
+
+        self.collide_pos = (0, 0)
+        self.screen = pygame.display.get_surface()
+
+    def blit_cannon(self):
+        surf = pygame.surface.Surface((200, 200)).convert_alpha()
+        surf.fill((0, 0, 0, 0))
+
+        if self.direction == "right":
+            vector = pygame.Vector2(
+                [-math.cos(math.radians(-self.incline_angle)), -math.sin(math.radians(-self.incline_angle))])
+            rotated_launch_vector = vector.copy().rotate(90)
+            scaled_launch_vector = vector.copy()
+            scaled_launch_vector.scale_to_length(25)
+            rotated_launch_vector.scale_to_length(35)
+            rotated_launch_vector -= scaled_launch_vector
+            self.barrel.blit(surf, (0, 0), self.launch_angle, rotated_launch_vector)
+            self.body.blit(surf, (0, 0), self.incline_angle)
+            if self.is_on_fire:
+                fire = load_png(Resources.Texture.Shells.fireball)
+                fire = pygame.transform.rotozoom(fire, -90, 0.5)
+                surf.blit(fire, (50, 50))
+            self.wheel.blit(surf, (0, 0), self.incline_angle)
+        elif self.direction == "left":
+            vector = pygame.Vector2(
+                [-math.cos(math.radians(self.incline_angle)), -math.sin(math.radians(self.incline_angle))])
+            rotated_launch_vector = vector.copy().rotate(90)
+            scaled_launch_vector = vector.copy()
+            scaled_launch_vector.scale_to_length(25)
+            rotated_launch_vector.scale_to_length(35)
+            rotated_launch_vector -= scaled_launch_vector
+            self.barrel.blit(surf, (0, 0), self.launch_angle, rotated_launch_vector)
+            self.body.blit(surf, (0, 0), -self.incline_angle)
+            if self.is_on_fire:
+                fire = load_png(Resources.Texture.Shells.fireball)
+                fire = pygame.transform.rotozoom(fire, -90, 0.5)
+                surf.blit(fire, (50, 50))
+            surf = pygame.transform.flip(surf, True, False)
+            self.wheel.blit(surf, (0, 0), self.incline_angle)
+
+        return surf
+
+    def move_right(self):
+        self.direction = "right"
+        if self.mobility > 0 and self.incline_angle <= 55:
+            self.vector.x = 1
+            if self.incline_angle >= 0:
+                delta_mobility = (6 + abs(self.incline_angle) / 4)
+            else:
+                delta_mobility = 6
+            if self.mobility - delta_mobility >= 0:
+                self.mobility -= delta_mobility
+            else:
+                self.mobility = 0
+
+    def move_left(self):
+        self.direction = "left"
+        if self.mobility > 0 and self.incline_angle >= -55:
+            self.vector.x = -1
+            if self.incline_angle <= 0:
+                delta_mobility = (6 + abs(self.incline_angle) / 4)
+            else:
+                delta_mobility = 6
+            if self.mobility - delta_mobility >= 0:
+                self.mobility -= delta_mobility
+            else:
+                self.mobility = 0
+
+    class Barrel:
+        def __init__(self, texture):
+            self.image = load_png(texture)
+            self.rect = self.image.get_rect()
+
+        def blit(self, surf, topleft, angle, vector):
+            new_surf = pygame.surface.Surface((200, 200)).convert_alpha()
+            new_surf.fill((0, 0, 0, 0))
+            new_surf.blit(self.image, (0, 35))
+            rotated_image = pygame.transform.rotate(new_surf, angle)
+            new_rect = rotated_image.get_rect(center=self.image.get_rect(topleft=topleft).center)
+
+            surf.blit(rotated_image, new_rect.topleft + vector)
+
+    class Body:
+        def __init__(self, texture):
+            self.image = load_png(texture)
+            self.rect = self.image.get_rect()
+
+        def blit(self, surf, topleft, angle):
+            rotated_image = pygame.transform.rotate(self.image, angle)
+            new_rect = rotated_image.get_rect(center=self.image.get_rect(topleft=topleft).center)
+
+            surf.blit(rotated_image, new_rect)
+
+    class Wheel:
+        def __init__(self, texture):
+            self.image = load_png(texture)
+            self.mask_image = load_png(Resources.Texture.Cannons.Wheel.basic_wheel)
+            self.mask_image = pygame.transform.scale_by(self.mask_image, 0.94)
+            self.mask = pygame.mask.from_surface(self.mask_image)
+
+        def blit(self, surf, topleft, angle):
+            rotated_image = pygame.transform.rotate(self.image, angle)
+            new_rect = rotated_image.get_rect(center=self.image.get_rect(topleft=topleft).center)
+
+            surf.blit(rotated_image, new_rect)
+
+
 CANNONS = {
     1: BasicCannon,
     2: Ballista,
-    3: FlameCannon
+    3: FlameCannon,
+    4: Catapult,
+    5: Tank
 }

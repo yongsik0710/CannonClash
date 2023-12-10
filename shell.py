@@ -22,7 +22,7 @@ def load_png(name, size):
 
 
 class Shell(pygame.sprite.Sprite):
-    texture = Resources.Shells.basic
+    texture = Resources.Texture.Shells.basic
     texture_size = 1
     explode_sound = Sound(all_sounds, Resources.Sounds.Shell.Basic.explode)
     damage = 100
@@ -39,6 +39,7 @@ class Shell(pygame.sprite.Sprite):
         self.owner = owner
         self.gravity = stage.gravity
         self.wind = stage.wind
+        self.angle = 0.0
 
         self.image, self.rect = load_png(self.texture, self.texture_size)
         self.rect.center = self.rect.move(pos).topleft
@@ -53,9 +54,19 @@ class Shell(pygame.sprite.Sprite):
     def update(self):
         self.vector.y += self.gravity / 2
         self.vector.x += self.wind / 550
+
+        self.angle += 10
+        self.image, self.rect = self.rot_center(self.angle, self.rect.centerx, self.rect.centery)
+
         self.collide_check()
         self.out_of_border()
         self.rect = self.rect.move(self.vector)
+
+    def rot_center(self, angle, x, y):
+        rotated_image = pygame.transform.rotate(self.original_image, angle)
+        new_rect = rotated_image.get_rect(center=self.original_image.get_rect(center=(x, y)).center)
+
+        return rotated_image, new_rect
 
     def collide_check(self):
         if pygame.sprite.collide_mask(self, self.stage) or \
@@ -77,7 +88,7 @@ class Shell(pygame.sprite.Sprite):
                                (self.rect.centerx - (self.explosion_rect.width / 2),
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        Explosion(self.camera, self.rect.center, Resources.Effects.explosion_3, 42, 1, 1, self.owner)
+        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion_3, 42, 1, 1, self.owner)
         self.explode_sound.sound.play()
         self.kill()
 
@@ -89,15 +100,15 @@ class Shell(pygame.sprite.Sprite):
 
 
 class BasicShell(Shell):
-    texture = Resources.Shells.basic
+    texture = Resources.Texture.Shells.basic
     texture_size = 0.7
     explode_sound = Sound(all_sounds, Resources.Sounds.Shell.Basic.explode)
     damage = 300
-    explosion_radius = 60
+    explosion_radius = 80
 
 
 class Arrow(Shell):
-    texture = Resources.Shells.arrow
+    texture = Resources.Texture.Shells.arrow
     texture_size = 1
     explode_sound = Sound(all_sounds, Resources.Sounds.Shell.Arrow.explode)
     damage = 100
@@ -125,26 +136,26 @@ class Arrow(Shell):
             pos = pygame.Vector2(self.rect.center)
             distance = pos.distance_to(cannon.rect.center)
             if 0 <= distance - 50 <= self.explosion_radius:
-                damage = self.damage * (self.vector.length_squared() / 500)
+                damage = self.damage + self.damage * (self.vector.length_squared() / 550)
                 damage *= ((self.explosion_radius - (distance - 50)) / self.explosion_radius) ** 2
                 cannon.damage(damage)
             elif distance < 50:
-                damage = self.damage * (self.vector.length_squared() / 500)
+                damage = self.damage + self.damage * (self.vector.length_squared() / 550)
                 cannon.damage(damage)
         pygame.mask.Mask.erase(self.stage.mask, self.explosion_mask,
                                (self.rect.centerx - (self.explosion_rect.width / 2),
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        Explosion(self.camera, self.rect.center, Resources.Effects.explosion, 7, 0.6, 0.3, self.owner)
+        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion, 7, 0.6, 0.3, self.owner)
         self.explode_sound.sound.play()
         self.kill()
 
 
 class FireBall(Shell):
-    texture = Resources.Shells.fireball
+    texture = Resources.Texture.Shells.fireball
     texture_size = 0.55
     explode_sound = Sound(all_sounds, Resources.Sounds.Shell.Fireball.explode)
-    damage = 250
+    damage = 270
     explosion_radius = 60
 
     def __init__(self, group, stage, pos, vector, owner, cannon_group):
@@ -197,6 +208,58 @@ class FireBall(Shell):
                                (self.rect.centerx - (self.explosion_rect.width / 2),
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        Explosion(self.camera, self.rect.center, Resources.Effects.explosion_3, 42, 1, 1, self.owner)
+        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion_3, 42, 1, 1, self.owner)
         self.explode_sound.sound.play()
         self.kill()
+
+
+class Stone(Shell):
+    texture = Resources.Texture.Shells.stone
+    texture_size = 2
+    explode_sound = Sound(all_sounds, Resources.Sounds.Shell.Basic.explode)
+    damage = 400
+    explosion_radius = 60
+
+    def explode(self):
+        for cannon in self.cannon_group:
+            pos = pygame.Vector2(self.rect.center)
+            distance = pos.distance_to(cannon.rect.center)
+            if 0 <= distance - 60 <= self.explosion_radius:
+                damage = self.damage * (((self.explosion_radius - (distance - 60)) / self.explosion_radius) ** 2)
+                cannon.damage(damage)
+            elif distance < 60:
+                damage = self.damage
+                cannon.damage(damage)
+
+        pygame.mask.Mask.erase(self.stage.mask, self.explosion_mask,
+                               (self.rect.centerx - (self.explosion_rect.width / 2),
+                                self.rect.centery - (self.explosion_rect.height / 2)))
+        self.stage.custom_update()
+        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion_3, 42, 1, 1, self.owner)
+        self.explode_sound.sound.play()
+        self.kill()
+
+
+class Missile(Shell):
+    texture = Resources.Texture.Shells.missile
+    texture_size = 1
+    explode_sound = Sound(all_sounds, Resources.Sounds.Shell.Basic.explode)
+    damage = 350
+    explosion_radius = 60
+
+    def update(self):
+        self.vector.y += self.gravity / 2
+        self.vector.x += self.wind / 550
+
+        angle = self.vector.angle_to((0, 0))
+        self.image, self.rect = self.rot_center(angle, self.rect.centerx, self.rect.centery)
+
+        self.collide_check()
+        self.out_of_border()
+        self.rect = self.rect.move(self.vector)
+
+    def rot_center(self, angle, x, y):
+        rotated_image = pygame.transform.rotate(self.original_image, angle)
+        new_rect = rotated_image.get_rect(center=self.original_image.get_rect(center=(x, y)).center)
+
+        return rotated_image, new_rect

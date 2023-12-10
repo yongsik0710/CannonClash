@@ -16,7 +16,7 @@ class PlayerUI:
         self.canvas.fill((0, 0, 0, 0))
         self.canvas_rect = self.canvas.get_rect()
 
-        self.current_player = pygame.image.load(Resources.Util.current_player)
+        self.current_player = pygame.image.load(Resources.Texture.Util.current_player)
 
         self.player_name = TextBox(self.canvas, 40, 10, 200, 50, 35, self.player.name,
                                    background_color="#555555", border_ratio=2)

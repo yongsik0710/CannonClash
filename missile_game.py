@@ -107,7 +107,7 @@ class MissileGame:
             self.current_turn = 0
 
         if self.players[self.current_turn].cannon.is_on_fire:
-            self.players[self.current_turn].cannon.damage(random.randint(50, 100))
+            self.players[self.current_turn].cannon.damage(random.randint(80, 120))
             self.players[self.current_turn].cannon.is_on_fire = random.choice([True, False])
 
         if not self.players[self.current_turn].is_death:
@@ -117,7 +117,7 @@ class MissileGame:
             self.players[self.current_turn].skip()
 
     def wind_change(self):
-        self.stage.wind += random.randint(-40, 40)
+        self.stage.wind += random.randint(-25, 25)
         if self.stage.wind > 100:
             self.stage.wind = 100
         elif self.stage.wind < -100:
