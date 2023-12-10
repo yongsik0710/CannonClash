@@ -21,7 +21,7 @@ class Game:
         self.current_display = self.main_menu
 
     def start_game(self):
-        pygame.mixer_music.load(Resources.Music.lobby)
+        pygame.mixer_music.load(Resources.Sounds.Music.lobby)
         pygame.mixer_music.play()
         self.main_loop()
 

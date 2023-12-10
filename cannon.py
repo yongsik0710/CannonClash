@@ -26,7 +26,8 @@ class Cannon(pygame.sprite.Sprite):
     barrel_texture = None
     wheel_texture = None
     shell = None
-    shoot_sound = Sound(all_sounds, Resources.Sounds.shoot)
+    shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.shoot)
+    damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.damage)
     barrel_length = 80
     barrel_distance = 30
 
@@ -164,8 +165,10 @@ class Cannon(pygame.sprite.Sprite):
         self.camera.target = self.shell(self.camera, self.stage, self.rect.center + scaled_launch_vector, vector, owner, self.cannon_group)
 
     def damage(self, damage):
-        self.health -= damage
-        if self.health <= 0 and not self.is_death:
+        if self.health > 0:
+            self.health -= damage
+            self.damage_sound.sound.play()
+        elif not self.is_death:
             self.is_death = True
             self.player.death()
 
@@ -250,6 +253,8 @@ class BasicCannon(Cannon):
     barrel_texture = Resources.Cannons.Barrel.basic_barrel
     wheel_texture = Resources.Cannons.Wheel.basic_wheel
     shell = BasicShell
+    shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.shoot)
+    damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.Basic.damage)
     barrel_length = 85
     barrel_distance = 25
 
@@ -264,6 +269,8 @@ class Ballista(Cannon):
     barrel_texture = Resources.Cannons.Barrel.ballista_barrel
     wheel_texture = Resources.Cannons.Wheel.ballista_wheel
     shell = Arrow
+    shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.Ballista.shoot)
+    damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.Ballista.damage)
     barrel_length = 100
     barrel_distance = 30
 
@@ -278,6 +285,8 @@ class FlameCannon(Cannon):
     barrel_texture = Resources.Cannons.Barrel.flame_cannon_barrel
     wheel_texture = Resources.Cannons.Wheel.flame_cannon_wheel
     shell = FireBall
+    shoot_sound = Sound(all_sounds, Resources.Sounds.Cannon.FlameCannon.shoot)
+    damage_sound = Sound(all_sounds, Resources.Sounds.Cannon.FlameCannon.damage)
     barrel_length = 100
     barrel_distance = 20
 

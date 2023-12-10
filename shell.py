@@ -24,7 +24,7 @@ def load_png(name, size):
 class Shell(pygame.sprite.Sprite):
     texture = Resources.Shells.basic
     texture_size = 1
-    explode_sound = Sound(all_sounds, Resources.Sounds.explode)
+    explode_sound = Sound(all_sounds, Resources.Sounds.Shell.Basic.explode)
     damage = 100
     explosion_radius = 50
 
@@ -91,6 +91,7 @@ class Shell(pygame.sprite.Sprite):
 class BasicShell(Shell):
     texture = Resources.Shells.basic
     texture_size = 0.7
+    explode_sound = Sound(all_sounds, Resources.Sounds.Shell.Basic.explode)
     damage = 300
     explosion_radius = 60
 
@@ -98,6 +99,7 @@ class BasicShell(Shell):
 class Arrow(Shell):
     texture = Resources.Shells.arrow
     texture_size = 1
+    explode_sound = Sound(all_sounds, Resources.Sounds.Shell.Arrow.explode)
     damage = 100
     explosion_radius = 30
 
@@ -134,12 +136,14 @@ class Arrow(Shell):
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
         Explosion(self.camera, self.rect.center, Resources.Effects.explosion, 7, 0.6, 0.3, self.owner)
+        self.explode_sound.sound.play()
         self.kill()
 
 
 class FireBall(Shell):
     texture = Resources.Shells.fireball
     texture_size = 0.55
+    explode_sound = Sound(all_sounds, Resources.Sounds.Shell.Fireball.explode)
     damage = 250
     explosion_radius = 60
 
@@ -194,4 +198,5 @@ class FireBall(Shell):
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
         Explosion(self.camera, self.rect.center, Resources.Effects.explosion_3, 42, 1, 1, self.owner)
+        self.explode_sound.sound.play()
         self.kill()

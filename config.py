@@ -30,12 +30,36 @@ class Resources:
     class Util:
         current_player = resource_path("Images/Utilities/current_player.png")
 
-    class Music:
-        lobby = resource_path("Sounds/Background/1.wav")
-
     class Sounds:
-        explode = resource_path("Sounds/explode.wav")
-        shoot = resource_path("Sounds/shoot.wav")
+        class Music:
+            lobby = resource_path("Sounds/Background/1.wav")
+
+        class Cannon:
+            class Basic:
+                shoot = resource_path("Sounds/Cannon/Basic/shoot.wav")
+                damage = resource_path("Sounds/Cannon/Basic/damage.wav")
+
+            class Ballista:
+                shoot = resource_path("Sounds/Cannon/Ballista/shoot.wav")
+                damage = resource_path("Sounds/Cannon/Ballista/damage.wav")
+
+            class FlameCannon:
+                shoot = resource_path("Sounds/Cannon/FlameCannon/shoot.wav")
+                damage = resource_path("Sounds/Cannon/FlameCannon/damage.wav")
+
+        class Shell:
+            class Basic:
+                explode = resource_path("Sounds/Shell/Basic/explode.wav")
+
+            class Arrow:
+                explode = resource_path("Sounds/Shell/Arrow/explode.wav")
+
+            class Fireball:
+                explode = resource_path("Sounds/Shell/Fireball/explode.wav")
+
+        class Util:
+            class Button:
+                click = resource_path("Sounds/Util/click.wav")
 
     class Levels:
         class Level1:

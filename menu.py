@@ -336,6 +336,6 @@ class GameMenu(Menu):
             self.game.current_display = self.game.missile_game
 
         if self.back_to_main_menu.is_clicked():  # 메인 메뉴로 이동
-            pygame.mixer_music.load(Resources.Music.lobby)
+            pygame.mixer_music.load(Resources.Sounds.Music.lobby)
             pygame.mixer_music.play()
             self.game.current_display = self.game.main_menu

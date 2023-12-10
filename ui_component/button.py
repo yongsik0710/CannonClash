@@ -1,4 +1,5 @@
 from config import *
+from sounds import *
 import pygame
 
 
@@ -8,6 +9,7 @@ class Button:
         # Core attributes
         self.surface = surface
         font = pygame.font.Font(font_path, int(font_size))
+        self.click_sound = Sound(all_sounds, Resources.Sounds.Util.Button.click)
         self.clicked = False
         self.pressed = False
         self.elevation = elevation
@@ -70,6 +72,7 @@ class Button:
 
     def is_clicked(self):
         if self.clicked:
+            self.click_sound.sound.play()
             self.clicked = False
             return True
         return False
