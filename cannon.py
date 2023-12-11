@@ -108,14 +108,14 @@ class Cannon(pygame.sprite.Sprite):
         self.cannon_ui.draw()
 
     def angle_update(self):
-        surf = pygame.surface.Surface((48, 48)).convert_alpha()
+        surf = pygame.surface.Surface((32, 32)).convert_alpha()
         surf.fill((0, 0, 0, 0))
-        surf.blit(self.stage.image, (-(self.rect.centerx - 24), -self.rect.centery))
+        surf.blit(self.stage.image, (-(self.rect.centerx - 16), -self.rect.centery))
         mask = pygame.mask.from_surface(surf)
 
         border_bits = []
-        for x in range(48):
-            for y in range(48):
+        for x in range(32):
+            for y in range(32):
                 if mask.get_at((x, y)):
                     border_bits.append((x, y))
                     break
@@ -133,16 +133,21 @@ class Cannon(pygame.sprite.Sprite):
             self.launch_angle = self.default_angle - self.incline_angle + self.delta_angle
 
     def collide_check(self):
-        if pygame.sprite.collide_mask(self, self.stage):
-            self.on_ground = True
-            if self.mask.overlap(self.stage.mask, (-self.rect.x, -self.rect.y + 3)):
-                self.vector.y = -2
+        dy = 0
+        self.on_ground = True
+        try:
+            while not self.stage.mask.get_at((self.rect.centerx, self.rect.centery + dy)):
+                dy += 1
+
+            if 0 <= dy <= 24:
+                self.rect.centery = (self.rect.centery - 24) + dy
             else:
-                self.collide_pos = self.mask.overlap(self.stage.mask, (-self.rect.centerx, -self.rect.centery))
-                # self.collide_pos = (self.collide_pos[0] + self.rect.x, self.collide_pos[1] + self.rect.y)
-                self.vector.y = 0
-        else:
+                self.on_ground = False
+        except:
             self.on_ground = False
+
+        if self.on_ground:
+            self.vector.y = 0
 
     def shoot_shell(self, power, owner):
         if self.direction == "right":
@@ -205,8 +210,18 @@ class Cannon(pygame.sprite.Sprite):
 
     def move_right(self):
         self.direction = "right"
-        if self.mobility > 0 and self.incline_angle <= 55:
-            self.vector.x = 1
+        if self.mobility > 0 and self.incline_angle <= 80:
+            dx = 0
+            try:
+                while not self.stage.mask.get_at((self.rect.centerx + dx, self.rect.centery)):
+                    dx += 1
+
+                if 0 <= dx <= 6:
+                    pass
+                else:
+                    self.vector.x = 1
+            except:
+                self.vector.x = 1
             self.wheel.roll_cw()
             if self.incline_angle >= 0:
                 delta_mobility = (6 + abs(self.incline_angle) / 4)
@@ -221,8 +236,18 @@ class Cannon(pygame.sprite.Sprite):
 
     def move_left(self):
         self.direction = "left"
-        if self.mobility > 0 and self.incline_angle >= -55:
-            self.vector.x = -1
+        if self.mobility > 0 and self.incline_angle >= -80:
+            dx = 0
+            try:
+                while not self.stage.mask.get_at((self.rect.centerx + dx, self.rect.centery)):
+                    dx -= 1
+
+                if -6 <= dx <= 0:
+                    pass
+                else:
+                    self.vector.x = -1
+            except:
+                self.vector.x = -1
             self.wheel.roll_acw()
             if self.incline_angle <= 0:
                 delta_mobility = (6 + abs(self.incline_angle) / 4)
@@ -395,10 +420,37 @@ class Catapult(Cannon):
 
         return surf
 
+    def collide_check(self):
+        dy = 0
+        self.on_ground = True
+        try:
+            while not self.stage.mask.get_at((self.rect.centerx, self.rect.centery + dy)):
+                dy += 1
+
+            if 0 <= dy <= 18:
+                self.rect.centery = (self.rect.centery - 18) + dy
+            else:
+                self.on_ground = False
+        except:
+            self.on_ground = False
+
+        if self.on_ground:
+            self.vector.y = 0
+
     def move_right(self):
         self.direction = "right"
-        if self.mobility > 0 and self.incline_angle <= 55:
-            self.vector.x = 1
+        if self.mobility > 0 and self.incline_angle <= 80:
+            dx = 0
+            try:
+                while not self.stage.mask.get_at((self.rect.centerx + dx, self.rect.centery)):
+                    dx += 1
+
+                if 0 <= dx <= 6:
+                    pass
+                else:
+                    self.vector.x = 1
+            except:
+                self.vector.x = 1
             if self.incline_angle >= 0:
                 delta_mobility = (6 + abs(self.incline_angle) / 4)
             else:
@@ -412,8 +464,18 @@ class Catapult(Cannon):
 
     def move_left(self):
         self.direction = "left"
-        if self.mobility > 0 and self.incline_angle >= -55:
-            self.vector.x = -1
+        if self.mobility > 0 and self.incline_angle >= -80:
+            dx = 0
+            try:
+                while not self.stage.mask.get_at((self.rect.centerx + dx, self.rect.centery)):
+                    dx -= 1
+
+                if -6 <= dx <= 0:
+                    pass
+                else:
+                    self.vector.x = -1
+            except:
+                self.vector.x = -1
             if self.incline_angle <= 0:
                 delta_mobility = (6 + abs(self.incline_angle) / 4)
             else:
@@ -450,9 +512,7 @@ class Catapult(Cannon):
     class Wheel:
         def __init__(self, texture):
             self.image = load_png(texture)
-            self.mask_image = load_png(Resources.Texture.Cannons.Wheel.basic_wheel)
-            self.mask_image = pygame.transform.scale_by(self.mask_image, 0.96)
-            self.mask = pygame.mask.from_surface(self.mask_image)
+            self.mask = pygame.mask.from_surface(self.image)
 
         def blit(self, surf, topleft, angle):
             rotated_image = pygame.transform.rotate(self.image, angle)
@@ -548,10 +608,37 @@ class Tank(Cannon):
 
         return surf
 
+    def collide_check(self):
+        dy = 0
+        self.on_ground = True
+        try:
+            while not self.stage.mask.get_at((self.rect.centerx, self.rect.centery + dy)):
+                dy += 1
+
+            if 0 <= dy <= 16:
+                self.rect.centery = (self.rect.centery - 16) + dy
+            else:
+                self.on_ground = False
+        except:
+            self.on_ground = False
+
+        if self.on_ground:
+            self.vector.y = 0
+
     def move_right(self):
         self.direction = "right"
-        if self.mobility > 0 and self.incline_angle <= 55:
-            self.vector.x = 1
+        if self.mobility > 0 and self.incline_angle <= 80:
+            dx = 0
+            try:
+                while not self.stage.mask.get_at((self.rect.centerx + dx, self.rect.centery)):
+                    dx += 1
+
+                if 0 <= dx <= 6:
+                    pass
+                else:
+                    self.vector.x = 1
+            except:
+                self.vector.x = 1
             if self.incline_angle >= 0:
                 delta_mobility = (6 + abs(self.incline_angle) / 4)
             else:
@@ -565,8 +652,18 @@ class Tank(Cannon):
 
     def move_left(self):
         self.direction = "left"
-        if self.mobility > 0 and self.incline_angle >= -55:
-            self.vector.x = -1
+        if self.mobility > 0 and self.incline_angle >= -80:
+            dx = 0
+            try:
+                while not self.stage.mask.get_at((self.rect.centerx + dx, self.rect.centery)):
+                    dx -= 1
+
+                if -6 <= dx <= 0:
+                    pass
+                else:
+                    self.vector.x = -1
+            except:
+                self.vector.x = -1
             if self.incline_angle <= 0:
                 delta_mobility = (6 + abs(self.incline_angle) / 4)
             else:
@@ -576,7 +673,6 @@ class Tank(Cannon):
             else:
                 self.mobility = 0
         else:
-            self.move_sound.sound.stop()
             self.move_sound.sound.stop()
 
     class Barrel:
@@ -607,9 +703,7 @@ class Tank(Cannon):
     class Wheel:
         def __init__(self, texture):
             self.image = load_png(texture)
-            self.mask_image = load_png(Resources.Texture.Cannons.Wheel.basic_wheel)
-            self.mask_image = pygame.transform.scale_by(self.mask_image, 0.94)
-            self.mask = pygame.mask.from_surface(self.mask_image)
+            self.mask = pygame.mask.from_surface(self.image)
 
         def blit(self, surf, topleft, angle):
             rotated_image = pygame.transform.rotate(self.image, angle)

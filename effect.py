@@ -21,8 +21,10 @@ class Effect(pygame.sprite.Sprite):
         self.current_frame += self.animation_speed
 
         if int(self.current_frame) >= self.sprite_sheet.frame:
-            if self.loop: self.current_frame = 0
-            else: self.kill()
+            if self.loop:
+                self.current_frame = 0
+            else:
+                self.kill()
 
 
 class Explosion(Effect):
@@ -76,8 +78,10 @@ class Fire(Effect):
         self.current_frame += self.animation_speed
 
         if int(self.current_frame) >= self.sprite_sheet.frame:
-            if self.loop: self.current_frame = 0
-            else: self.kill()
+            if self.loop:
+                self.current_frame = 0
+            else:
+                self.kill()
 
 
 class Damage(Effect):
@@ -88,7 +92,47 @@ class Damage(Effect):
         self.lifetime = lifetime
         self.font = pygame.font.Font(font_path, int(font_size))
 
-        self.image = self.font.render(text, True, text_color)
+        _circle_cache = {}
+
+        def _circlepoints(r):
+            r = int(round(r))
+            if r in _circle_cache:
+                return _circle_cache[r]
+            x, y, e = r, 0, 1 - r
+            _circle_cache[r] = points = []
+            while x >= y:
+                points.append((x, y))
+                y += 1
+                if e < 0:
+                    e += 2 * y - 1
+                else:
+                    x -= 1
+                    e += 2 * (y - x) - 1
+            points += [(y, x) for x, y in points if x > y]
+            points += [(-x, y) for x, y in points if x]
+            points += [(x, -y) for x, y in points if y]
+            points.sort()
+            return points
+
+        def render(text, font, gfcolor="#ffffff", ocolor="#000000", opx=1):
+            textsurface = font.render(text, True, gfcolor).convert_alpha()
+            w = textsurface.get_width() + 2 * opx
+            h = font.get_height()
+
+            osurf = pygame.Surface((w, h + 2 * opx)).convert_alpha()
+            osurf.fill((0, 0, 0, 0))
+
+            surf = osurf.copy()
+
+            osurf.blit(font.render(text, True, ocolor).convert_alpha(), (0, 0))
+
+            for dx, dy in _circlepoints(opx):
+                surf.blit(osurf, (dx + opx, dy + opx))
+
+            surf.blit(textsurface, (opx, opx))
+            return surf
+
+        self.image = render(text, self.font, text_color, "#222222", 2)
         self.rect = self.image.get_rect()
         self.rect.center = self.rect.move(pos).topleft
 
