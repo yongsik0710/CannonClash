@@ -226,7 +226,7 @@ class FireBall(Shell):
 
 class Stone(Shell):
     texture = Resources.Texture.Shells.stone
-    texture_size = 2
+    texture_size = 1
     explode_sound = Sound(all_sounds, Resources.Sounds.Shell.Stone.explode)
     damage = 400
     explosion_radius = 60
