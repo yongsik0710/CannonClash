@@ -55,7 +55,7 @@ class Shell(pygame.sprite.Sprite):
 
     def update(self):
         self.vector.y += self.gravity / 2
-        self.vector.x += self.wind / 550
+        self.vector.x += self.wind / 600
 
         self.angle += 10
         self.image, self.rect = self.rot_center(self.angle, self.rect.centerx, self.rect.centery)
@@ -91,6 +91,7 @@ class Shell(pygame.sprite.Sprite):
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
         Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion_1, 7, 1.3, 0.20, self.owner)
+        self.camera.particle_destroy.summon_particles(self.rect.center, 0, 20)
         self.explode_sound.sound.play()
         self.kill()
 
@@ -118,7 +119,7 @@ class Arrow(Shell):
 
     def update(self):
         self.vector.y += self.gravity / 2
-        self.vector.x += self.wind / 550
+        self.vector.x += self.wind / 600
 
         angle = self.vector.angle_to((0, 0))
         self.image, self.rect = self.rot_center(angle, self.rect.centerx, self.rect.centery)
@@ -148,8 +149,10 @@ class Arrow(Shell):
                                (self.rect.centerx - (self.explosion_rect.width / 2),
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
-        Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion_1, 7, 0.6, 0.3, self.owner)
+        self.camera.particle_destroy.summon_particles(self.rect.center, 0, 20)
         self.explode_sound.sound.play()
+        self.camera.target = None
+        self.owner.next_turn()
         self.kill()
 
 
@@ -173,7 +176,7 @@ class FireBall(Shell):
 
     def update(self):
         self.vector.y += self.gravity / 2
-        self.vector.x += self.wind / 550
+        self.vector.x += self.wind / 600
 
         self.image = self.sprite_sheet.get_image(int(self.current_frame), self.texture_size)
         self.original_image = self.image.copy()
@@ -200,14 +203,14 @@ class FireBall(Shell):
             if 0 <= distance - 75 <= self.explosion_radius:
                 damage = self.damage * (((self.explosion_radius - (distance - 75)) / self.explosion_radius) ** 2)
                 cannon.damage(damage)
-                if cannon.fire_turn < 2:
+                if cannon.fire_turn < 2 and damage > 10:
                     cannon.fire_turn = 2
-                if cannon.fire_effect is None:
-                    cannon.fire_effect = Fire(self.camera, cannon, cannon.rect.center, Resources.Texture.Effects.fire, 5, 0.7, 0.25, loop=True)
+                    if cannon.fire_effect is None:
+                        cannon.fire_effect = Fire(self.camera, cannon, cannon.rect.center, Resources.Texture.Effects.fire, 5, 0.7, 0.25, loop=True)
             elif distance < 75:
                 damage = self.damage
                 cannon.damage(damage)
-                cannon.fire_turn = random.randint(3, 5)
+                cannon.fire_turn = random.randint(2, 4)
                 if cannon.fire_effect is None:
                     cannon.fire_effect = Fire(self.camera, cannon, cannon.rect.center, Resources.Texture.Effects.fire, 5, 0.7, 0.25, loop=True)
 
@@ -216,6 +219,7 @@ class FireBall(Shell):
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
         Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion_1, 7, 1.1, 0.2, self.owner)
+        self.camera.particle_flame.summon_particles(self.rect.center, 10, 20)
         self.explode_sound.sound.play()
         self.kill()
 
@@ -243,6 +247,7 @@ class Stone(Shell):
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
         Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion_1, 7, 1.1, 0.2, self.owner)
+        self.camera.particle_destroy.summon_particles(self.rect.center, 10, 30)
         self.explode_sound.sound.play()
         self.kill()
 
@@ -256,7 +261,7 @@ class Missile(Shell):
 
     def update(self):
         self.vector.y += self.gravity / 2
-        self.vector.x += self.wind / 550
+        self.vector.x += self.wind / 600
 
         angle = self.vector.angle_to((0, 0))
         self.image, self.rect = self.rot_center(angle, self.rect.centerx, self.rect.centery)
@@ -287,5 +292,6 @@ class Missile(Shell):
                                 self.rect.centery - (self.explosion_rect.height / 2)))
         self.stage.custom_update()
         Explosion(self.camera, self.rect.center, Resources.Texture.Effects.explosion_2, 42, 1, 1, self.owner)
+        self.camera.particle_destroy.summon_particles(self.rect.center, 0, 20)
         self.explode_sound.sound.play()
         self.kill()

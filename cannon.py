@@ -224,7 +224,7 @@ class Cannon(pygame.sprite.Sprite):
                 self.vector.x = 1
             self.wheel.roll_cw()
             if self.incline_angle >= 0:
-                delta_mobility = (6 + abs(self.incline_angle) / 4)
+                delta_mobility = (6 + abs(self.incline_angle) / 5)
             else:
                 delta_mobility = 6
             if self.mobility - delta_mobility >= 0:
@@ -250,7 +250,7 @@ class Cannon(pygame.sprite.Sprite):
                 self.vector.x = -1
             self.wheel.roll_acw()
             if self.incline_angle <= 0:
-                delta_mobility = (6 + abs(self.incline_angle) / 4)
+                delta_mobility = (6 + abs(self.incline_angle) / 5)
             else:
                 delta_mobility = 6
             if self.mobility - delta_mobility >= 0:
@@ -452,7 +452,7 @@ class Catapult(Cannon):
             except:
                 self.vector.x = 1
             if self.incline_angle >= 0:
-                delta_mobility = (6 + abs(self.incline_angle) / 4)
+                delta_mobility = (6 + abs(self.incline_angle) / 5)
             else:
                 delta_mobility = 6
             if self.mobility - delta_mobility >= 0:
@@ -477,7 +477,7 @@ class Catapult(Cannon):
             except:
                 self.vector.x = -1
             if self.incline_angle <= 0:
-                delta_mobility = (6 + abs(self.incline_angle) / 4)
+                delta_mobility = (6 + abs(self.incline_angle) / 5)
             else:
                 delta_mobility = 6
             if self.mobility - delta_mobility >= 0:
@@ -640,7 +640,7 @@ class Tank(Cannon):
             except:
                 self.vector.x = 1
             if self.incline_angle >= 0:
-                delta_mobility = (6 + abs(self.incline_angle) / 4)
+                delta_mobility = (6 + abs(self.incline_angle) / 5)
             else:
                 delta_mobility = 6
             if self.mobility - delta_mobility >= 0:
@@ -665,7 +665,7 @@ class Tank(Cannon):
             except:
                 self.vector.x = -1
             if self.incline_angle <= 0:
-                delta_mobility = (6 + abs(self.incline_angle) / 4)
+                delta_mobility = (6 + abs(self.incline_angle) / 5)
             else:
                 delta_mobility = 6
             if self.mobility - delta_mobility >= 0:

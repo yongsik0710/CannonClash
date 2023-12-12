@@ -7,6 +7,8 @@ class CameraGroup(pygame.sprite.Group):
         super().__init__()
         self.display_surface = pygame.display.get_surface()
         self.particle_circle = Particle.Circle(self.display_surface)
+        self.particle_destroy = Particle.Destroy(self.display_surface)
+        self.particle_flame = Particle.Flame(self.display_surface)
 
         # camera offset
         self.offset = pygame.math.Vector2()
@@ -119,3 +121,5 @@ class CameraGroup(pygame.sprite.Group):
 
         # particle
         self.particle_circle.emit(self.offset)
+        self.particle_destroy.emit(self.offset)
+        self.particle_flame.emit(self.offset)

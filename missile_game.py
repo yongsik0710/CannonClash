@@ -55,7 +55,7 @@ class MissileGame:
                 self.players[self.current_turn].cannon.barrel_move_sound.sound.stop()
                 self.players[self.current_turn].cannon.move_sound.sound.stop()
                 if self.players[self.current_turn].power < self.players[self.current_turn].max_power:
-                    self.players[self.current_turn].power += 1
+                    self.players[self.current_turn].power += 1.3
             else:
                 if keys[pygame.K_RIGHT]:
                     self.players[self.current_turn].cannon.move_right()
@@ -135,7 +135,7 @@ class MissileGame:
             self.current_turn = 0
 
         if self.players[self.current_turn].cannon.fire_turn > 0:
-            self.players[self.current_turn].cannon.damage(random.randint(40, 100), is_fire=True)
+            self.players[self.current_turn].cannon.damage(random.randint(30, 70), is_fire=True)
             self.players[self.current_turn].cannon.fire_turn -= 1
             if self.players[self.current_turn].cannon.fire_turn <= 0:
                 if self.players[self.current_turn].cannon.fire_effect is not None:
