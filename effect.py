@@ -89,6 +89,7 @@ class Damage(Effect):
         pygame.sprite.Sprite.__init__(self, group)
         self.camera = group
         self.depth = 5
+        self.max_lifetime = lifetime
         self.lifetime = lifetime
         self.font = pygame.font.Font(font_path, int(font_size))
 
@@ -137,6 +138,8 @@ class Damage(Effect):
         self.rect.center = self.rect.move(pos).topleft
 
     def update(self):
+        if self.lifetime <= self.max_lifetime / 2:
+            self.image.set_alpha(255 * (self.lifetime / (self.max_lifetime / 2)))
         self.lifetime -= 1
         self.rect.y -= 1.2
 

@@ -1,0 +1,15 @@
+{
+	"video": {
+		"display_resolution": [
+			1920,
+			1080
+		]
+	},
+	"audio": {
+		"volume": 10
+	},
+	"util": {
+		"keyboard_camera": true,
+		"mouse_camera": true
+	}
+}

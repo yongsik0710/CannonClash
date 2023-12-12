@@ -8,7 +8,7 @@ class Button:
                  top_color="#475f77", bottom_color="#354b5e", change_color="#d74b4b"):
         # Core attributes
         self.surface = surface
-        font = pygame.font.Font(font_path, int(font_size))
+        self.font = pygame.font.Font(font_path, int(font_size))
         self.mouse_on_sound = Sound(all_sounds, Resources.Sounds.Util.Button.mouse_on)
         self.click_sound = Sound(all_sounds, Resources.Sounds.Util.Button.click)
         self.mouse_on = False
@@ -36,7 +36,7 @@ class Button:
         self.bottom_rect = pygame.Rect((x, y), (width, height))
 
         # text
-        self.text_surf = font.render(text, True, '#FFFFFF')
+        self.text_surf = self.font.render(text, True, '#ffffff')
         self.text_rect = self.text_surf.get_rect(center=self.top_rect.center)
 
     def draw(self):
@@ -75,6 +75,11 @@ class Button:
             self.pressed = False
             self.dynamic_elecation = self.elevation
             self.top_color = self.top_original_color
+
+    def text_update(self, text):
+        # text update
+        self.text_surf = self.font.render(text, True, "#ffffff")
+        self.text_rect = self.text_surf.get_rect(center=self.top_rect.center)
 
     def is_clicked(self):
         if self.clicked:

@@ -1,3 +1,5 @@
+from sounds import *
+from config import *
 import pygame
 import os
 
@@ -22,6 +24,8 @@ class StageButton:
                  border_color="#333333"):
         # Core attributes
         self.surface = surface
+        self.mouse_on_sound = Sound(all_sounds, Resources.Sounds.Util.Button.mouse_on)
+        self.click_sound = Sound(all_sounds, Resources.Sounds.Util.Button.click)
         self.clicked = False
         self.pressed = False
         self.hover = False
@@ -67,7 +71,9 @@ class StageButton:
     def check_click(self):
         mouse_pos = pygame.mouse.get_pos()
         if self.interact_rect.collidepoint(mouse_pos):
-            self.hover = True
+            if not self.hover:
+                self.mouse_on_sound.sound.play()
+                self.hover = True
             if pygame.mouse.get_pressed()[0]:
                 self.pressed = True
             else:
@@ -80,6 +86,7 @@ class StageButton:
 
     def is_clicked(self):
         if self.clicked:
+            self.click_sound.sound.play()
             self.clicked = False
             return True
         return False

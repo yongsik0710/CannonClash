@@ -9,7 +9,7 @@ import math
 
 def load_png(name):
     """ Load image and return image object"""
-    fullname = os.path.join("Images", name)
+    fullname = os.path.join("Assets/Images", name)
     try:
         image = pygame.image.load(fullname)
         image = pygame.transform.scale(image, (200, 200))
@@ -348,7 +348,7 @@ class FlameCannon(Cannon):
 
 
 class Catapult(Cannon):
-    name = "캐터펄트"
+    name = "투석기"
     barrel_texture = Resources.Texture.Cannons.Barrel.catapult_barrel
     body_texture = Resources.Texture.Cannons.Body.catapult_body
     wheel_texture = Resources.Texture.Cannons.Wheel.catapult_wheel

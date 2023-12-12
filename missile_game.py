@@ -54,8 +54,10 @@ class MissileGame:
             if keys[pygame.K_SPACE]:
                 self.players[self.current_turn].cannon.barrel_move_sound.sound.stop()
                 self.players[self.current_turn].cannon.move_sound.sound.stop()
-                if self.players[self.current_turn].power < self.players[self.current_turn].max_power:
+                if self.players[self.current_turn].power + 1.3 <= self.players[self.current_turn].max_power:
                     self.players[self.current_turn].power += 1.3
+                else:
+                    self.players[self.current_turn].power = self.players[self.current_turn].max_power
             else:
                 if keys[pygame.K_RIGHT]:
                     self.players[self.current_turn].cannon.move_right()
@@ -119,9 +121,11 @@ class MissileGame:
     def game_menu_pop(self):
         pygame.mixer.pause()
         self.game.current_display = self.game.game_menu
+        pause_surf = pygame.display.get_surface().convert_alpha()
         surf = pygame.Surface((1920, 1080), pygame.SRCALPHA)
         surf.fill((255, 255, 255, 160))
-        self.game.screen.blit(surf, (0, 0))
+        pause_surf.blit(surf, (0, 0))
+        self.game.game_menu.pause_surf = pause_surf
 
     def next_turn(self):
         # 게임 종료 테스트

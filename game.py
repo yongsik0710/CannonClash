@@ -1,4 +1,3 @@
-import pygame
 from menu import *
 
 
@@ -12,7 +11,9 @@ class Game:
         self.FPS = 60
         self.missile_game = None
         self.game_menu = GameMenu(self)
+        self.game_option = GameOption(self)
         self.main_menu = MainMenu(self)
+        self.game_explain = GameExplain(self)
         self.option = Option(self)
         self.number_of_player_select = NumberOfPlayerSelect(self)
         self.cannon_select = None
@@ -23,6 +24,7 @@ class Game:
     def start_game(self):
         pygame.mixer_music.load(Resources.Sounds.Music.lobby)
         pygame.mixer_music.play(-1)
+        all_sounds.set_volume(option["audio"]["volume"] / 10)
         self.main_loop()
 
     def main_loop(self):

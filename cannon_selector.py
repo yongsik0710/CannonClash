@@ -6,7 +6,7 @@ import os
 
 def load_png(name, size):
     """ Load image and return image object"""
-    fullname = os.path.join("Images", name)
+    fullname = os.path.join("Assets/Images", name)
     try:
         image = pygame.image.load(fullname)
         image = pygame.transform.scale(image, size)

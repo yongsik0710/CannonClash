@@ -1,5 +1,6 @@
-import pygame
 from particle import *
+from config import *
+
 
 
 class CameraGroup(pygame.sprite.Group):
@@ -29,7 +30,7 @@ class CameraGroup(pygame.sprite.Group):
         self.ground_rect = self.ground_surf.get_rect(topleft=(0, 0))
 
         # camera speed
-        self.keyboard_speed = 5
+        self.keyboard_speed = 17
         self.mouse_speed = 0.2
 
         # target
@@ -45,13 +46,14 @@ class CameraGroup(pygame.sprite.Group):
 
     def keyboard_control(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_a]: self.camera_rect.x -= self.keyboard_speed
-        if keys[pygame.K_d]: self.camera_rect.x += self.keyboard_speed
-        if keys[pygame.K_w]: self.camera_rect.y -= self.keyboard_speed
-        if keys[pygame.K_s]: self.camera_rect.y += self.keyboard_speed
-
-        self.offset.x = self.camera_rect.left - self.camera_borders['left']
-        self.offset.y = self.camera_rect.top - self.camera_borders['top']
+        if keys[pygame.K_a]:
+            self.offset.x -= self.keyboard_speed
+        if keys[pygame.K_d]:
+            self.offset.x += self.keyboard_speed
+        if keys[pygame.K_w]:
+            self.offset.y -= self.keyboard_speed
+        if keys[pygame.K_s]:
+            self.offset.y += self.keyboard_speed
 
     def mouse_control(self):
         mouse = pygame.math.Vector2(pygame.mouse.get_pos())
@@ -102,9 +104,10 @@ class CameraGroup(pygame.sprite.Group):
         if self.target is not None:
             self.center_target_camera()
         else:
-            self.mouse_control()
-
-        # self.keyboard_control()
+            if option["util"]["keyboard_camera"]:
+                self.keyboard_control()
+            if option["util"]["mouse_camera"]:
+                self.mouse_control()
 
         self.out_of_border()
 
