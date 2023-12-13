@@ -199,17 +199,17 @@ class FireBall(Shell):
         for cannon in self.cannon_group:
             pos = pygame.Vector2(self.rect.center)
             distance = pos.distance_to(cannon.rect.center)
-            if 0 <= distance - 53 <= self.explosion_radius:
-                damage = self.damage * (((self.explosion_radius - (distance - 53)) / self.explosion_radius) ** 2)
+            if 0 <= distance - 67 <= self.explosion_radius:
+                damage = self.damage * (((self.explosion_radius - (distance - 67)) / self.explosion_radius) ** 2)
                 cannon.damage(damage)
                 if cannon.fire_turn < 2 and damage > 10:
                     cannon.fire_turn = 2
                     if cannon.fire_effect is None:
                         cannon.fire_effect = Fire(self.camera, cannon, cannon.rect.center, Resources.Texture.Effects.fire, 5, 0.7, 0.25, loop=True)
-            elif distance < 53:
+            elif distance < 67:
                 damage = self.damage
                 cannon.damage(damage)
-                cannon.fire_turn = random.randint(2, 4)
+                cannon.fire_turn = random.randint(3, 4)
                 if cannon.fire_effect is None:
                     cannon.fire_effect = Fire(self.camera, cannon, cannon.rect.center, Resources.Texture.Effects.fire, 5, 0.7, 0.25, loop=True)
 
