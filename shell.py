@@ -117,6 +117,30 @@ class Arrow(Shell):
     damage = 100
     explosion_radius = 30
 
+    def __init__(self, group, stage, pos, vector, owner, cannon_group):
+        pygame.sprite.Sprite.__init__(self, group)
+        self.camera = group
+        self.depth = 2
+        self.damage = self.damage
+        self.stage = stage
+        self.cannon_group = cannon_group
+        self.vector = vector
+        self.owner = owner
+        self.gravity = stage.gravity
+        self.wind = stage.wind
+        self.angle = 0.0
+        self.travel_distance = 0.0
+
+        self.image, self.rect = load_png(self.texture, self.texture_size)
+        self.rect.center = self.rect.move(pos).topleft
+        self.original_image = self.image.copy()
+
+        self.explosion_rect = pygame.rect.Rect((0, 0), (self.explosion_radius * 3, self.explosion_radius * 2))
+        self.surf = pygame.surface.Surface(self.explosion_rect.size).convert_alpha()
+        self.surf.fill((0, 0, 0, 0))
+        pygame.draw.ellipse(self.surf, "#000000", self.explosion_rect)
+        self.explosion_mask = pygame.mask.from_surface(self.surf)
+
     def update(self):
         self.vector.y += self.gravity / 2
         self.vector.x += self.wind / 600
@@ -127,6 +151,7 @@ class Arrow(Shell):
         self.collide_check()
         self.out_of_border()
         self.rect = self.rect.move(self.vector)
+        self.travel_distance += self.vector.length()
 
     def rot_center(self, angle, x, y):
         rotated_image = pygame.transform.rotate(self.original_image, angle)
@@ -139,11 +164,11 @@ class Arrow(Shell):
             pos = pygame.Vector2(self.rect.center)
             distance = pos.distance_to(cannon.rect.center)
             if 0 <= distance - 56 <= self.explosion_radius:
-                damage = (2 * self.damage) + self.damage * (self.vector.length_squared() / 600)
+                damage = self.damage + self.damage * (self.travel_distance / 500)
                 damage *= ((self.explosion_radius - (distance - 56)) / self.explosion_radius) ** 2
                 cannon.damage(damage)
             elif distance < 56:
-                damage = (2 * self.damage) + self.damage * (self.vector.length_squared() / 600)
+                damage = self.damage + self.damage * (self.travel_distance / 500)
                 cannon.damage(damage)
         pygame.mask.Mask.erase(self.stage.mask, self.explosion_mask,
                                (self.rect.centerx - (self.explosion_rect.width / 2),
@@ -159,8 +184,8 @@ class FireBall(Shell):
     texture = Resources.Texture.Shells.fireball
     texture_size = 0.5
     explode_sound = Sound(all_sounds, Resources.Sounds.Shell.Fireball.explode)
-    damage = 230
-    explosion_radius = 60
+    damage = 100
+    explosion_radius = 50
 
     def __init__(self, group, stage, pos, vector, owner, cannon_group):
         Shell.__init__(self, group, stage, pos, vector, owner, cannon_group)
@@ -185,6 +210,10 @@ class FireBall(Shell):
 
         angle = self.vector.angle_to((0, 0))
         self.image, self.rect = self.rot_center(angle, self.rect.centerx, self.rect.centery)
+
+        if self.current_frame % 3 >= 1:
+            self.camera.particle_flame.summon_particles(self.rect.center, 10, 1)
+
         self.collide_check()
         self.out_of_border()
         self.rect = self.rect.move(self.vector)
@@ -202,14 +231,19 @@ class FireBall(Shell):
             if 0 <= distance - 67 <= self.explosion_radius:
                 damage = self.damage * (((self.explosion_radius - (distance - 67)) / self.explosion_radius) ** 2)
                 cannon.damage(damage)
-                if cannon.fire_turn < 2 and damage > 10:
-                    cannon.fire_turn = 2
-                    if cannon.fire_effect is None:
-                        cannon.fire_effect = Fire(self.camera, cannon, cannon.rect.center, Resources.Texture.Effects.fire, 5, 0.7, 0.25, loop=True)
+                if damage > 10:
+                    cannon.fire_stack += 1
+                    if cannon.fire_turn < 2:
+                        cannon.fire_turn = 2
+                        if cannon.fire_effect is None:
+                            cannon.fire_effect = Fire(self.camera, cannon, cannon.rect.center, Resources.Texture.Effects.fire, 5, 0.7, 0.25, loop=True)
             elif distance < 67:
                 damage = self.damage
                 cannon.damage(damage)
-                cannon.fire_turn = random.randint(3, 4)
+                random_fire_turn = random.randint(3, 4)
+                if cannon.fire_turn < random_fire_turn:
+                    cannon.fire_turn = random_fire_turn
+                cannon.fire_stack += 1
                 if cannon.fire_effect is None:
                     cannon.fire_effect = Fire(self.camera, cannon, cannon.rect.center, Resources.Texture.Effects.fire, 5, 0.7, 0.25, loop=True)
 
@@ -227,7 +261,7 @@ class Stone(Shell):
     texture = Resources.Texture.Shells.stone
     texture_size = 1
     explode_sound = Sound(all_sounds, Resources.Sounds.Shell.Stone.explode)
-    damage = 400
+    damage = 300
     explosion_radius = 60
 
     def explode(self):
@@ -282,6 +316,9 @@ class Missile(Shell):
         angle = self.vector.angle_to((0, 0))
         self.image, self.rect = self.rot_center(angle, self.rect.centerx, self.rect.centery)
 
+        if self.current_frame % 3 >= 1:
+            self.camera.particle_flame.summon_particles(self.rect.center, 0, 1)
+
         self.collide_check()
         self.out_of_border()
         self.rect = self.rect.move(self.vector)
@@ -296,10 +333,10 @@ class Missile(Shell):
         for cannon in self.cannon_group:
             pos = pygame.Vector2(self.rect.center)
             distance = pos.distance_to(cannon.rect.center)
-            if 0 <= distance - 57 <= self.explosion_radius:
-                damage = self.damage * (((self.explosion_radius - (distance - 57)) / self.explosion_radius) ** 2)
+            if 0 <= distance - 50 <= self.explosion_radius:
+                damage = self.damage * (((self.explosion_radius - (distance - 50)) / self.explosion_radius) ** 2)
                 cannon.damage(damage)
-            elif distance < 57:
+            elif distance < 50:
                 damage = self.damage
                 cannon.damage(damage)
 

@@ -10,6 +10,8 @@ class MissileGame:
     def __init__(self, game, players, level):
         self.game = game
         self.stop = False
+        self.is_game_end = False
+        self.end_timer = 0
         self.current_turn = 0
         self.background = pygame.image.load(level.background_image).convert()
         self.camera_group = CameraGroup(self.background)
@@ -18,6 +20,7 @@ class MissileGame:
         self.stage = Stage(self.camera_group, level)
 
         random.shuffle(level.spawn_points)
+        random.shuffle(players)
         for i, player in enumerate(players):
             player.missile_game = self
             player.cannon = player.cannon([self.camera_group, self.cannon_group], self.stage, level.spawn_points[i], [0, 0], player)
@@ -29,6 +32,10 @@ class MissileGame:
         self.game_menu_on = False
 
     def loop(self):
+        if self.is_game_end:
+            self.end_timer += 1
+        if self.is_game_end and self.end_timer >= 60:
+            self.game_end([player for player in self.players if not player.is_death][0])
         # 이벤트 핸들러
         self.event_check()
         # 화면 그리기
@@ -100,10 +107,6 @@ class MissileGame:
                     if event.key == pygame.K_DOWN:
                         self.players[self.current_turn].cannon.barrel_move_sound.sound.stop()
 
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        print(pygame.mouse.get_pos() + self.camera_group.offset)
-
                 if not keys[pygame.K_SPACE]:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_RIGHT:
@@ -129,7 +132,7 @@ class MissileGame:
 
     def next_turn(self):
         # 게임 종료 테스트
-        self.is_game_end()
+        self.game_end_test()
         self.wind_change()
         self.players[self.current_turn].cannon.mobility = self.players[self.current_turn].cannon.max_mobility
 
@@ -139,12 +142,13 @@ class MissileGame:
             self.current_turn = 0
 
         if self.players[self.current_turn].cannon.fire_turn > 0:
-            self.players[self.current_turn].cannon.damage(random.randint(30, 70), is_fire=True)
+            self.players[self.current_turn].cannon.damage(random.randint(40, 60) * self.players[self.current_turn].cannon.fire_stack, is_fire=True)
             self.players[self.current_turn].cannon.fire_turn -= 1
             if self.players[self.current_turn].cannon.fire_turn <= 0:
                 if self.players[self.current_turn].cannon.fire_effect is not None:
                     self.players[self.current_turn].cannon.fire_effect.kill()
                     self.players[self.current_turn].cannon.fire_effect = None
+                    self.players[self.current_turn].cannon.fire_stack = 0
 
         if not self.players[self.current_turn].is_death:
             self.camera_group.center_target_camera_align(self.players[self.current_turn].cannon)
@@ -159,10 +163,10 @@ class MissileGame:
         elif self.stage.wind < -100:
             self.stage.wind = -100
 
-    def is_game_end(self):
+    def game_end_test(self):
         alive_players = [player for player in self.players if not player.is_death]
         if len(alive_players) <= 1:
-            self.game_end(alive_players[0])
+            self.is_game_end = True
 
     def game_end(self, winner):
         pygame.mixer.stop()
@@ -175,8 +179,9 @@ class GameEnd:
         self.stop = False
         self.winner = winner
 
-        self.winner_text = TextBox(game.screen, 510, 300, 900, 150, 70, f"{self.winner.name} 님이 승리했습니다!")
-        self.back_to_main_menu = Button(game.screen, 760, 700, 400, 100, 5, 40, "메인 메뉴로 돌아가기")
+        self.winner_text = TextBox(game.screen, 510, 150, 900, 150, 70, f"{self.winner.name} 님이 승리했습니다!")
+        self.winner_cannon = pygame.transform.scale_by(winner.cannon.image, 2)
+        self.back_to_main_menu = Button(game.screen, 760, 800, 400, 100, 5, 40, "메인 메뉴로 돌아가기")
 
     def loop(self):
         # 이벤트 핸들러
@@ -184,6 +189,7 @@ class GameEnd:
         # 화면 그리기
         self.game.screen.fill("#e0e0e0")
         self.winner_text.draw()
+        self.game.screen.blit(self.winner_cannon, (760, 400))
         self.back_to_main_menu.draw()
         # 화면 업데이트
         pygame.display.update()

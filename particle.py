@@ -4,7 +4,7 @@ from config import *
 
 
 class Particle:
-    class Circle:
+    class Smoke:
         def __init__(self, surface):
             self.particles = []
             self.screen = surface
@@ -13,21 +13,34 @@ class Particle:
             if self.particles:
                 self.delete_particles()
                 for particle in self.particles:
-                    particle[0][0] += particle[2][0]
-                    particle[0][1] += particle[2][1]
-                    particle[1] -= 0.3
-                    bright = random.randint(50, 100)
-                    pygame.draw.circle(self.screen, (bright, bright, bright), particle[0] - offset, int(particle[1]))
+                    particle["pos"][0] += particle["vector"][0]
+                    particle["pos"][1] += particle["vector"][1]
+                    particle["lifetime"] -= 0.3
+                    particle["radius"] -= 0.3
+                    pygame.draw.circle(self.screen, particle["color"], particle["pos"] - offset, int(particle["radius"]))
 
         def add_particles(self, pos):
             radius = 10
             direction_x = random.randint(-60, 60) / 10
             direction_y = random.randint(-60, 60) / 10
-            particle_circle = [[pos[0], pos[1]], radius, [direction_x, direction_y]]
-            self.particles.append(particle_circle)
+            lifetime = 10
+            bright = random.randint(80, 120)
+            color = [bright, bright, bright]
+            particle = {"pos": [pos[0], pos[1]],
+                        "vector": [direction_x, direction_y],
+                        "lifetime": lifetime,
+                        "radius": radius,
+                        "color": color}
+            self.particles.append(particle)
+
+        def summon_particles(self, pos, noise, count):
+            for _ in range(count):
+                pos[0] + random.randint(-noise, noise)
+                pos[1] - random.randint(-noise, noise)
+                self.add_particles(pos)
 
         def delete_particles(self):
-            particle_copy = [particle for particle in self.particles if particle[1] > 0]
+            particle_copy = [particle for particle in self.particles if particle["lifetime"] > 0]
             self.particles = particle_copy
 
     class Destroy:
@@ -62,13 +75,14 @@ class Particle:
             scale = 10 * (random.randint(50, 100) / 100)
             bright = random.randint(0, 50)
             color = [20 + bright, 20 + bright, 20 + bright]
-            self.particles.append({"pos": [pos[0], pos[1]],
-                                   "vector": [direction_x, direction_y],
-                                   "lifetime": lifetime,
-                                   "rot": rot,
-                                   "rot_direction": rot_direction,
-                                   "scale": scale,
-                                   "color": color})
+            particle = {"pos": [pos[0], pos[1]],
+                        "vector": [direction_x, direction_y],
+                        "lifetime": lifetime,
+                        "rot": rot,
+                        "rot_direction": rot_direction,
+                        "scale": scale,
+                        "color": color}
+            self.particles.append(particle)
 
         def summon_particles(self, pos, noise, count):
             for _ in range(count):

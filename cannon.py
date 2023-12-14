@@ -60,6 +60,7 @@ class Cannon(pygame.sprite.Sprite):
         self.is_death = False
         self.direction = "right"
         self.fire_turn = 0
+        self.fire_stack = 0
         self.fire_effect = None
 
         self.stage = stage
@@ -164,29 +165,25 @@ class Cannon(pygame.sprite.Sprite):
         rotated_launch_vector.scale_to_length(self.barrel_distance)
         scaled_launch_vector -= rotated_launch_vector
         self.shoot_sound.sound.play()
-        for i in range(20):
-            self.camera.particle_circle.add_particles(self.rect.center + scaled_launch_vector)
+        self.camera.particle_smoke.summon_particles(self.rect.center + scaled_launch_vector, 10, 20)
         self.camera.target = self.shell(self.camera, self.stage, self.rect.center + scaled_launch_vector, vector, owner, self.cannon_group)
 
     def damage(self, damage, is_fire=False):
-        if is_fire and self.health - damage <= 0:
-            self.fire_turn = 0
-        else:
-            if self.health > 0:
-                self.health -= damage
-                if is_fire:
-                    self.burning_sound.sound.play()
-                Damage(self.camera,
-                       (self.rect.centerx + random.randint(-50, 50), self.rect.centery + random.randint(-50, 50)),
-                       120, Resources.Fonts.font,
-                       20 + 80 * (damage / self.max_health),
-                       str(int(damage)),
-                       text_color=(255,
-                                   255 - [300 * (damage / self.max_health) if 300 * (damage / self.max_health) <= 215 else 215][0],
-                                   255 - [300 * (damage / self.max_health) if 300 * (damage / self.max_health) <= 255 else 255][0]))
-            if self.health <= 0 and not self.is_death:
-                self.is_death = True
-                self.player.death()
+        if self.health > 0:
+            self.health -= damage
+            if is_fire:
+                self.burning_sound.sound.play()
+            Damage(self.camera,
+                   (self.rect.centerx + random.randint(-50, 50), self.rect.centery + random.randint(-50, 50)),
+                   120, Resources.Fonts.font,
+                   20 + 80 * (damage / self.max_health),
+                   str(int(damage)),
+                   text_color=(255,
+                               255 - [300 * (damage / self.max_health) if 300 * (damage / self.max_health) <= 215 else 215][0],
+                               255 - [300 * (damage / self.max_health) if 300 * (damage / self.max_health) <= 255 else 255][0]))
+        if self.health <= 0 and not self.is_death:
+            self.is_death = True
+            self.player.death()
 
     def out_of_border(self):
         if self.rect.top > 2000:
@@ -324,8 +321,8 @@ class Ballista(Cannon):
 
     default_angle = 20
     max_delta_angle = 40
-    max_health = 800
-    max_mobility = 2500
+    max_health = 1000
+    max_mobility = 2000
 
 
 class FlameCannon(Cannon):
@@ -384,6 +381,7 @@ class Catapult(Cannon):
         self.is_death = False
         self.direction = "right"
         self.fire_turn = 0
+        self.fire_stack = 0
         self.fire_effect = None
 
         self.stage = stage
@@ -535,10 +533,10 @@ class Tank(Cannon):
     barrel_length = 100
     barrel_distance = 20
 
-    default_angle = 10
-    max_delta_angle = 20
-    max_health = 1400
-    max_mobility = 1000
+    default_angle = 0
+    max_delta_angle = 16
+    max_health = 1300
+    max_mobility = 800
 
     def __init__(self, group, stage, pos, vector, player):
         pygame.sprite.Sprite.__init__(self, group)
@@ -558,6 +556,7 @@ class Tank(Cannon):
         self.is_death = False
         self.direction = "right"
         self.fire_turn = 0
+        self.fire_stack = 0
         self.fire_effect = None
 
         self.stage = stage

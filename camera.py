@@ -2,12 +2,11 @@ from particle import *
 from config import *
 
 
-
 class CameraGroup(pygame.sprite.Group):
     def __init__(self, background):
         super().__init__()
         self.display_surface = pygame.display.get_surface()
-        self.particle_circle = Particle.Circle(self.display_surface)
+        self.particle_smoke = Particle.Smoke(self.display_surface)
         self.particle_destroy = Particle.Destroy(self.display_surface)
         self.particle_flame = Particle.Flame(self.display_surface)
 
@@ -123,6 +122,6 @@ class CameraGroup(pygame.sprite.Group):
             self.display_surface.blit(sprite.image, offset_pos)
 
         # particle
-        self.particle_circle.emit(self.offset)
+        self.particle_smoke.emit(self.offset)
         self.particle_destroy.emit(self.offset)
         self.particle_flame.emit(self.offset)

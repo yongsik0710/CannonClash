@@ -6,7 +6,8 @@ class Game:
         pygame.init()
         self.SCREEN_WIDTH, self.SCREEN_HEIGHT = 1920, 1080
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
-        pygame.display.set_caption("대포 게임")
+        pygame.display.set_caption("Cannon Clash")
+        pygame.display.set_icon(load_png(Resources.icon))
         self.clock = pygame.time.Clock()
         self.FPS = 60
         self.missile_game = None

@@ -28,12 +28,16 @@ class CannonSelector:
         self.size = size
         self.cannon_id = 1
         self.player = player
-        self.player.name = "Player " + str(player.number + 1)
+        player_name_table = ["한놈", "두식이", "석삼", "너구리", "오징어", "육개장"]
+        self.player.name = player_name_table[player.number]
         self.player.cannon = CANNONS[self.cannon_id]
 
         self.cannon_image = pygame.surface.Surface((360 * size, 360 * size)).convert_alpha()
         self.cannon_image.fill((0, 0, 0, 0))
-        self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (360 * self.size, 360 * self.size)), (0, 0))
+        if self.cannon_id == 5:
+            self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (360 * self.size, 360 * self.size)), (40, 0))
+        else:
+            self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (360 * self.size, 360 * self.size)), (0, 0))
         if CANNONS[self.cannon_id].body_texture is not None:
             self.cannon_image.blit(load_png(CANNONS[self.cannon_id].body_texture, (360 * self.size, 360 * self.size)), (0, 0))
         self.cannon_image.blit(load_png(CANNONS[self.cannon_id].wheel_texture, (360 * self.size, 360 * self.size)), (0, 0))
@@ -46,7 +50,10 @@ class CannonSelector:
     def update(self):
         self.player.cannon = CANNONS[self.cannon_id]
         self.cannon_image.fill((0, 0, 0, 0))
-        self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (360 * self.size, 360 * self.size)), (0, 0))
+        if self.cannon_id == 5:
+            self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (360 * self.size, 360 * self.size)), (40, 0))
+        else:
+            self.cannon_image.blit(load_png(CANNONS[self.cannon_id].barrel_texture, (360 * self.size, 360 * self.size)), (0, 0))
         if CANNONS[self.cannon_id].body_texture is not None:
             self.cannon_image.blit(load_png(CANNONS[self.cannon_id].body_texture, (360 * self.size, 360 * self.size)), (0, 0))
         self.cannon_image.blit(load_png(CANNONS[self.cannon_id].wheel_texture, (360 * self.size, 360 * self.size)), (0, 0))

@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 
 
@@ -11,7 +12,7 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-option_file = resource_path("options.json")
+option_file = "options.json"
 with open(option_file, 'r') as file:
     option_data = json.load(file)
 
@@ -20,6 +21,8 @@ option = option_data
 
 
 class Resources:
+    icon = resource_path("icon.ico")
+
     class Fonts:
         font = resource_path("Assets/Fonts/LINESeedKR-Bd.ttf")
 

@@ -14,16 +14,19 @@ class Player:
         self.power = 0
 
     def death(self):
-        self.turn = False
         self.is_death = True
-        self.next_turn()
+        if self.turn:
+            self.turn = False
+            self.next_turn()
 
     def init_player_ui(self):
         self.player_ui = PlayerUI(self)
 
     def shoot_shell(self):
-        if self.power <= self.max_power:
+        if 0 < self.power <= self.max_power:
             self.cannon.shoot_shell(self.power, self)
+        elif self.power <= 0:
+            self.cannon.shoot_shell(1, self)
         else:
             self.cannon.shoot_shell(self.max_power, self)
         self.player_ui.power_bar.prev_power = self.power
