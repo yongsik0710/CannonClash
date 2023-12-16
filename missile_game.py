@@ -34,7 +34,7 @@ class MissileGame:
     def loop(self):
         if self.is_game_end:
             self.end_timer += 1
-        if self.is_game_end and self.end_timer >= 120:
+        if self.is_game_end and self.end_timer >= 60:
             self.game_end([player for player in self.players if not player.is_death][0])
         # 이벤트 핸들러
         self.event_check()
