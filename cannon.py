@@ -58,6 +58,7 @@ class Cannon(pygame.sprite.Sprite):
 
         self.on_ground = False
         self.is_death = False
+        self.invincible = False
         self.direction = "right"
         self.fire_turn = 0
         self.fire_stack = 0
@@ -169,21 +170,26 @@ class Cannon(pygame.sprite.Sprite):
         self.camera.target = self.shell(self.camera, self.stage, self.rect.center + scaled_launch_vector, vector, owner, self.cannon_group)
 
     def damage(self, damage, is_fire=False):
-        if self.health > 0:
-            self.health -= damage
-            if is_fire:
-                self.burning_sound.sound.play()
-            Damage(self.camera,
-                   (self.rect.centerx + random.randint(-50, 50), self.rect.centery + random.randint(-50, 50)),
-                   120, Resources.Fonts.font,
-                   20 + 80 * (damage / self.max_health),
-                   str(int(damage)),
-                   text_color=(255,
-                               255 - [300 * (damage / self.max_health) if 300 * (damage / self.max_health) <= 215 else 215][0],
-                               255 - [300 * (damage / self.max_health) if 300 * (damage / self.max_health) <= 255 else 255][0]))
-        if self.health <= 0 and not self.is_death:
-            self.is_death = True
-            self.player.death()
+        if not self.invincible:
+            if is_fire and self.health - damage <= 0:
+                damage = self.health - 1
+                self.fire_turn = 0
+                self.fire_stack = 0
+            if self.health > 0:
+                self.health -= damage
+                if is_fire:
+                    self.burning_sound.sound.play()
+                Damage(self.camera,
+                       (self.rect.centerx + random.randint(-50, 50), self.rect.centery + random.randint(-50, 50)),
+                       120, Resources.Fonts.font,
+                       20 + 80 * (damage / self.max_health),
+                       str(int(damage)),
+                       text_color=(255,
+                                   255 - [300 * (damage / self.max_health) if 300 * (damage / self.max_health) <= 215 else 215][0],
+                                   255 - [300 * (damage / self.max_health) if 300 * (damage / self.max_health) <= 255 else 255][0]))
+            if self.health <= 0 and not self.is_death:
+                self.is_death = True
+                self.player.death()
 
     def out_of_border(self):
         if self.rect.top > 2000:
@@ -379,6 +385,7 @@ class Catapult(Cannon):
 
         self.on_ground = False
         self.is_death = False
+        self.invincible = False
         self.direction = "right"
         self.fire_turn = 0
         self.fire_stack = 0
@@ -554,6 +561,7 @@ class Tank(Cannon):
 
         self.on_ground = False
         self.is_death = False
+        self.invincible = False
         self.direction = "right"
         self.fire_turn = 0
         self.fire_stack = 0

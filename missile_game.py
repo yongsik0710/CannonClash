@@ -34,7 +34,7 @@ class MissileGame:
     def loop(self):
         if self.is_game_end:
             self.end_timer += 1
-        if self.is_game_end and self.end_timer >= 60:
+        if self.is_game_end and self.end_timer >= 120:
             self.game_end([player for player in self.players if not player.is_death][0])
         # 이벤트 핸들러
         self.event_check()
@@ -167,6 +167,7 @@ class MissileGame:
         alive_players = [player for player in self.players if not player.is_death]
         if len(alive_players) <= 1:
             self.is_game_end = True
+            alive_players[0].cannon.invincible = True
 
     def game_end(self, winner):
         pygame.mixer.stop()
